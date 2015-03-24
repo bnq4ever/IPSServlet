@@ -17,6 +17,7 @@ class Device {
     private float x;
     private float y;
     private ArrayList<Float> history;//HISTORICAL COORDINATES
+    private float direction;
     
     public Device(String id) {
         this.id = id;
@@ -54,6 +55,14 @@ class Device {
     
     public void setY(float y) {
         this.y = y;
+    }
+    
+    public void setDirection(float direction) {
+        this.direction = direction;
+    }
+    
+    public float getDirection() {
+        return direction;
     }
     
 //    @Override

@@ -2,13 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Hampus/Documents/NetBeansProjects/IndoorPositioning/web/js/update.js</file>
-            <file>file:/C:/Users/Hampus/Documents/NetBeansProjects/IndoorPositioning/src/java/server/ConnectionServlet.java</file>
-            <file>file:/C:/Users/Hampus/Documents/NetBeansProjects/IndoorPositioning/src/java/server/Command.java</file>
-            <file>file:/C:/Users/Hampus/Documents/NetBeansProjects/IndoorPositioning/src/java/server/Database.java</file>
-            <file>file:/C:/Users/Hampus/Documents/NetBeansProjects/IndoorPositioning/src/java/server/DeviceManager.java</file>
-            <file>file:/C:/Users/Hampus/Documents/NetBeansProjects/IndoorPositioning/src/java/server/MappingServlet.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

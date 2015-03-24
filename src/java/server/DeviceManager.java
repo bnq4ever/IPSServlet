@@ -78,12 +78,12 @@ public class DeviceManager {
     
     public synchronized static void moveDevice(String MAC, float angle, float stepLength) {
         Device device = connectedDevices.get(connectedDevices.indexOf(new Device(MAC)));
-        
+        device.setDirection(device.getDirection() + angle);
         float x = device.getX();
         float y = device.getY();
         
-        x += (float) Math.cos(Math.toRadians(angle))*stepLength;
-        y += (float) Math.sin(Math.toRadians(angle))*stepLength;
+        x += (float) Math.cos(Math.toRadians(device.getDirection()))*stepLength;
+        y += (float) Math.sin(Math.toRadians(device.getDirection()))*stepLength;
         
         device.setX(x);
         device.setY(y);
