@@ -3,6 +3,7 @@ package server;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -32,61 +33,55 @@ public class MappingServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String key = "command";
-        String value = request.getParameter(key);
-        switch(value) {
-            case "GET_CONNECTED_DEVICES":
-                getAllDevices(response);
+        PrintWriter out = response.getWriter();
+        String command = request.getParameter("command");
+        switch (command) {
+            case Command.GET_CONNECTED_DEVICES:
+                getAllDevices(out);
                 break;
-            case "DEVICE_MOVED":
+            case Command.LOCATE_DEVICE:
                 String MAC = request.getParameter("id");
-                float angle = Float.parseFloat(request.getParameter("angle"));
-                float stepLength = Float.parseFloat(request.getParameter("steplength"));
-                System.out.println(angle);
-                moveDevice(MAC, angle, stepLength);
+//                float angle = Float.parseFloat(request.getParameter("angle"));
+//                float stepLength = Float.parseFloat(request.getParameter("steplength"));
+                HashMap<String, Double> fingerprint = Parser.parseFingerprint(request.getParameter("fingerprint"));
+                locateDevice(out, MAC, fingerprint);
                 break;
-            case "GET_POSITIONS":
-                getPositions(response);
+            case Command.GET_POSITIONS:
+                getAllPositions(out);
                 break;
         }
     }
+
+//    protected void moveDevice(String MAC, float angle, float stepLength) {
+//        DeviceManager.getInstance().moveDevice(MAC, angle, stepLength);
+//    }
     
-    protected void moveDevice(String MAC, float angle, float stepLength) {
-        DeviceManager.getInstance().moveDevice(MAC, angle, stepLength);
+    protected void locateDevice(PrintWriter out, String MAC, HashMap<String, Double> fingerprint) {
+        ReferencePoint locatedPoint = Locator.getInstance().locateDevice(MAC, fingerprint);
+        DeviceManager.getInstance().updatePosition(MAC, locatedPoint);
+        out.println("x:" + locatedPoint.x + ",y:" + locatedPoint.y);
     }
-    
-    protected void getAllDevices(HttpServletResponse response) {
-        PrintWriter out;
-        try {
-            out = response.getWriter();
-            ArrayList<Device> devices = DeviceManager.getInstance().getConnectedDevices();
-            JsonArrayBuilder array = Json.createArrayBuilder();
-            
-            for(Device device : devices){
-                array.add(Json.createObjectBuilder().add("id", device.getId()).add("name", device.getName()).add("x", device.getX()).add("y", device.getY()));
-            }
-            out.println(Json.createObjectBuilder().add("devices", array).build());
-            
-        } catch (IOException ex) {
-            Logger.getLogger(MappingServlet.class.getName()).log(Level.SEVERE, null, ex);
+
+    protected void getAllDevices(PrintWriter out) {
+
+        ArrayList<Device> devices = DeviceManager.getInstance().getConnectedDevices();
+        JsonArrayBuilder array = Json.createArrayBuilder();
+
+        for (Device device : devices) {
+            array.add(Json.createObjectBuilder().add("id", device.getId()).add("name", device.getName()).add("x", device.getX()).add("y", device.getY()));
         }
+        out.println(Json.createObjectBuilder().add("devices", array).build());
+
     }
-    
-    protected void getPositions(HttpServletResponse response) {
-        PrintWriter out;
-        try {
-            out = response.getWriter();
-            ArrayList<Device> devices = DeviceManager.getInstance().getConnectedDevices();
-            JsonArrayBuilder array = Json.createArrayBuilder();
-            
-            for(Device device : devices) {
-                array.add(Json.createObjectBuilder().add("id", device.getId()).add("x", device.getX()).add("y", device.getY()));
-            }
-            out.println(Json.createObjectBuilder().add("devices", array).build());
-            
-        } catch (IOException ex) {
-            Logger.getLogger(MappingServlet.class.getName()).log(Level.SEVERE, null, ex);
+
+    protected void getAllPositions(PrintWriter out) {
+        ArrayList<Device> devices = DeviceManager.getInstance().getConnectedDevices();
+        JsonArrayBuilder array = Json.createArrayBuilder();
+
+        for (Device device : devices) {
+            array.add(Json.createObjectBuilder().add("id", device.getId()).add("x", device.getX()).add("y", device.getY()));
         }
+        out.println(Json.createObjectBuilder().add("devices", array).build());
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

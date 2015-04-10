@@ -11,81 +11,131 @@ import java.util.ArrayList;
  *
  * @author Hampus
  */
-public class DeviceManager {
+public final class DeviceManager {
     
     private static DeviceManager _instance;
     
-    private static ArrayList<Device> devices = new ArrayList<>();
-    private static ArrayList<Device> connectedDevices = new ArrayList<>();
-    private static final Database db = new Database();
+    private ArrayList<Device> devices = new ArrayList<>();
+    private ArrayList<Device> connectedDevices = new ArrayList<>();
+    private final Database db = new Database();
     
     public synchronized static DeviceManager getInstance() {
-        if (_instance == null) _instance = new DeviceManager();
+        if (_instance == null) 
+            _instance = new DeviceManager();
         return _instance;
     }
     
     private DeviceManager() {
-        db.openConnection();
-        devices = db.getAllDevices();
-        db.closeConnection();
-        System.out.println(devices.size());
+//        db.openConnection();
+//        devices = db.getAllDevices();
+//        db.closeConnection();
+//        System.out.println(devices.size());
     }
     
-    public synchronized static boolean exists(String deviceId) {
+    public synchronized boolean exists(String deviceId) {
+        //System.out.println("exists");
         return devices.contains(new Device(deviceId));
     }
     
-    public synchronized static void addExistence(String deviceId) {
-        db.openConnection();
-        db.addDeviceExistence(deviceId);
-        db.closeConnection();
+    public synchronized void addDevice(String deviceId, String name) {
+        //System.out.println("addDevice");
+//        db.openConnection();
+//        db.addDevice(deviceId, name);
+//        db.closeConnection();
         
-        devices.add(new Device(deviceId));
+        devices.add(new Device(deviceId, name));
     }
     
-    public synchronized static boolean isConnected(String deviceId) {
-        return connectedDevices.contains(new Device(deviceId));
+    public synchronized boolean isConnected(String deviceId) {
+        //System.out.println("isConnected");
+        return connectedDevices.contains(getDevice(deviceId));
     }
     
-    public synchronized static void connectDevice(String deviceId) {
-        if (!isConnected(deviceId))
-            connectedDevices.add(devices.get(devices.indexOf(new Device(deviceId))));
+    public synchronized boolean isIntroduced(String deviceId) {
+        //System.out.println("isIntroduced");
+//        db.openConnection();
+//        boolean isIntroduced = db.isIntroduced(deviceId);
+//        db.closeConnection();
+        if (!exists(deviceId))
+            return false;
+        //System.out.println(getDevice(deviceId).getName());
+        return !getDevice(deviceId).getName().equals("");
     }
     
-    public synchronized static void disconnectDevice(String deviceId) {
-        connectedDevices.remove(new Device(deviceId));
+    public synchronized String connectDevice(String deviceId) {
+        //System.out.println("connectDevice");
+        if (!exists(deviceId))
+            return Command.DEVICE_NOT_EXISTING;
+        else if (isConnected(deviceId))
+            return Command.DEVICE_ALREADY_CONNECTED;
+        
+        connectedDevices.add(getDevice(deviceId));
+        return Command.DEVICE_CONNECTED;
+    }
+    
+    public synchronized String disconnectDevice(String deviceId) {
+        //System.out.println("disconnectDevice");
+        if (!exists(deviceId))
+            return Command.DEVICE_NOT_EXISTING;
+        else if (!isConnected(deviceId))
+            return Command.DEVICE_ALREADY_DISCONNECTED;
+        
+        connectedDevices.remove(getDevice(deviceId));
+        return Command.DEVICE_DISCONNECTED;
+    }
+    
+    private synchronized Device getDevice(String deviceId) {
+        return devices.get(devices.indexOf(new Device(deviceId)));
     }
     
     //Update DB data in interval or at shutdown
-    public synchronized static void setDeviceName(String deviceId, String name) {
-        db.openConnection();
-        db.setDeviceName(deviceId, name);
-        db.closeConnection();
-        devices.get(devices.indexOf(new Device(deviceId))).setName(name);
+    public synchronized void setDeviceName(String deviceId, String name) {
+        //System.out.println("setDeviceName");
+//        db.openConnection();
+//        db.setDeviceName(deviceId, name);
+//        db.closeConnection();
+        getDevice(deviceId).setName(name);
     }
     
-    public synchronized static ArrayList<Device> getConnectedDevices() {
+    public synchronized ArrayList<Device> getConnectedDevices() {
         return new ArrayList<>(connectedDevices);
     }
     
-    public synchronized static int nbrOfDevicesConnected() {
+    public synchronized int nbrOfConnectedDevices() {
+        //System.out.println("nbrOfConnectedDevices");
         return connectedDevices.size();
     }
     
-    public synchronized static int nbrOfDevices() {
+    public synchronized int nbrOfDevices() {
+        //System.out.println("nbrOfDevices");
         return devices.size();
     }
     
-    public synchronized static void moveDevice(String MAC, float angle, float stepLength) {
+    public synchronized void moveDevice(String MAC, float angle, float stepLength) {
         Device device = connectedDevices.get(connectedDevices.indexOf(new Device(MAC)));
         device.setDirection(device.getDirection() + angle);
-        float x = device.getX();
-        float y = device.getY();
+        double x = device.getX();
+        double y = device.getY();
         
-        x += (float) Math.cos(Math.toRadians(device.getDirection()))*stepLength;
-        y += (float) Math.sin(Math.toRadians(device.getDirection()))*stepLength;
+        x += (double) Math.cos(Math.toRadians(device.getDirection()))*stepLength;
+        y += (double) Math.sin(Math.toRadians(device.getDirection()))*stepLength;
         
         device.setX(x);
         device.setY(y);
+    }
+    
+    public synchronized void updatePosition(String MAC, ReferencePoint newLocation) {
+        Device device = getDevice(MAC);
+        device.setX(newLocation.x);
+        device.setY(newLocation.y);
+    }
+    
+    public synchronized void deleteDevice(String MAC) {
+        Device d = getDevice(MAC);
+        connectedDevices.remove(d);
+        devices.remove(d);
+//        db.openConnection();
+//        db.deleteDevice(MAC);
+//        db.closeConnection();
     }
 }

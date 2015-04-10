@@ -1,9 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 var connectedDevices = {};
 var Command = new Command();
 
@@ -45,18 +39,9 @@ $(document).ready(function() {
             if (typeof connectedDevices[this.id] === 'undefined') {
                 $(this).fadeOut("fast", function() {
                     $(this).remove();
-//                    document.getElementById("#info-" + this.id).remove();
-//                    $("#info-" + this.id).remove();
                 });
             }
         });
-//        $('#connected').children('.info').each(function() {
-//            var id = this.id;
-//            alert(this);
-//            if (typeof connectedDevices[id] === 'undefined') {
-////                $(this).remove();
-//            }
-//        });
     }
 
     function moveTo(id) {
@@ -88,18 +73,6 @@ $(document).ready(function() {
         $(div).hide();
         document.getElementById("mappingArea").appendChild(div);
         $(div).clearQueue().fadeIn("fast");
-//        
-//        
-//        var infoDiv = document.createElement("DIV");
-//        var divId = document.createAttribute("id");
-//        var divClass = document.createAttribute("class");
-//        divId.value = "info-" + deviceID;
-//        divClass.value = "info";
-//        infoDiv.setAttributeNode(divId);
-//        infoDiv.setAttributeNode(divClass);
-//        infoDiv.innerHTML = connectedDevices[deviceID].id + " " + connectedDevices[deviceID].name;
-//        document.getElementById("connected").appendChild(infoDiv);
-
     }
 
     function setMap() {
@@ -112,47 +85,41 @@ $(document).ready(function() {
         img.style.width = "1200px";
     }
 
-    function initMatrix() {
-        var img = document.getElementById('map_img');
-        var c = document.createElement("canvas");
-        c.width = img.width;
-        c.height = img.height;
-        var ctx = c.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-        var imgData = ctx.getImageData(0, 0, c.width, c.height);
-        var x = 487;
-        var y = 15;
-        for (var x = 0; x < c.width; x++) {
-            for (var y = 0; y < c.height; y++) {
-                if (imgData.data[(y*img.width + x)*4 + 0] === 255 && imgData.data[(y*img.width + x)*4 + 1] === 255 && imgData.data[(y*img.width + x)*4 + 2] === 255) {
-                    imgData.data[(y*img.width + x)*4 + 0] = 0;
-                    imgData.data[(y*img.width + x)*4 + 1] = 0;
-                    imgData.data[(y*img.width + x)*4 + 2] = 0;
-                    imgData.data[(y*img.width + x)*4 + 3] = 255;
-                } else {
-                    imgData.data[(y*img.width + x)*4 + 0] = 255;
-                    imgData.data[(y*img.width + x)*4 + 1] = 255;
-                    imgData.data[(y*img.width + x)*4 + 2] = 255;
-                    imgData.data[(y*img.width + x)*4 + 3] = 0;
-                }
-            }
-        }
-        var c = document.getElementById("myCanvas");
-        var ctx = c.getContext("2d");
-        ctx.putImageData(imgData, 0, 0);
-
-        //
-        // here idata.data[(y*img.width + x)*4] is the red value
-        // of pixel (x, y), followed by green, blue and alpha
-        //
-    }
+//    function initMatrix() {
+//        var img = document.getElementById('map_img');
+//        var c = document.createElement("canvas");
+//        c.width = img.width;
+//        c.height = img.height;
+//        var ctx = c.getContext("2d");
+//        ctx.drawImage(img, 0, 0);
+//        var imgData = ctx.getImageData(0, 0, c.width, c.height);
+//        var x = 487;
+//        var y = 15;
+//        for (var x = 0; x < c.width; x++) {
+//            for (var y = 0; y < c.height; y++) {
+//                if (imgData.data[(y*img.width + x)*4 + 0] === 255 && imgData.data[(y*img.width + x)*4 + 1] === 255 && imgData.data[(y*img.width + x)*4 + 2] === 255) {
+//                    imgData.data[(y*img.width + x)*4 + 0] = 0;
+//                    imgData.data[(y*img.width + x)*4 + 1] = 0;
+//                    imgData.data[(y*img.width + x)*4 + 2] = 0;
+//                    imgData.data[(y*img.width + x)*4 + 3] = 255;
+//                } else {
+//                    imgData.data[(y*img.width + x)*4 + 0] = 255;
+//                    imgData.data[(y*img.width + x)*4 + 1] = 255;
+//                    imgData.data[(y*img.width + x)*4 + 2] = 255;
+//                    imgData.data[(y*img.width + x)*4 + 3] = 0;
+//                }
+//            }
+//        }
+//        var c = document.getElementById("myCanvas");
+//        var ctx = c.getContext("2d");
+//        ctx.putImageData(imgData, 0, 0);
+//    }
 
     function getConnectedDevices() {
-        var command = "GET_CONNECTED_DEVICES";
         $.ajax({
             url: "Mapper",
             type: "get", //send it through get method
-            data:{command: command},
+            data:{command: "GET_CONNECTED_DEVICES"},
             success: function(response) {
                 var tmp = {};
                 var json = $.parseJSON(response);
@@ -185,17 +152,5 @@ $(document).ready(function() {
         this.x = x;
         this.y = y;
         this.name = name;
-    //    this.div = document.getElementById(id);
-    //    this.jq = $("#" + id);
-    //    this.moveTo = function (moveX, moveY) {
-    //        this.x = moveX;
-    //        this.y = moveY;
-    //        var x = this.x + "px";
-    //        var y = this.y + "px";
-    //        this.jq.animate({
-    //           left: x,
-    //           top: y
-    //        }, 100);
-    //    };
     };
 });

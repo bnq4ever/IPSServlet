@@ -10,22 +10,30 @@ package server;
  * @author Hampus
  */
 public class Command {
-    //SERVER STATEMENTS
-    public static final int DEVICE_UNKNOWN = 0;
+    //CONNECTION STATEMENTS
+    public static final String DEVICE_UNKNOWN = "DEVICE_UNKNOWN";
+    public static final String DEVICE_CONNECTED = "DEVICE_CONNECTED";
+    public static final String DEVICE_ALREADY_CONNECTED = "DEVICE_ALLREADY_CONNECTED";
+    public static final String DEVICE_DISCONNECTED = "DEVICE_DISCONNECTED";
+    public static final String DEVICE_ALREADY_DISCONNECTED = "DEVICE_ALLREADY_DISCONNECTED";
+    public static final String DEVICE_INTRODUCED = "DEVICE_INTRODUCED";
+    public static final String DEVICE_ALREADY_INTRODUCED = "DEVICE_ALLREADY_INTRODUCED";
+    public static final String DEVICE_DELETED = "DEVICE_DELETED";
+    public static final String DEVICE_NOT_EXISTING = "DEVICE_NOT_EXISTING";
     
-    public static final int DEVICE_CONNECTED = 1;
-    public static final int DEVICE_ALLREADY_CONNECTED = 2;
-    
-    public static final int DEVICE_DISCONNECTED = 3;
-    public static final int DEVICE_ALLREADY_DISCONNECTED = 4;
-    
-    public static final int DEVICE_INTRODUCED = 5;
-    public static final int DEVICE_ALLREADY_INTRODUCED = 6;
+    public static final String ADD_REFERENCE_POINT = "ADD_REFERENCE_POINT";
+    public static final String REFERENCE_POINT_ADDED = "REFERENCE_POINT_ADDED";
+    public static final String REFERENCE_POINT_NOT_ADDED = "REFERENCE_POINT_NOT_ADDED";
     
     //DEVICE REQUESTS
-    public static final int CONNECT_DEVICE = 7;
-    public static final int DISCONNECT_DEVICE = 8;
-    public static final int INTRODUCING_DEVICE = 9;
+    public static final String CONNECT_DEVICE = "CONNECT_DEVICE";
+    public static final String DISCONNECT_DEVICE = "DISCONNECT_DEVICE";
+    public static final String INTRODUCING_DEVICE = "INTRODUCING_DEVICE";
+    public static final String DELETE_DEVICE = "DELETE_DEVICE";
+    public static final String BUILD_FINGERPRINT = "BUILD_FINGERPRINT";
+    public static final String LOCATE_DEVICE = "LOCATE_DEVICE";
     
-    //CONNECTION
+    //WEBPAGE REQUESTS
+    public static final String GET_CONNECTED_DEVICES = "GET_CONNECTED_DEVICES";
+    public static final String GET_POSITIONS = "GET_POSITIONS";
 }

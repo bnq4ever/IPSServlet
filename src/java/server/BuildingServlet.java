@@ -17,8 +17,9 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Hampus
  */
-@WebServlet(name = "Connector", urlPatterns = {"/Connector"})
-public class ConnectionServlet extends HttpServlet {
+@WebServlet(name = "Builder", urlPatterns = {"/Builder"})
+public class BuildingServlet extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -30,50 +31,24 @@ public class ConnectionServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        
         PrintWriter out = response.getWriter();
-        
         String command = request.getParameter("command");
-        String MAC = request.getParameter("id");
-        //System.out.println(command);
+        System.out.println(command);
         switch(command) {
-            case Command.CONNECT_DEVICE:
-                connectDevice(out, MAC);
-                break;
-            case Command.DISCONNECT_DEVICE:
-                disconnectDevice(out, MAC);
-                break;
-            case Command.INTRODUCING_DEVICE:
-                String name = request.getParameter("name");
-                introduction(out, MAC, name);
-                break;
-            case Command.DELETE_DEVICE:
-                deleteDevice(out, MAC);
+            case Command.ADD_REFERENCE_POINT:
+                double x = Double.parseDouble(request.getParameter("x"));
+                double y = Double.parseDouble(request.getParameter("y"));
+                String fingerprintData = request.getParameter("fingerprint");
+                addReferencePoint(out, x, y, fingerprintData);
                 break;
         }
+    }
+
+    private void addReferencePoint(PrintWriter out, double x, double y, String fingerprintData) {
+        RadioMap.getInstance().addPoint(new ReferencePoint(x, y, Parser.parseFingerprint(fingerprintData)));
+        out.print(Command.REFERENCE_POINT_ADDED);
     }
     
-    private void deleteDevice(PrintWriter out, String MAC) {
-        if (DeviceManager.getInstance().exists(MAC)) {
-            DeviceManager.getInstance().deleteDevice(MAC);
-            out.print(Command.DEVICE_DELETED);
-        } else {
-            out.print(Command.DEVICE_NOT_EXISTING);
-        }
-    }
-
-    private void connectDevice(PrintWriter out, String MAC) {
-        if (!DeviceManager.getInstance().isIntroduced(MAC)) {
-            out.print(Command.DEVICE_UNKNOWN);
-        } else if (DeviceManager.getInstance().isConnected(MAC)) {
-            out.print(Command.DEVICE_CONNECTED);
-        } else {
-            DeviceManager.getInstance().connectDevice(MAC);
-            out.print(Command.DEVICE_CONNECTED);
-        }
-    }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -112,19 +87,5 @@ public class ConnectionServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
-    private void disconnectDevice(PrintWriter out, String MAC) {
-        if (DeviceManager.getInstance().isConnected(MAC)) {
-            DeviceManager.getInstance().disconnectDevice(MAC);
-            out.print(Command.DEVICE_DISCONNECTED);
-        } else {
-            out.print(Command.DEVICE_ALREADY_DISCONNECTED);
-        }
-    }
-
-    private void introduction(PrintWriter out, String MAC, String name) {
-        DeviceManager.getInstance().addDevice(MAC, name);
-        out.print(Command.DEVICE_INTRODUCED);
-    }
 
 }
