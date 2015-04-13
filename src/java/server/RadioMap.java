@@ -26,7 +26,7 @@ public final class RadioMap {
         points = new ArrayList<>();
     }
     
-    public synchronized ArrayList<ReferencePoint> getPoints() {
+    public synchronized ArrayList<ReferencePoint> getReferencePoints() {
         ArrayList<ReferencePoint> tmp = new ArrayList<>(points);
         return tmp;
     }
@@ -35,7 +35,7 @@ public final class RadioMap {
         ArrayList<ReferencePoint> result = new ArrayList<>();
         for (ReferencePoint p : points) {
             for (String key : deviceFingerprint.keySet()) {
-                if (!p.fingerprint.containsKey(key))
+                if (!p.RSSfingerprint.containsKey(key))
                     break;
             }
             result.add(p);
@@ -43,20 +43,34 @@ public final class RadioMap {
         return result;
     }
     
-    public synchronized void addPoint(ReferencePoint point) {
-        ReferencePoint p = getPoint(point.x, point.y);
+    public synchronized void addReferencePoint(ReferencePoint point) {
+        ReferencePoint p = getReferencePoint(point.x, point.y);
         if (p != null)
-            p.fingerprint = point.fingerprint;
+            p.RSSfingerprint = point.RSSfingerprint;
         else
             points.add(point);
         StringBuilder sb = new StringBuilder();
-        for (String key : point.fingerprint.keySet()) {
-            sb.append(key).append(" ").append(point.fingerprint.get(key));
+        for (String key : point.RSSfingerprint.keySet()) {
+            sb.append(key).append(" ").append(point.RSSfingerprint.get(key));
         }
         System.out.println(sb.toString());
     }
     
-    public synchronized ReferencePoint getPoint(double x, double y) {
+    
+    /*
+        Adds magnetic fingerprints to map and connects them to nearby RSSReferencepoint.
+    */
+    public synchronized void addMagneticFingerprints(ArrayList<MagneticFingerprint> magnetics) {
+        for(ReferencePoint p : points) {
+            for(MagneticFingerprint mf : magnetics) {
+                if(Math.sqrt(Math.pow((p.x - mf.x), 2)+Math.pow((p.y - mf.y), 2)) < 150) {
+                        p.addMagnetic(mf);
+                }    
+            }
+        }
+    }
+    
+    public synchronized ReferencePoint getReferencePoint(double x, double y) {
         for (ReferencePoint p : points) {
             if(x == p.x && y == p.y)
                 return p;
@@ -64,7 +78,7 @@ public final class RadioMap {
         return null;
     }
     
-    public synchronized void removePoint(double x, double y) {
-        points.remove(getPoint(x, y));
+    public synchronized void removeReferencePoint(double x, double y) {
+        points.remove(getReferencePoint(x, y));
     }
 }
