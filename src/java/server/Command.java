@@ -21,6 +21,9 @@ public class Command {
     public static final String DEVICE_DELETED = "DEVICE_DELETED";
     public static final String DEVICE_NOT_EXISTING = "DEVICE_NOT_EXISTING";
     
+    public static final String ADD_MAGNETIC_FINGERPRINTS = "ADD_MAGNETIC_FINGERPRINTS";
+    public static final String MAGNETIC_FINGERPRINTS_ADDED = "MAGNETIC_FINGERPRINTS_ADDED";
+    public static final String MAGNETIC_FINGERPRINTS_NOT_ADDED = "MAGNETIC_FINGERPRINTS_NOT_ADDED";
     public static final String ADD_REFERENCE_POINT = "ADD_REFERENCE_POINT";
     public static final String REFERENCE_POINT_ADDED = "REFERENCE_POINT_ADDED";
     public static final String REFERENCE_POINT_NOT_ADDED = "REFERENCE_POINT_NOT_ADDED";

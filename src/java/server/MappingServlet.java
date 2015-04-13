@@ -43,8 +43,11 @@ public class MappingServlet extends HttpServlet {
                 String MAC = request.getParameter("id");
 //                float angle = Float.parseFloat(request.getParameter("angle"));
 //                float stepLength = Float.parseFloat(request.getParameter("steplength"));
+                
+                //här ska vi även hämta magnetics via parser.
+                
                 HashMap<String, Double> fingerprint = Parser.parseFingerprint(request.getParameter("fingerprint"));
-                locateDevice(out, MAC, fingerprint);
+                locateReferenceArea(out, MAC, fingerprint);
                 break;
             case Command.GET_POSITIONS:
                 getAllPositions(out);
@@ -56,10 +59,21 @@ public class MappingServlet extends HttpServlet {
 //        DeviceManager.getInstance().moveDevice(MAC, angle, stepLength);
 //    }
     
-    protected void locateDevice(PrintWriter out, String MAC, HashMap<String, Double> fingerprint) {
-        ReferencePoint locatedPoint = Locator.getInstance().locateDevice(MAC, fingerprint);
+    
+    /*
+        locates closest RSS reference point. NOT USED!
+    */
+    protected void locateReferenceArea(PrintWriter out, String MAC, HashMap<String, Double> fingerprint) {
+        ReferencePoint locatedPoint = Locator.getInstance().locateReferenceArea(MAC, fingerprint);
         DeviceManager.getInstance().updatePosition(MAC, locatedPoint);
         out.println("x:" + locatedPoint.x + ",y:" + locatedPoint.y);
+    }
+    
+    /*
+        Combines magnetic and RSS to pinpoint device.
+    */
+    protected void locateDevice(PrintWriter out, String MAC, HashMap<String, Double> RSSfingerprint, float magnitude, float zaxis, float xyaxis, ArrayList<MagneticFingerprint> magneticfingerprints) {
+        MagneticFingerprint location = Locator.getInstance().locateDevice(MAC, RSSfingerprint, magnitude, zaxis, xyaxis, magneticfingerprints);
     }
 
     protected void getAllDevices(PrintWriter out) {

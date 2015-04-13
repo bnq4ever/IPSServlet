@@ -41,12 +41,26 @@ public class BuildingServlet extends HttpServlet {
                 String fingerprintData = request.getParameter("fingerprint");
                 addReferencePoint(out, x, y, fingerprintData);
                 break;
+            case Command.ADD_MAGNETIC_FINGERPRINTS:
+                String magneticData = request.getParameter("magnetic");
+                addMagneticFingerprints(out, magneticData);
+                /*
+                double x = Double.parseDouble(request.getParameter("x"));
+                double y = Double.parseDouble(request.getParameter("y"));
+                String fingerprintData = request.getParameter("fingerprint");
+                addReferencePoint(out, x, y, fingerprintData);
+                break;
+                */
         }
     }
 
     private void addReferencePoint(PrintWriter out, double x, double y, String fingerprintData) {
-        RadioMap.getInstance().addPoint(new ReferencePoint(x, y, Parser.parseFingerprint(fingerprintData)));
+        RadioMap.getInstance().addReferencePoint(new ReferencePoint(x, y, Parser.parseFingerprint(fingerprintData)));
         out.print(Command.REFERENCE_POINT_ADDED);
+    }
+    
+    private void addMagneticFingerprints(PrintWriter out, String magneticData) {
+        RadioMap.getInstance().addMagneticFingerprints(Parser.parseMagnetics(magneticData));
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -87,5 +101,4 @@ public class BuildingServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

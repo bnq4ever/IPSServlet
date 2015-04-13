@@ -1,5 +1,6 @@
 package server;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -10,21 +11,28 @@ public class ReferencePoint {
     public double x;
     public double y;
     
-    public Map<String, Double> fingerprint;
+    public Map<String, Double> RSSfingerprint;
+    public ArrayList<MagneticFingerprint> magnetics;
 
-    public ReferencePoint(double x, double y, Map fingerprint){
-        
+    public ReferencePoint(double x, double y, Map RSSfingerprint){
         this.x = x;
         this.y = y;
-        this.fingerprint = fingerprint;
+        this.RSSfingerprint = RSSfingerprint;
+    }
     
+    public void addMagnetic(MagneticFingerprint mf) {
+        magnetics.add(mf);
+    }
+    
+    public ArrayList<MagneticFingerprint> getMagnetics() {
+        return magnetics;
     }
     
     public String getFingerprint() {
         StringBuilder sb = new StringBuilder();
 
-        for (String key : fingerprint.keySet()) {
-            sb.append(key).append(": ").append(fingerprint.get(key)).append(" ");
+        for (String key : RSSfingerprint.keySet()) {
+            sb.append(key).append(": ").append(RSSfingerprint.get(key)).append(" ");
         }
         
         return sb.toString();
