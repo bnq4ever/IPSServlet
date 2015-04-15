@@ -74,6 +74,7 @@ public class MappingServlet extends HttpServlet {
     */
     protected void locateDevice(PrintWriter out, String MAC, HashMap<String, Double> RSSfingerprint, float magnitude, float zaxis, float xyaxis, ArrayList<MagneticFingerprint> magneticfingerprints) {
         MagneticFingerprint location = Locator.getInstance().locateDevice(MAC, RSSfingerprint, magnitude, zaxis, xyaxis, magneticfingerprints);
+        DeviceManager.getInstance().updatePosition(MAC, location);
     }
 
     protected void getAllDevices(PrintWriter out) {
