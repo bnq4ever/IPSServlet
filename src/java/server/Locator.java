@@ -34,13 +34,13 @@ public class Locator {
         }
         double distance = Integer.MAX_VALUE;
         ReferencePoint result = null;
-        for (ReferencePoint p : relevantPoints) {
-            double pointDistance = getRSSEuclidean(fingerprint, p);
+        for (ReferencePoint point : relevantPoints) {
+            double pointDistance = getRSSEuclidean(fingerprint, point);
             //System.out.println(p.getFingerprint());
-            System.out.println("x: " + p.x + " y: " + p.y + " distance: " + pointDistance);
+            System.out.println("x: " + point.x + " y: " + point.y + " distance: " + pointDistance);
             if ( pointDistance < distance ) {
                 distance = pointDistance;
-                result = p;
+                result = point;
             }
         }
         
@@ -54,7 +54,7 @@ public class Locator {
         //System.out.println("euclidian");
         for ( String key : fingerprint.keySet() ) {
 //            System.out.println(fingerprint.get(key) + " - " + p.fingerprint.get(key));
-            pointDistance += Math.pow(fingerprint.get(key) - p.RSSfingerprint.get(key), 2);
+            pointDistance += Math.pow(fingerprint.get(key) - p.fingerprint.get(key), 2);
         }
         return Math.sqrt(pointDistance);
     }
@@ -62,32 +62,31 @@ public class Locator {
     /*
         Locates device using both RSS and magnetic. Requires both RSS and magnetic as parameters.
     */
-    public synchronized MagneticFingerprint locateDevice(String MAC, HashMap<String, Double> RSSfingerprint, float magnitude, float zaxis, float xyaxis, ArrayList<MagneticFingerprint> magneticfingerprints/*, ArrayList<Double> priorities*/) {
-        ReferencePoint area = locateReferenceArea(MAC, RSSfingerprint);
-        ArrayList<Double> priorities = new ArrayList<Double>();
-        for(MagneticFingerprint f : magneticfingerprints) {
-            priorities.add(1.0);
-        }
-        MagneticFingerprint location = getNearestMagnetic(magnitude, zaxis, xyaxis, magneticfingerprints, priorities);
-        return location;
+    public synchronized void updatePosition(String MAC, double[] fingerprint) {
+        MagneticFingerprint location = getNearestMagnetic(MAC, fingerprint);
+        DeviceManager.getInstance().updatePosition(MAC, location);
     }
     
     
     /*
         Euclidean from magneticfingerprint to other magneticfingerprints. Returns nearest MagneticFingerprint
     */
-    private synchronized MagneticFingerprint getNearestMagnetic(float magnitude, float zaxis, float xyaxis, ArrayList<MagneticFingerprint> fingerprints, ArrayList<Double> priorities) {
-        float compare = Float.MAX_VALUE;
+    private synchronized MagneticFingerprint getNearestMagnetic(String MAC, double[] fingerprint) {
+        double magnitude = fingerprint[0];
+        double zaxis = fingerprint[1];
+        double xyaxis = fingerprint[2];
+        ArrayList<MagneticFingerprint> fingerprints = DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics();
+        double compare = Float.MAX_VALUE;
         MagneticFingerprint nearest = new MagneticFingerprint(90, 1000, 0, 0, 0);
-        float distance = 0;
+        double distance;
         //for (Fingerprint fp : fingerprints) {
         for(int i = 0; i < fingerprints.size(); i++) {
             distance = 0;
             distance += Math.pow((magnitude - fingerprints.get(i).magnitude), 2);
             distance += Math.pow((zaxis - fingerprints.get(i).zaxis), 2);
             distance += Math.pow((xyaxis - fingerprints.get(i).xyaxis), 2);
-            distance = (float) Math.sqrt(distance);
-            distance = (float) (distance*priorities.get(i));
+            distance = (double) Math.sqrt(distance);
+//            distance = (float) (distance*priorities.get(i));
             if (distance < compare) {
                 nearest = fingerprints.get(i);
                 compare = distance;

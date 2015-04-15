@@ -15,8 +15,8 @@ public final class DeviceManager {
     
     private static DeviceManager _instance;
     
-    private ArrayList<Device> devices = new ArrayList<>();
-    private ArrayList<Device> connectedDevices = new ArrayList<>();
+    private final ArrayList<Device> devices = new ArrayList<>();
+    private final ArrayList<Device> connectedDevices = new ArrayList<>();
     private final Database db = new Database();
     
     public synchronized static DeviceManager getInstance() {
@@ -84,7 +84,7 @@ public final class DeviceManager {
         return Command.DEVICE_DISCONNECTED;
     }
     
-    private synchronized Device getDevice(String deviceId) {
+    public synchronized Device getDevice(String deviceId) {
         return devices.get(devices.indexOf(new Device(deviceId)));
     }
     
@@ -124,15 +124,18 @@ public final class DeviceManager {
         device.setY(y);
     }
     
-    public synchronized void updatePosition(String MAC, MagneticFingerprint newLocation) {
-        Device device = getDevice(MAC);
-        device.setX(newLocation.x);
-        device.setY(newLocation.y);
+
+    public synchronized void updatePosition(String MAC, MagneticFingerprint fingerprint) {
+        Device device = connectedDevices.get(connectedDevices.indexOf(new Device(MAC)));
+        
+        device.setX(fingerprint.x);
+        device.setY(fingerprint.y);
+        device.addPreviousPosition(fingerprint);
     }
-    public synchronized void updatePosition(String MAC, ReferencePoint newLocation) {
+    
+    public synchronized void updateReferencePosition(String MAC, ReferencePoint newReferencePoint) {
         Device device = getDevice(MAC);
-        device.setX(newLocation.x);
-        device.setY(newLocation.y);
+        device.setReferencePoint(newReferencePoint);
     }
     
     public synchronized void deleteDevice(String MAC) {

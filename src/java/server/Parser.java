@@ -14,18 +14,30 @@ import java.util.HashMap;
  */
 public class Parser {
     public static ArrayList parseMagnetics(String magneticString) {
-        ArrayList<MagneticFingerprint> magnetics = new ArrayList<MagneticFingerprint>();
+        ArrayList<MagneticFingerprint> magnetics = new ArrayList<>();
         String[] split = magneticString.split(";");
         for(String s : split) {
             String[] data = s.split("/");
             //    ;x/y/magnitude/zaxis/xyaxis;
-            magnetics.add(new MagneticFingerprint(Float.parseFloat(data[0]), Float.parseFloat(data[1]), Float.parseFloat(data[2]), Float.parseFloat(data[3]), Float.parseFloat(data[4])));
+            magnetics.add(new MagneticFingerprint(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]), Double.parseDouble(data[4])));
         }
         return magnetics;
     }
     
+    public static double[] parseMagneticFingerprint(String magneticString) {
+        
+        String[] data = magneticString.split("/");
+        double[] magneticValues = new double[3];
+        
+            //    magnitude/zaxis/xyaxis
+        magneticValues[0] = Double.parseDouble(data[0]);
+        magneticValues[1] = Double.parseDouble(data[1]);
+        magneticValues[2] = Double.parseDouble(data[2]);
+        
+        return magneticValues;
+    }
+    
     public static HashMap parseFingerprint(String fingerprintString) {
-        System.out.println(fingerprintString);
         String[] list = fingerprintString.split(";");
         HashMap<String, Double> fingerprint = new HashMap<>();
         for (String str : list) {

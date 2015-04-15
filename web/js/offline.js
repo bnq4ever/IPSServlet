@@ -1,5 +1,9 @@
 var xClick;
 var yClick;
+
+var start;
+var end;
+
 $(document).ready(function() {
     
     $("#map").on("click", "#map_img", function (event) {
@@ -10,6 +14,17 @@ $(document).ready(function() {
         JSInterface.getClickCoordinates(xClick, yClick);
     });
     
+    function addStart() {
+        
+    }
+    
+    function addEnd() {
+        buildPath();
+    }
+    
+    function buildPath() {
+        
+    }
     function paintStuffOnMap() {
         
     }

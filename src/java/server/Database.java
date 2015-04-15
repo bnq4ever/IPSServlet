@@ -76,7 +76,7 @@ public class Database {
     }
 
     public boolean addReferencePoint(ReferencePoint p) {
-        Set<String> keys = p.RSSfingerprint.keySet();
+        Set<String> keys = p.fingerprint.keySet();
         StringBuilder aps = new StringBuilder();
         StringBuilder questionMarks = new StringBuilder();
         for (String key : keys) {
@@ -92,7 +92,7 @@ public class Database {
             preparedStatement.setDouble(2, p.y);
             int i = 3;
             for (String key : keys) {
-                preparedStatement.setDouble(i, p.RSSfingerprint.get(key));
+                preparedStatement.setDouble(i, p.fingerprint.get(key));
                 i++;
             }
             preparedStatement.executeUpdate();

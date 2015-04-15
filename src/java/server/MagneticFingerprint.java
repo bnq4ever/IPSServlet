@@ -10,11 +10,11 @@ package server;
  * @author fredrik
  */
 class MagneticFingerprint {
-    public float x, y;
+    public double x, y;
     //private float[] orientation;
-    public float magnitude, zaxis, xyaxis;
+    public double magnitude, zaxis, xyaxis;
     
-    public MagneticFingerprint(float x, float y, float magnitude, float zaxis, float xyaxis) {
+    public MagneticFingerprint(double x, double y, double magnitude, double zaxis, double xyaxis) {
         this.x = x;
         this.y = y;
         this.magnitude = magnitude;
@@ -24,20 +24,20 @@ class MagneticFingerprint {
     
     /*
     
-    public float getX() {
+    public double getX() {
         return X;
     }
-    public float getY() {
+    public double getY() {
         return Y;
     }
 
-    public float getMagnitude() {
+    public double getMagnitude() {
         return magnitude;
     }
-    public float getZ() {
+    public double getZ() {
         return zaxis;
     }
-    public float getXY() { 
+    public double getXY() { 
         return xyaxis; 
     }
     */

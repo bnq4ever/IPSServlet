@@ -11,13 +11,13 @@ public class ReferencePoint {
     public double x;
     public double y;
     
-    public Map<String, Double> RSSfingerprint;
+    public Map<String, Double> fingerprint;
     public ArrayList<MagneticFingerprint> magnetics;
 
-    public ReferencePoint(double x, double y, Map RSSfingerprint){
+    public ReferencePoint(double x, double y, Map fingerprint){
         this.x = x;
         this.y = y;
-        this.RSSfingerprint = RSSfingerprint;
+        this.fingerprint = fingerprint;
     }
     
     public void addMagnetic(MagneticFingerprint mf) {
@@ -31,8 +31,8 @@ public class ReferencePoint {
     public String getFingerprint() {
         StringBuilder sb = new StringBuilder();
 
-        for (String key : RSSfingerprint.keySet()) {
-            sb.append(key).append(": ").append(RSSfingerprint.get(key)).append(" ");
+        for (String key : fingerprint.keySet()) {
+            sb.append(key).append(": ").append(fingerprint.get(key)).append(" ");
         }
         
         return sb.toString();

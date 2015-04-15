@@ -14,7 +14,7 @@ import java.util.HashMap;
  */
 public final class RadioMap {
     private static RadioMap _instance;
-    private ArrayList<ReferencePoint> points;
+    private final ArrayList<ReferencePoint> referencePoints;
     
     public synchronized static RadioMap getInstance() {
         if (_instance == null) 
@@ -23,35 +23,35 @@ public final class RadioMap {
     }
     
     public RadioMap() {
-        points = new ArrayList<>();
+        referencePoints = new ArrayList<>();
     }
     
     public synchronized ArrayList<ReferencePoint> getReferencePoints() {
-        ArrayList<ReferencePoint> tmp = new ArrayList<>(points);
+        ArrayList<ReferencePoint> tmp = new ArrayList<>(referencePoints);
         return tmp;
     }
     
     public synchronized ArrayList<ReferencePoint> getRelevantPoints(HashMap<String, Double> deviceFingerprint) {
         ArrayList<ReferencePoint> result = new ArrayList<>();
-        for (ReferencePoint p : points) {
+        for (ReferencePoint point : referencePoints) {
             for (String key : deviceFingerprint.keySet()) {
-                if (!p.RSSfingerprint.containsKey(key))
+                if (!point.fingerprint.containsKey(key))
                     break;
             }
-            result.add(p);
+            result.add(point);
         }
         return result;
     }
     
-    public synchronized void addReferencePoint(ReferencePoint point) {
-        ReferencePoint p = getReferencePoint(point.x, point.y);
-        if (p != null)
-            p.RSSfingerprint = point.RSSfingerprint;
+    public synchronized void addReferencePoint(ReferencePoint p) {
+        ReferencePoint point = getReferencePoint(p.x, p.y);
+        if (point != null)
+            point.fingerprint = p.fingerprint;
         else
-            points.add(point);
+            referencePoints.add(p);
         StringBuilder sb = new StringBuilder();
-        for (String key : point.RSSfingerprint.keySet()) {
-            sb.append(key).append(" ").append(point.RSSfingerprint.get(key));
+        for (String key : p.fingerprint.keySet()) {
+            sb.append(key).append(" ").append(p.fingerprint.get(key));
         }
         System.out.println(sb.toString());
     }
@@ -61,24 +61,24 @@ public final class RadioMap {
         Adds magnetic fingerprints to map and connects them to nearby RSSReferencepoint.
     */
     public synchronized void addMagneticFingerprints(ArrayList<MagneticFingerprint> magnetics) {
-        for(ReferencePoint p : points) {
-            for(MagneticFingerprint mf : magnetics) {
-                if(Math.sqrt(Math.pow((p.x - mf.x), 2)+Math.pow((p.y - mf.y), 2)) < 150) {
-                        p.addMagnetic(mf);
+        for(ReferencePoint point : referencePoints) {
+            for(MagneticFingerprint magneticFingerprint : magnetics) { //150 - testa runt
+                if(Math.sqrt(Math.pow((point.x - magneticFingerprint.x), 2) + Math.pow((point.y - magneticFingerprint.y), 2)) < 150) {
+                        point.addMagnetic(magneticFingerprint);
                 }    
             }
         }
     }
     
     public synchronized ReferencePoint getReferencePoint(double x, double y) {
-        for (ReferencePoint p : points) {
-            if(x == p.x && y == p.y)
-                return p;
+        for (ReferencePoint point : referencePoints) {
+            if(x == point.x && y == point.y)
+                return point;
         }
         return null;
     }
     
     public synchronized void removeReferencePoint(double x, double y) {
-        points.remove(getReferencePoint(x, y));
+        referencePoints.remove(getReferencePoint(x, y));
     }
 }

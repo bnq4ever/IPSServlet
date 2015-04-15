@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.servlet.ServletException;
@@ -36,45 +34,50 @@ public class MappingServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         String command = request.getParameter("command");
         switch (command) {
+            
             case Command.GET_CONNECTED_DEVICES:
                 getAllDevices(out);
                 break;
-            case Command.LOCATE_DEVICE:
-                String MAC = request.getParameter("id");
-//                float angle = Float.parseFloat(request.getParameter("angle"));
-//                float stepLength = Float.parseFloat(request.getParameter("steplength"));
                 
-                //här ska vi även hämta magnetics via parser.
-                
-                HashMap<String, Double> fingerprint = Parser.parseFingerprint(request.getParameter("fingerprint"));
-                locateReferenceArea(out, MAC, fingerprint);
-                break;
             case Command.GET_POSITIONS:
                 getAllPositions(out);
                 break;
+                
+            case Command.LOCATE_DEVICE:
+                String MAC = request.getParameter("id");
+                String dataType = request.getParameter("dataType");
+                String data = request.getParameter("data");
+                
+                handleLocateDeviceRequest(out, MAC, dataType, data);
+                break;
+                
         }
     }
-
-//    protected void moveDevice(String MAC, float angle, float stepLength) {
-//        DeviceManager.getInstance().moveDevice(MAC, angle, stepLength);
-//    }
     
+    private void handleLocateDeviceRequest(PrintWriter out, String MAC, String dataType, String data) {
+        switch(dataType) {
+            case "REFERENCE_POINT":
+                HashMap<String, Double> referenceFingerprint = Parser.parseFingerprint(data);
+                locateReferenceArea(out, MAC, referenceFingerprint);
+                break;
+            case "MAGNETIC_POINT":
+                double[] magneticFingerprint = Parser.parseMagneticFingerprint(data);
+                locateMagneticPoint(out, MAC, magneticFingerprint);
+                break;
+        }
+    }
     
     /*
         locates closest RSS reference point. NOT USED!
     */
     protected void locateReferenceArea(PrintWriter out, String MAC, HashMap<String, Double> fingerprint) {
         ReferencePoint locatedPoint = Locator.getInstance().locateReferenceArea(MAC, fingerprint);
-        DeviceManager.getInstance().updatePosition(MAC, locatedPoint);
-        out.println("x:" + locatedPoint.x + ",y:" + locatedPoint.y);
+        DeviceManager.getInstance().updateReferencePosition(MAC, locatedPoint);
     }
     
-    /*
-        Combines magnetic and RSS to pinpoint device.
-    */
-    protected void locateDevice(PrintWriter out, String MAC, HashMap<String, Double> RSSfingerprint, float magnitude, float zaxis, float xyaxis, ArrayList<MagneticFingerprint> magneticfingerprints) {
-        MagneticFingerprint location = Locator.getInstance().locateDevice(MAC, RSSfingerprint, magnitude, zaxis, xyaxis, magneticfingerprints);
-        DeviceManager.getInstance().updatePosition(MAC, location);
+
+    protected void locateMagneticPoint(PrintWriter out, String MAC, double[] fingerprint) {
+        Locator.getInstance().updatePosition(MAC, fingerprint);
     }
 
     protected void getAllDevices(PrintWriter out) {

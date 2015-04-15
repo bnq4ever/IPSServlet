@@ -16,8 +16,9 @@ class Device {
     private final String id;
     private double x;
     private double y;
-    private ArrayList<Float> history;//HISTORICAL COORDINATES
-    private float direction;
+    private ArrayList<MagneticFingerprint> previousPositions;//HISTORICAL COORDINATES
+    private double direction;
+    private ReferencePoint referencePoint;
     
     public Device(String id) {
         this.id = id;
@@ -57,12 +58,24 @@ class Device {
         this.y = y;
     }
     
-    public void setDirection(float direction) {
+    public void setDirection(double direction) {
         this.direction = direction;
     }
     
-    public float getDirection() {
+    public double getDirection() {
         return direction;
+    }
+    
+    public void setReferencePoint(ReferencePoint referencePoint) {
+        this.referencePoint = referencePoint;
+    }
+    
+    public ReferencePoint getReferencePoint() {
+        return this.referencePoint;
+    }
+    
+    public void addPreviousPosition(MagneticFingerprint fingerprint) {
+        previousPositions.add(fingerprint);
     }
     
 //    @Override
