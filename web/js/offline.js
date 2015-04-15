@@ -25,5 +25,8 @@ $(document).ready(function() {
     function buildPath() {
         
     }
+    function paintStuffOnMap() {
+        
+    }
 
 });

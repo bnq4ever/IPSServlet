@@ -35,7 +35,6 @@ public class BuildingServlet extends HttpServlet {
         String command = request.getParameter("command");
         System.out.println(command);
         switch(command) {
-            
             case Command.ADD_REFERENCE_POINT:
                 double x = Double.parseDouble(request.getParameter("x"));
                 double y = Double.parseDouble(request.getParameter("y"));
@@ -47,7 +46,6 @@ public class BuildingServlet extends HttpServlet {
                 String magneticData = request.getParameter("magnetics");
                 addMagneticFingerprints(out, magneticData);
                 break;
-                
         }
     }
 
