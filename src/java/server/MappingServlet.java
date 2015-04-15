@@ -61,7 +61,7 @@ public class MappingServlet extends HttpServlet {
                 locateReferenceArea(out, MAC, referenceFingerprint);
                 break;
             case "MAGNETIC_POINT":
-                double[] magneticFingerprint = Parser.parseMagneticValues(data);
+                double[] magneticFingerprint = Parser.parseMagneticFingerprint(data);
                 locateMagneticPoint(out, MAC, magneticFingerprint);
                 break;
         }
@@ -75,6 +75,7 @@ public class MappingServlet extends HttpServlet {
         DeviceManager.getInstance().updateReferencePosition(MAC, locatedPoint);
     }
     
+
     protected void locateMagneticPoint(PrintWriter out, String MAC, double[] fingerprint) {
         Locator.getInstance().updatePosition(MAC, fingerprint);
     }

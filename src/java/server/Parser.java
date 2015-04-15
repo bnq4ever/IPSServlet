@@ -24,12 +24,12 @@ public class Parser {
         return magnetics;
     }
     
-    public static double[] parseMagneticValues(String magneticString) {
+    public static double[] parseMagneticFingerprint(String magneticString) {
         
         String[] data = magneticString.split("/");
         double[] magneticValues = new double[3];
         
-            //    ;x/y/magnitude/zaxis/xyaxis;
+            //    magnitude/zaxis/xyaxis
         magneticValues[0] = Double.parseDouble(data[0]);
         magneticValues[1] = Double.parseDouble(data[1]);
         magneticValues[2] = Double.parseDouble(data[2]);
