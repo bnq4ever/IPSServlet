@@ -59,10 +59,10 @@ $(document).ready(function() {
         div.style.backgroundRepeat = "no-repeat";
         var divID = document.createAttribute("id");
         divID.value = deviceID;
+        div.setAttributeNode(divID);
 
         var divClass = document.createAttribute("class");
         divClass.value = "device";
-        div.setAttributeNode(divID);
         div.setAttributeNode(divClass);
         div.style.position = "absolute";
         div.style.top = Math.floor(y) + "px";

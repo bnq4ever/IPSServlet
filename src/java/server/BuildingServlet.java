@@ -39,6 +39,7 @@ public class BuildingServlet extends HttpServlet {
                 double x = Double.parseDouble(request.getParameter("x"));
                 double y = Double.parseDouble(request.getParameter("y"));
                 String fingerprintData = request.getParameter("fingerprint");
+                System.out.println(x + " " + y + " " + fingerprintData);
                 addReferencePoint(out, x, y, fingerprintData);
                 break;
                 
