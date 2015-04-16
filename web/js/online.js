@@ -79,9 +79,9 @@ $(document).ready(function() {
         var img = document.getElementById('map');
         img.style.zIndex = -1;
         img.style.position = "relative";
-        img.style.top = "200px";
+//        img.style.top = "200px";
         img.style.left = "0px";
-        img.style.margin = "auto auto";
+//        img.style.margin = "auto auto";
         img.style.width = "1200px";
     }
 

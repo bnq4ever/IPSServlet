@@ -19,6 +19,8 @@ public class Parser {
         for(String s : split) {
             String[] data = s.split("/");
             //    ;x/y/magnitude/zaxis/xyaxis;
+            
+            System.out.println(Double.parseDouble(data[0]) + " " +  Double.parseDouble(data[1]) + " " + Double.parseDouble(data[2]) + " " + Double.parseDouble(data[3]) + " " + Double.parseDouble(data[4]));
             magnetics.add(new MagneticFingerprint(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]), Double.parseDouble(data[4])));
         }
         return magnetics;

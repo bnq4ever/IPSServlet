@@ -63,7 +63,7 @@ public final class RadioMap {
     public synchronized void addMagneticFingerprints(ArrayList<MagneticFingerprint> magnetics) {
         for(ReferencePoint point : referencePoints) {
             for(MagneticFingerprint magneticFingerprint : magnetics) { //150 - testa runt
-                if(Math.sqrt(Math.pow((point.x - magneticFingerprint.x), 2) + Math.pow((point.y - magneticFingerprint.y), 2)) < 150) {
+                if(Math.sqrt(Math.pow((point.x - magneticFingerprint.x), 2) + Math.pow((point.y - magneticFingerprint.y), 2)) < 75) {
                         point.addMagnetic(magneticFingerprint);
                 }    
             }

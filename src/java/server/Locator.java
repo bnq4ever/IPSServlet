@@ -26,7 +26,8 @@ public class Locator {
     }
     
     public synchronized ReferencePoint locateReferenceArea(String MAC, HashMap<String, Double> fingerprint) {
-        ArrayList<ReferencePoint> relevantPoints = RadioMap.getInstance().getRelevantPoints(fingerprint);
+//        ArrayList<ReferencePoint> relevantPoints = RadioMap.getInstance().getRelevantPoints(fingerprint);
+        ArrayList<ReferencePoint> relevantPoints = RadioMap.getInstance().getReferencePoints();
         //System.out.println("relevantPoints.size(): " + relevantPoints.size());
         System.out.println(fingerprint.size());
         for (String key : fingerprint.keySet()) {
@@ -53,8 +54,10 @@ public class Locator {
         double pointDistance = 0;
         //System.out.println("euclidian");
         for ( String key : fingerprint.keySet() ) {
+            if(p.fingerprint.get(key) != null) {
 //            System.out.println(fingerprint.get(key) + " - " + p.fingerprint.get(key));
-            pointDistance += Math.pow(fingerprint.get(key) - p.fingerprint.get(key), 2);
+                pointDistance += Math.pow(fingerprint.get(key) - p.fingerprint.get(key), 2);
+            }
         }
         return Math.sqrt(pointDistance);
     }
@@ -75,6 +78,7 @@ public class Locator {
         double magnitude = fingerprint[0];
         double zaxis = fingerprint[1];
         double xyaxis = fingerprint[2];
+        //System.out.println(DeviceManager.getInstance().getDevice(MAC).getReferencePoint());
         ArrayList<MagneticFingerprint> fingerprints = DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics();
         double compare = Float.MAX_VALUE;
         MagneticFingerprint nearest = new MagneticFingerprint(90, 1000, 0, 0, 0);

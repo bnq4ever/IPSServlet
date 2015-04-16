@@ -36,7 +36,7 @@ public class ConnectionServlet extends HttpServlet {
         
         String command = request.getParameter("command");
         String MAC = request.getParameter("id");
-        //System.out.println(command);
+        System.out.println(command);
         switch(command) {
             case Command.CONNECT_DEVICE:
                 connectDevice(out, MAC);

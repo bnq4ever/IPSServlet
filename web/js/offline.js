@@ -6,13 +6,9 @@ var startY;
 var endX;
 var endY;
 
-
-
-function addEnd() {
-    buildPath();
-}
-
+//Magentic path start point
 function addStartPoint(x, y) {
+    clearPathPoints();
     var div = document.createElement("DIV");
     var divID = document.createAttribute("id");
     divID.value = "startPoint";
@@ -30,6 +26,7 @@ function addStartPoint(x, y) {
     document.getElementById("map").appendChild(div);
 }
 
+//Magentic path end point
 function addEndPoint(x, y) {
     var div = document.createElement("DIV");
     var divID = document.createAttribute("id");
@@ -46,29 +43,11 @@ function addEndPoint(x, y) {
     div.style.height = "20px";
     div.style.width = "20px";
     document.getElementById("map").appendChild(div);
-    drawLine();
+    drawPath();
 }
 
-function addPoint(x, y) {
-    $("#point").remove();
-    var div = document.createElement("DIV");
-    var divID = document.createAttribute("id");
-    divID.value = "point";
-    div.setAttributeNode(divID);
-    div.style.backgroundImage = "url('imgs/point.png')";
-    div.style.backgroundSize = "20px 20px";
-    div.style.backgroundRepeat = "no-repeat";
-
-    div.style.position = "absolute";
-    div.style.top = y + "px";
-    div.style.left = x + "px";
-    div.style.zIndex = "1";
-    div.style.height = "20px";
-    div.style.width = "20px";
-    document.getElementById("map").appendChild(div);
-}
-
-function drawLine() { // draw a line connecting elements
+// draw a line connecting elements
+function drawPath() { 
     var startPoint = document.getElementById("startPoint");
     var endPoint = document.getElementById("endPoint");
     
@@ -92,6 +71,11 @@ function drawLine() { // draw a line connecting elements
     // make hr
     //var htmlLine = "<div style='padding:0px; margin:0px; height:" + thickness + "px; background-color:black; line-height:1px; position:absolute; left:" + cx + "px; top:" + cy + "px; width:" + length + "px; -moz-transform:rotate(" + angle + "deg); -webkit-transform:rotate(" + angle + "deg); -o-transform:rotate(" + angle + "deg); -ms-transform:rotate(" + angle + "deg); transform:rotate(" + angle + "deg);' />";
     var div = document.createElement("DIV");
+    
+    var divID = document.createAttribute("id");
+    divID.value = "path";
+    div.setAttributeNode(divID);
+    
     div.style.backgroundImage = "url('imgs/line.png')";
     div.style.backgroundRepeat = "repeat-x";
     div.style.padding = "0px";
@@ -113,21 +97,47 @@ function drawLine() { // draw a line connecting elements
     document.getElementById("map").appendChild(div);
 }
 
+function clearPathPoints() {
+    $("#startPoint").remove();
+    $("#endPoint").remove();
+    $("#path").remove();
+}
+
+
+//Bluetooth & Wifi point
+function addPoint(x, y) {
+    $("#point").remove();
+    var div = document.createElement("DIV");
+    var divID = document.createAttribute("id");
+    divID.value = "point";
+    div.setAttributeNode(divID);
+    div.style.backgroundImage = "url('imgs/point.png')";
+    div.style.backgroundSize = "20px 20px";
+    div.style.backgroundRepeat = "no-repeat";
+
+    div.style.position = "absolute";
+    div.style.top = y + "px";
+    div.style.left = x + "px";
+    div.style.zIndex = "1";
+    div.style.height = "20px";
+    div.style.width = "20px";
+    document.getElementById("map").appendChild(div);
+}
+
+function clearPoint() {
+    $("#point").remove();
+}
 
 $(document).ready(function () {
     
     $("#map").on("click", "#map_img", function (event) {
-        var xClick = event.clientX + window.pageXOffset - 10;// - 219;//- 219
-        var yClick = event.clientY + window.pageYOffset - 10;// - 65;//- 365
         
+        var xClick = event.clientX + window.pageXOffset - 10;//10;// - 219;//- 219
+        var yClick = event.clientY + window.pageYOffset - 10;//10;// - 65;//- 365
+        
+        //Androidanrop med klickkoordinater
         JSInterface.getClickCoordinates(xClick, yClick);
+        
     });
-
-    function buildPath() {
-
-    }
-    function paintStuffOnMap() {
-
-    }
-
+    
 });

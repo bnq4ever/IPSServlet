@@ -18,6 +18,7 @@ public class ReferencePoint {
         this.x = x;
         this.y = y;
         this.fingerprint = fingerprint;
+        magnetics = new ArrayList<>();
     }
     
     public void addMagnetic(MagneticFingerprint mf) {

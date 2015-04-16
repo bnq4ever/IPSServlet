@@ -35,6 +35,7 @@ public class Command {
     public static final String DELETE_DEVICE = "DELETE_DEVICE";
     public static final String BUILD_FINGERPRINT = "BUILD_FINGERPRINT";
     public static final String LOCATE_DEVICE = "LOCATE_DEVICE";
+    public static final String DEVICE_LOCATED = "DEVICE_LOCATED";
     
     //WEBPAGE REQUESTS
     public static final String GET_CONNECTED_DEVICES = "GET_CONNECTED_DEVICES";

@@ -130,12 +130,15 @@ public final class DeviceManager {
         
         device.setX(fingerprint.x);
         device.setY(fingerprint.y);
-        device.addPreviousPosition(fingerprint);
+        //device.addPreviousPosition(fingerprint);
     }
     
     public synchronized void updateReferencePosition(String MAC, ReferencePoint newReferencePoint) {
         Device device = getDevice(MAC);
         device.setReferencePoint(newReferencePoint);
+       // device.setX(newReferencePoint.x);
+       // device.setY(newReferencePoint.y);
+        //System.out.println(newReferencePoint.x + " " + newReferencePoint.y);
     }
     
     public synchronized void deleteDevice(String MAC) {

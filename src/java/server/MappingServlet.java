@@ -73,6 +73,7 @@ public class MappingServlet extends HttpServlet {
     protected void locateReferenceArea(PrintWriter out, String MAC, HashMap<String, Double> fingerprint) {
         ReferencePoint locatedPoint = Locator.getInstance().locateReferenceArea(MAC, fingerprint);
         DeviceManager.getInstance().updateReferencePosition(MAC, locatedPoint);
+        out.println(locatedPoint.x + "," + locatedPoint.y);
     }
     
 
