@@ -18,8 +18,8 @@ function addStartPoint(x, y) {
     div.style.backgroundRepeat = "no-repeat";
 
     div.style.position = "absolute";
-    div.style.top = y + "px";
-    div.style.left = x + "px";
+    div.style.top = y - 10 + "px";
+    div.style.left = x - 10 + "px";
     div.style.zIndex = "1";
     div.style.height = "20px";
     div.style.width = "20px";
@@ -37,8 +37,8 @@ function addEndPoint(x, y) {
     div.style.backgroundRepeat = "no-repeat";
 
     div.style.position = "absolute";
-    div.style.top = y + "px";
-    div.style.left = x + "px";
+    div.style.top = y - 10 + "px";
+    div.style.left = x - 10 + "px";
     div.style.zIndex = "1";
     div.style.height = "20px";
     div.style.width = "20px";
@@ -111,16 +111,16 @@ function addPoint(x, y) {
     var divID = document.createAttribute("id");
     divID.value = "point";
     div.setAttributeNode(divID);
-    div.style.backgroundImage = "url('imgs/point.png')";
-    div.style.backgroundSize = "20px 20px";
+    div.style.backgroundImage = "url('imgs/pointArea.png')";
+    div.style.backgroundSize = "150px 150px";
     div.style.backgroundRepeat = "no-repeat";
 
     div.style.position = "absolute";
-    div.style.top = y + "px";
-    div.style.left = x + "px";
+    div.style.top = y -75 + "px";
+    div.style.left = x -75 + "px";
     div.style.zIndex = "1";
-    div.style.height = "20px";
-    div.style.width = "20px";
+    div.style.height = "150px";
+    div.style.width = "150px";
     document.getElementById("map").appendChild(div);
 }
 function addMagneticPoints(startX, startY, endX, endY, nbrOfSamples) {
@@ -134,8 +134,8 @@ function addMagneticPoints(startX, startY, endX, endY, nbrOfSamples) {
         div.style.backgroundRepeat = "no-repeat";
 
         div.style.position = "absolute";
-        div.style.top = (startY + ((endY - startY)/nbrOfSamples) * i) + 5 + "px";
-        div.style.left = (startX + ((endX - startX)/nbrOfSamples) * i) + 5 + "px";
+        div.style.top = (startY + ((endY - startY)/nbrOfSamples) * i) - 5 + "px";
+        div.style.left = (startX + ((endX - startX)/nbrOfSamples) * i) - 5 + "px";
         div.style.zIndex = "1";
         div.style.height = "10px";
         div.style.width = "10px";
@@ -151,8 +151,8 @@ function clearPoint() {
 $(document).ready(function () {
     $("#map").on("click", "#map_img", function (event) {
         
-        var xClick = event.clientX + window.pageXOffset - 10;//10;// - 219;//- 219
-        var yClick = event.clientY + window.pageYOffset - 10;//10;// - 65;//- 365
+        var xClick = event.clientX + window.pageXOffset;//10;// - 219;//- 219
+        var yClick = event.clientY + window.pageYOffset;//10;// - 65;//- 365
         
         //Androidanrop med klickkoordinater
         JSInterface.getClickCoordinates(xClick, yClick);
