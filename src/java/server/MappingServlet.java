@@ -71,14 +71,20 @@ public class MappingServlet extends HttpServlet {
         locates closest RSS reference point. NOT USED!
     */
     protected void locateReferenceArea(PrintWriter out, String MAC, HashMap<String, Double> fingerprint) {
+        
+        removeUnreliable(fingerprint);
         ReferencePoint locatedPoint = Locator.getInstance().locateReferenceArea(MAC, fingerprint);
         DeviceManager.getInstance().updateReferencePosition(MAC, locatedPoint);
+        
         out.println(locatedPoint.x + "," + locatedPoint.y);
+        
     }
     
 
     protected void locateMagneticPoint(PrintWriter out, String MAC, double[] fingerprint) {
+        
         Locator.getInstance().updatePosition(MAC, fingerprint);
+        
     }
 
     protected void getAllDevices(PrintWriter out) {
@@ -89,18 +95,21 @@ public class MappingServlet extends HttpServlet {
         for (Device device : devices) {
             array.add(Json.createObjectBuilder().add("id", device.getId()).add("name", device.getName()).add("x", device.getX()).add("y", device.getY()));
         }
+        
         out.println(Json.createObjectBuilder().add("devices", array).build());
 
     }
 
     protected void getAllPositions(PrintWriter out) {
+        
         ArrayList<Device> devices = DeviceManager.getInstance().getConnectedDevices();
         JsonArrayBuilder array = Json.createArrayBuilder();
 
-        for (Device device : devices) {
+        for (Device device : devices)
             array.add(Json.createObjectBuilder().add("id", device.getId()).add("x", device.getX()).add("y", device.getY()));
-        }
+        
         out.println(Json.createObjectBuilder().add("devices", array).build());
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -141,4 +150,16 @@ public class MappingServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private void removeUnreliable(HashMap<String, Double> fingerprint) {
+        
+        for (String key : fingerprint.keySet() ) {
+        
+            if (fingerprint.get(key) < -90)
+                fingerprint.remove(key);
+        
+        }
+        
+    }
+    
 }

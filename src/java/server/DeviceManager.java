@@ -111,18 +111,18 @@ public final class DeviceManager {
         return devices.size();
     }
     
-    public synchronized void moveDevice(String MAC, float angle, float stepLength) {
-        Device device = connectedDevices.get(connectedDevices.indexOf(new Device(MAC)));
-        device.setDirection(device.getDirection() + angle);
-        double x = device.getX();
-        double y = device.getY();
-        
-        x += (double) Math.cos(Math.toRadians(device.getDirection()))*stepLength;
-        y += (double) Math.sin(Math.toRadians(device.getDirection()))*stepLength;
-        
-        device.setX(x);
-        device.setY(y);
-    }
+//    public synchronized void moveDevice(String MAC, float angle, float stepLength) {
+//        Device device = connectedDevices.get(connectedDevices.indexOf(new Device(MAC)));
+//        device.setDirection(device.getDirection() + angle);
+//        double x = device.getX();
+//        double y = device.getY();
+//        
+//        x += (double) Math.cos(Math.toRadians(device.getDirection()))*stepLength;
+//        y += (double) Math.sin(Math.toRadians(device.getDirection()))*stepLength;
+//        
+//        device.setX(x);
+//        device.setY(y);
+//    }
     
 
     public synchronized void updatePosition(String MAC, MagneticFingerprint fingerprint) {
@@ -136,8 +136,10 @@ public final class DeviceManager {
     public synchronized void updateReferencePosition(String MAC, ReferencePoint newReferencePoint) {
         Device device = getDevice(MAC);
         device.setReferencePoint(newReferencePoint);
-       // device.setX(newReferencePoint.x);
-       // device.setY(newReferencePoint.y);
+        //
+            device.setX(newReferencePoint.x);
+            device.setY(newReferencePoint.y);
+        //
         //System.out.println(newReferencePoint.x + " " + newReferencePoint.y);
     }
     

@@ -44,6 +44,7 @@ public final class RadioMap {
     }
     
     public synchronized void addReferencePoint(ReferencePoint p) {
+        removeUnreliable(p);
         ReferencePoint point = getReferencePoint(p.x, p.y);
         if (point != null)
             point.fingerprint = p.fingerprint;
@@ -80,5 +81,13 @@ public final class RadioMap {
     
     public synchronized void removeReferencePoint(double x, double y) {
         referencePoints.remove(getReferencePoint(x, y));
+    }
+
+    private void removeUnreliable(ReferencePoint p) {
+        for (String key : p.fingerprint.keySet() ) {
+            if (p.fingerprint.get(key) < 90)
+                p.fingerprint.remove(key);
+        }
+        
     }
 }
