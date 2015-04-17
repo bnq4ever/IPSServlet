@@ -7,12 +7,13 @@ package server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *
  * @author Hampus
  */
-public final class RadioMap {
+public class RadioMap {
     private static RadioMap _instance;
     private final ArrayList<ReferencePoint> referencePoints;
     
@@ -84,10 +85,18 @@ public final class RadioMap {
     }
 
     private void removeUnreliable(ReferencePoint p) {
+        ArrayList<String> toRemove = new ArrayList<>();
+
         for (String key : p.fingerprint.keySet() ) {
-            if (p.fingerprint.get(key) < 90)
-                p.fingerprint.remove(key);
+        
+            if ((double)p.fingerprint.get(key) < -90)
+                toRemove.add(key);
+        
         }
         
+        for (String key : toRemove)
+            p.fingerprint.remove(key);
+        
     }
+    
 }

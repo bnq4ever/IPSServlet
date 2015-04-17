@@ -48,8 +48,8 @@ $(document).ready(function() {
         var div = document.getElementById(id);
         var x = connectedDevices[id].x;
         var y = connectedDevices[id].y;
-        div.style.left = x + "px";
-        div.style.top = y + "px";
+        div.style.left = x - 10 + "px";
+        div.style.top = y - 10 + "px";
     }
 
     function generateDiv(deviceID, name, x, y) {

@@ -153,12 +153,17 @@ public class MappingServlet extends HttpServlet {
 
     private void removeUnreliable(HashMap<String, Double> fingerprint) {
         
+        ArrayList<String> toRemove = new ArrayList<>();
+
         for (String key : fingerprint.keySet() ) {
         
-            if (fingerprint.get(key) < -90)
-                fingerprint.remove(key);
+            if ((double)fingerprint.get(key) < -90)
+                toRemove.add(key);
         
         }
+        
+        for (String key : toRemove)
+            fingerprint.remove(key);
         
     }
     

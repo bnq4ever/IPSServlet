@@ -58,7 +58,7 @@ public class Locator {
 //            System.out.println(fingerprint.get(key) + " - " + p.fingerprint.get(key));
                 pointDistance += Math.pow(fingerprint.get(key) - p.fingerprint.get(key), 2);
             } else {
-                pointDistance += Math.pow(fingerprint.get(key) - 0, 2); //unknown APs
+                pointDistance += Math.pow(fingerprint.get(key) + 90, 2); //unknown APs
             }
         }
         return Math.sqrt(pointDistance);
