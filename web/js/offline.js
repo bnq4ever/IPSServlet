@@ -123,13 +123,32 @@ function addPoint(x, y) {
     div.style.width = "20px";
     document.getElementById("map").appendChild(div);
 }
+function addMagneticPoints(startX, startY, endX, endY, nbrOfSamples) {
+    for (var i = 0; i < nbrOfSamples; i++) {        
+        var div = document.createElement("DIV");
+//        var divClass = document.createAttribute("class");
+//        divClass.value = "magneticPoint";
+//        div.setAttributeNode(divClass);
+        div.style.backgroundImage = "url('imgs/magneticPoint.png')";
+        div.style.backgroundSize = "10px 10px";
+        div.style.backgroundRepeat = "no-repeat";
+
+        div.style.position = "absolute";
+        div.style.top = (startY + ((endY - startY)/nbrOfSamples) * i) + 5 + "px";
+        div.style.left = (startX + ((endX - startX)/nbrOfSamples) * i) + 5 + "px";
+        div.style.zIndex = "1";
+        div.style.height = "10px";
+        div.style.width = "10px";
+        
+        document.getElementById("map").appendChild(div);
+    }
+}
 
 function clearPoint() {
     $("#point").remove();
 }
 
 $(document).ready(function () {
-    
     $("#map").on("click", "#map_img", function (event) {
         
         var xClick = event.clientX + window.pageXOffset - 10;//10;// - 219;//- 219
