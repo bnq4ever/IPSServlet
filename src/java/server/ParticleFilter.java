@@ -18,15 +18,35 @@ public class ParticleFilter {
     Particle:   x, y, direction, speed, weight    
     */
     
-    public ParticleFilter() {
-        
-    }
-    
-    public void resetParticles(double x, double y) {
+    public ParticleFilter(double x, double y) {
         for(int i = 0; i < 100; i++) {
             double angle = Math.random()*360;
             //particles.add(new double[]{x+Math.random()*(x-40), y+Math.random()*(y-40), angle, 10*Math.random()});
             particles.add(new Particle(x+Math.random()*(x-40), y+Math.random()*(y-40), angle, 10*Math.random(), 1));
+        }
+    }
+    
+    public void resetParticles(double x, double y) {
+        //ArrayList<Particle> removed = new ArrayList<>();
+        int nbrDeleted = 0;
+        ArrayList<Particle> prioritized = new ArrayList<>();
+        for(Particle p : particles) {
+            if(p.weight < 0.5) {
+                particles.remove(p);
+                nbrDeleted++;
+            }else if(p.weight > 0.8) {
+                prioritized.add(p);
+            }
+            p.weight = 1;
+        }
+        
+        for(int i = 0; i < nbrDeleted; i++) {
+            if(i < prioritized.size()-1) {
+                double angle = Math.random()*360;
+                particles.add(new Particle(prioritized.get(i).x, prioritized.get(i).y, angle, 10*Math.random(), 1));
+            }else{
+                i=0;
+            }
         }
     }
     
@@ -51,8 +71,15 @@ public class ParticleFilter {
         }
     }
     
-    public void updateWeights() {
-        
+    public void updateWeights(MagneticFingerprint measurement) {
+        for(Particle p : particles) {
+           p.weight = Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2));
+           p.weight = 1 / particles.size(); //Normalize weights.
+        }
+    }
+    
+    public ArrayList<Particle> getParticles() {
+        return particles;
     }
     
     
