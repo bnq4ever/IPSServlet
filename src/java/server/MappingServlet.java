@@ -68,7 +68,7 @@ public class MappingServlet extends HttpServlet {
     }
     
     /*
-        locates closest RSS reference point. NOT USED!
+        locates closest RSS reference point.
     */
     protected void locateReferenceArea(PrintWriter out, String MAC, HashMap<String, Double> fingerprint) {
         
