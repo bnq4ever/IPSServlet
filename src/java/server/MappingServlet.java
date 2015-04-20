@@ -54,6 +54,7 @@ public class MappingServlet extends HttpServlet {
                 
             case Command.GET_PARTICLES:
                 MAC = request.getParameter("id");
+                System.out.println(MAC + " " + command);
                 getParticles(out, MAC);
                 break;
                 
@@ -174,7 +175,7 @@ public class MappingServlet extends HttpServlet {
     }
 
     private void getParticles(PrintWriter out, String MAC) {
-        out.write(DeviceManager.getInstance().getDevice(MAC).getFilter().toJSON());
+        out.println(DeviceManager.getInstance().getDevice(MAC).getFilter().toJSON());
     }
     
 }
