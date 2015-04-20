@@ -19,15 +19,18 @@ class Device {
     private ArrayList<MagneticFingerprint> previousPositions;//HISTORICAL COORDINATES
     private double direction;
     private ReferencePoint referencePoint;
+    private ParticleFilter filter;
     
     public Device(String id) {
         this.id = id;
         this.name = "";
+        filter = new ParticleFilter(0,0);
     }
     
     public Device(String id, String name) {
         this.id = id;
         this.name = name;
+        filter = new ParticleFilter(0,0);
     }
     
     public String getName() {
@@ -76,6 +79,10 @@ class Device {
     
     public void addPreviousPosition(MagneticFingerprint fingerprint) {
         previousPositions.add(fingerprint);
+    }
+    
+    public ParticleFilter getFilter() {
+        return filter;
     }
     
 //    @Override
