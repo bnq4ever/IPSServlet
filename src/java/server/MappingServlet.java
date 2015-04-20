@@ -74,7 +74,7 @@ public class MappingServlet extends HttpServlet {
     }
     
     /*
-        locates closest RSS reference point. NOT USED!
+        locates closest RSS reference point.
     */
     protected void locateReferenceArea(PrintWriter out, String MAC, HashMap<String, Double> fingerprint) {
         
@@ -174,8 +174,7 @@ public class MappingServlet extends HttpServlet {
     }
 
     private void getParticles(PrintWriter out, String MAC) {
-        ArrayList<Particle> particles = DeviceManager.getInstance().getDevice(MAC).getFilter().getParticles();
-        
+        out.write(DeviceManager.getInstance().getDevice(MAC).getFilter().toJSON());
     }
     
 }

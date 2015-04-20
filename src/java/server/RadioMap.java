@@ -32,11 +32,11 @@ public class RadioMap {
         return tmp;
     }
     
-    public synchronized ArrayList<ReferencePoint> getRelevantPoints(HashMap<String, Double> deviceFingerprint) {
+    public synchronized ArrayList<ReferencePoint> getRelevantPoints(double x, double y, HashMap<String, Double> deviceFingerprint) {
         ArrayList<ReferencePoint> result = new ArrayList<>();
         for (ReferencePoint point : referencePoints) {
             for (String key : deviceFingerprint.keySet()) {
-                if (!point.fingerprint.containsKey(key))
+                if (!point.fingerprint.containsKey(key) || (Math.sqrt(Math.pow((point.x - x), 2) + Math.pow((point.y - y), 2)) > 300))
                     break;
             }
             result.add(point);
