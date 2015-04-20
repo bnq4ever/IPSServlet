@@ -70,6 +70,16 @@ public class Locator {
     */
     public synchronized void updatePosition(String MAC, double[] fingerprint) {
         MagneticFingerprint location = getNearestMagnetic(MAC, fingerprint);
+        double timeDiff = System.currentTimeMillis() - DeviceManager.getInstance().getDevice(MAC).lastMeasurement;
+        if(DeviceManager.getInstance().getDevice(MAC).lastMeasurement == 0) {
+            timeDiff = 1;
+            //DeviceManager.getInstance().getDevice(MAC).getFilter().findClosestFingerprints(DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics());
+        }else{
+        DeviceManager.getInstance().getDevice(MAC).getFilter().resetParticles(timeDiff);
+        DeviceManager.getInstance().getDevice(MAC).getFilter().findClosestFingerprints(DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics());
+        DeviceManager.getInstance().getDevice(MAC).getFilter().updateWeights(location);
+        }
+        
         DeviceManager.getInstance().updatePosition(MAC, location);
     }
     
