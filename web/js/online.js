@@ -18,7 +18,7 @@ $(document).ready(function() {
 
     function init() {
         setMap();
-        initMatrix();
+        //initMatrix();
     }
 
     function updateMapDevices() {

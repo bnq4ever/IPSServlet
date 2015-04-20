@@ -19,6 +19,7 @@ public class ReferencePoint {
         this.y = y;
         this.fingerprint = fingerprint;
         magnetics = new ArrayList<>();
+        //magnetics = Generate.MagneticFingerprints();
     }
     
     public void addMagnetic(MagneticFingerprint mf) {

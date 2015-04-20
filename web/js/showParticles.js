@@ -1,13 +1,12 @@
-var Command = new Command();
 var particles = {};
 var MAC = "88:32:9B:B6:AB:56";
 
 $(document).ready(function() {
 
-    window.onload = init;
-    window.onresize = resize;
+    //window.onload = init;
+    //window.onresize = resize;
     
-    setInterval(updateParticles, 10);
+    setInterval(updateParticles, 100);
     setInterval(getParticles(MAC));
 
     function updateParticles() {
