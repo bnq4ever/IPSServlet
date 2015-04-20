@@ -23,7 +23,7 @@ public class ParticleFilter {
         for(int i = 0; i < 100; i++) {
             double angle = Math.random()*360;
             //particles.add(new double[]{x+Math.random()*(x-40), y+Math.random()*(y-40), angle, 10*Math.random()});
-            particles.add(new Particle(x+Math.random()*(x-300), y+Math.random()*(y-300), angle, 10*Math.random(), 1));
+            particles.add(new Particle(x+Math.random()*(x+1000), y+Math.random()*(y+1000), angle, 10*Math.random(), 1));
         }
     }
     
