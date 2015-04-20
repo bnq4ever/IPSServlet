@@ -139,6 +139,7 @@ $(document).ready(function() {
             }
         });
     }
+    
 
 //    function resize() {
 //        var width = $(window).height();
