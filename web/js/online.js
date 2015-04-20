@@ -4,7 +4,7 @@ var Command = new Command();
 $(document).ready(function() {
 
     window.onload = init;
-    window.onresize = resize;
+//    window.onresize = resize;
     
     setInterval(getConnectedDevices, 10);
     setInterval(updateMapDevices, 10);
@@ -122,6 +122,7 @@ $(document).ready(function() {
             data:{command: "GET_CONNECTED_DEVICES"},
             success: function(response) {
                 var tmp = {};
+                alert(response);
                 var json = $.parseJSON(response);
                 var jsonArray = json['devices'];
                 for (var key in jsonArray) {
@@ -129,7 +130,6 @@ $(document).ready(function() {
                     var name = jsonArray[key].name;
                     var x = jsonArray[key].x;
                     var y = jsonArray[key].y;
-
                     tmp[id] = new Device(id, name, x, y);
                 }
                 connectedDevices = tmp;
@@ -140,12 +140,12 @@ $(document).ready(function() {
         });
     }
 
-    function resize() {
-        var width = $(window).height();
-        var height = $(window).width();
-        System.out.println(width + " " + height);
-
-    }
+//    function resize() {
+//        var width = $(window).height();
+//        var height = $(window).width();
+//        System.out.println(width + " " + height);
+//
+//    }
 
     var Device = function(id, name, x, y) {
         this.id = id;

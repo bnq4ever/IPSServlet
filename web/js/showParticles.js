@@ -10,7 +10,7 @@ $(document).ready(function() {
     setInterval(getParticles(MAC));
 
     function updateParticles() {
-        $("#mappingArea").empty();
+        //$("#mappingArea").empty();
         
         for (var id in particles) {            
             generateDiv(particles[id].x, particles[id].y, particles[id].weight);

@@ -102,7 +102,6 @@ public class MappingServlet extends HttpServlet {
         for (Device device : devices) {
             array.add(Json.createObjectBuilder().add("id", device.getId()).add("name", device.getName()).add("x", device.getX()).add("y", device.getY()));
         }
-        
         out.println(Json.createObjectBuilder().add("devices", array).build());
 
     }
