@@ -20,6 +20,7 @@ class Device {
     private double direction;
     private ReferencePoint referencePoint;
     private ParticleFilter filter;
+    public double lastMeasurement = 0;
     
     public Device(String id) {
         this.id = id;
@@ -84,6 +85,7 @@ class Device {
     public ParticleFilter getFilter() {
         return filter;
     }
+   
     
 //    @Override
 //    public boolean equals(Device device) {

@@ -126,8 +126,7 @@ public final class DeviceManager {
     
 
     public synchronized void updatePosition(String MAC, MagneticFingerprint fingerprint) {
-        Device device = connectedDevices.get(connectedDevices.indexOf(new Device(MAC)));
-        
+        Device device = connectedDevices.get(connectedDevices.indexOf(new Device(MAC)));    
         device.setX(fingerprint.x);
         device.setY(fingerprint.y);
         //device.addPreviousPosition(fingerprint);
