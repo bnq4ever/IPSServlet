@@ -40,4 +40,7 @@ public class Command {
     //WEBPAGE REQUESTS
     public static final String GET_CONNECTED_DEVICES = "GET_CONNECTED_DEVICES";
     public static final String GET_POSITIONS = "GET_POSITIONS";
+    
+    //PARTICLE FILTER
+    public static final String GET_PARTICLES = "GET_PARTICLES";
 }

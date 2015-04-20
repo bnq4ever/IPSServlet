@@ -33,6 +33,7 @@ public class MappingServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         String command = request.getParameter("command");
+        String MAC;
         switch (command) {
             
             case Command.GET_CONNECTED_DEVICES:
@@ -44,11 +45,16 @@ public class MappingServlet extends HttpServlet {
                 break;
                 
             case Command.LOCATE_DEVICE:
-                String MAC = request.getParameter("id");
+                MAC = request.getParameter("id");
                 String dataType = request.getParameter("dataType");
                 String data = request.getParameter("data");
                 
                 handleLocateDeviceRequest(out, MAC, dataType, data);
+                break;
+                
+            case Command.GET_PARTICLES:
+                MAC = request.getParameter("id");
+                getParticles(out, MAC);
                 break;
                 
         }
@@ -157,13 +163,18 @@ public class MappingServlet extends HttpServlet {
 
         for (String key : fingerprint.keySet() ) {
         
-            if ((double)fingerprint.get(key) < -90)
+            if ((double)fingerprint.get(key) < -80)
                 toRemove.add(key);
         
         }
         
         for (String key : toRemove)
             fingerprint.remove(key);
+        
+    }
+
+    private void getParticles(PrintWriter out, String MAC) {
+        ArrayList<Particle> particles = DeviceManager.getInstance().getDevice(MAC).getFilter().getParticles();
         
     }
     

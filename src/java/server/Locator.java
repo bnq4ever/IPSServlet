@@ -26,8 +26,8 @@ public class Locator {
     }
     
     public synchronized ReferencePoint locateReferenceArea(String MAC, HashMap<String, Double> fingerprint) {
-//        ArrayList<ReferencePoint> relevantPoints = RadioMap.getInstance().getRelevantPoints(fingerprint);
-        ArrayList<ReferencePoint> relevantPoints = RadioMap.getInstance().getReferencePoints();
+        ArrayList<ReferencePoint> relevantPoints = RadioMap.getInstance().getRelevantPoints(fingerprint);
+        //ArrayList<ReferencePoint> relevantPoints = RadioMap.getInstance().getReferencePoints();
         //System.out.println("relevantPoints.size(): " + relevantPoints.size());
         System.out.println(fingerprint.size());
         for (String key : fingerprint.keySet()) {
@@ -57,9 +57,10 @@ public class Locator {
             if(p.fingerprint.get(key) != null) {
 //            System.out.println(fingerprint.get(key) + " - " + p.fingerprint.get(key));
                 pointDistance += Math.pow(fingerprint.get(key) - p.fingerprint.get(key), 2);
-            } else {
-                pointDistance += Math.pow(fingerprint.get(key) + 90, 2); //unknown APs
             }
+//             else {
+//                pointDistance += Math.pow(fingerprint.get(key) + 90, 2); //unknown APs
+//            }
         }
         return Math.sqrt(pointDistance);
     }
