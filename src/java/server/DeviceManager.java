@@ -34,7 +34,7 @@ public final class DeviceManager {
     
     public synchronized boolean exists(String deviceId) {
         //System.out.println("exists");
-        return devices.contains(new Device(deviceId));
+        return devices.contains(getDevice(deviceId));
     }
     
     public synchronized void addDevice(String deviceId, String name) {
@@ -133,7 +133,7 @@ public final class DeviceManager {
     
 
     public synchronized void updatePosition(String MAC, MagneticFingerprint fingerprint) {
-        Device device = connectedDevices.get(connectedDevices.indexOf(new Device(MAC)));    
+        Device device = getDevice(MAC);
         device.setX(fingerprint.x);
         device.setY(fingerprint.y);
         //device.addPreviousPosition(fingerprint);

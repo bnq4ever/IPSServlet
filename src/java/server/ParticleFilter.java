@@ -6,6 +6,9 @@
 package server;
 
 import java.util.ArrayList;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 
 /**
  *
@@ -13,13 +16,14 @@ import java.util.ArrayList;
  */
 public class ParticleFilter {
     //private ArrayList<double[]> particles = new ArrayList<double[]>();
-    private ArrayList<Particle> particles = new ArrayList<Particle>();
+    private ArrayList<Particle> particles;
     //private ArrayList<MagneticFingerprint> fingerprints; 
     /*
     Particle:   x, y, direction, speed, weight    
     */
     
     public ParticleFilter(double x, double y) {
+        particles = new ArrayList<>();
         for(int i = 0; i < 1000; i++) {
             double angle = Math.random()*360;
             //particles.add(new double[]{x+Math.random()*(x-40), y+Math.random()*(y-40), angle, 10*Math.random()});
@@ -74,7 +78,7 @@ public class ParticleFilter {
                 double dist = Math.sqrt(Math.pow(p.x-f.x, 2) + Math.pow(p.y-f.y, 2));
                 if(dist < shortest) {
                     shortest = dist;
-                    p.setClosestFingerprint(f);
+                    p.closestFingerprint = f;
                 }
             }
         }
@@ -90,6 +94,16 @@ public class ParticleFilter {
     public ArrayList<Particle> getParticles() {
         return particles;
     }
+
+    public JsonObject toJSON() {
+        
+        JsonArrayBuilder array = Json.createArrayBuilder();
+
+        for (Particle p : particles)
+            array.add(Json.createObjectBuilder().add("x", p.x).add("y", p.y).add("weight", p.weight).add("direction", p.direction).add("speed", p.speed));
+                    
+        return Json.createObjectBuilder().add("particles", array).build();
+    }   
     
     public class Particle {
         public double x;
@@ -107,9 +121,5 @@ public class ParticleFilter {
             this.weight = weight;
             closestFingerprint = new MagneticFingerprint(0, 0, 0, 0, 0);
         }
-        
-        public void setClosestFingerprint(MagneticFingerprint f) {
-            closestFingerprint = f;
-        }
-    }    
+   }
 }

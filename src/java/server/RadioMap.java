@@ -57,8 +57,7 @@ public class RadioMap {
         }
         System.out.println(sb.toString());
     }
-    
-    
+       
     /*
         Adds magnetic fingerprints to map and connects them to nearby RSSReferencepoint.
     */
@@ -89,7 +88,7 @@ public class RadioMap {
 
         for (String key : p.fingerprint.keySet() ) {
         
-            if ((double)p.fingerprint.get(key) < -90)
+            if ((double)p.fingerprint.get(key) < -80)
                 toRemove.add(key);
         
         }
