@@ -20,15 +20,12 @@ public class ParticleFilter {
     */
     
     public ParticleFilter(double x, double y) {
-        for(int i = 0; i < 100; i++) {
+        for(int i = 0; i < 1000; i++) {
             double angle = Math.random()*360;
             //particles.add(new double[]{x+Math.random()*(x-40), y+Math.random()*(y-40), angle, 10*Math.random()});
             x = Math.random()*1000;
             y = Math.random()*1000;
-            particles.add(new Particle(x, y, angle, 10*Math.random(), 1)); 
-        }
-        for(Particle p : particles) {
-            System.out.println("Hej: "+p.x);
+            particles.add(new Particle(x, y, angle, 50*Math.random(), 1)); 
         }
     }
     
@@ -42,13 +39,12 @@ public class ParticleFilter {
             if(p.weight > highestWeight) {
                 indexofhighest = particles.indexOf(p);
             }
-            if(p.weight < 0.05) {
+            if(p.weight < 0.2) {
                 removed.add(p);
                 nbrDeleted++;
-            }else if(p.weight > 0.2) {
+            }else if(p.weight > 0.40) {
                 prioritized.add(p);
             }
-            //System.out.println("Weight: "+p.weight);
             p.weight = 1;
         }
         prioritized.add(particles.get(indexofhighest));
@@ -56,7 +52,7 @@ public class ParticleFilter {
         for(int i = 0; i < nbrDeleted; i++) {
 //            if(i < prioritized.size()) {
                 double angle = Math.random()*360;
-                particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, 10*Math.random(), 1));
+                particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, 50*Math.random(), 1));
 //            }           
         }
         moveParticles(timeDiff);
@@ -64,11 +60,10 @@ public class ParticleFilter {
     }
     
     public void moveParticles(double timeDiff) {
-        System.out.println("timeDiff: "+timeDiff);
         //for(double[] p : particles) {
         for(Particle p : particles) {
-            p.x = timeDiff*p.speed*Math.cos(Math.toRadians(p.direction));
-            p.y = timeDiff*p.speed*Math.sin(Math.toRadians(p.direction));
+            p.x += p.speed*Math.cos(Math.toRadians(p.direction));
+            p.y += p.speed*Math.sin(Math.toRadians(p.direction));
         }
     }
     
@@ -95,7 +90,6 @@ public class ParticleFilter {
     public ArrayList<Particle> getParticles() {
         return particles;
     }
-    
     
     public class Particle {
         public double x;
