@@ -6,11 +6,11 @@ $(document).ready(function() {
     //window.onload = init;
     //window.onresize = resize;
     
-    setInterval(updateParticles, 1000);
-    setInterval(getParticles, 1000);
+    //setInterval(updateParticles, 500);
+    //setInterval(getParticles, 500);
 
     function updateParticles() {
-        //$("#mappingArea").empty();
+        $("#mappingArea").empty();
         
         for (var id in particles) {            
             generateDiv(particles[id].x, particles[id].y, particles[id].weight);
@@ -20,7 +20,7 @@ $(document).ready(function() {
     function generateDiv(x, y, weight) {
         var size = weight * 20;
         var div = document.createElement("DIV");
-        div.style.backgroundImage = "url('imgs/circle.png')";
+        div.style.backgroundImage = "url('imgs/particle.png')";
         div.style.backgroundSize = size + "px";
         div.style.backgroundRepeat = "no-repeat";
         var divID = document.createAttribute("id");
@@ -62,7 +62,7 @@ $(document).ready(function() {
                 particles = tmp;
             },
             error: function(xhr) {
-              alert("error");
+              //alert("error");
             }
         });
     }
