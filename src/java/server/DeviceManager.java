@@ -42,8 +42,9 @@ public final class DeviceManager {
 //        db.openConnection();
 //        db.addDevice(deviceId, name);
 //        db.closeConnection();
-        
-        devices.add(new Device(deviceId, name));
+        Device device = new Device(deviceId, name);
+        device.startFilter();
+        devices.add(device);
     }
     
     public synchronized boolean isConnected(String deviceId) {
@@ -85,7 +86,13 @@ public final class DeviceManager {
     }
     
     public synchronized Device getDevice(String deviceId) {
-        return devices.get(devices.indexOf(new Device(deviceId)));
+        for(Device d : devices) {
+            if(d.getID().equals(deviceId)) {
+                return d;
+            }
+        }
+        //return devices.get(devices.indexOf(new Device(deviceId)));
+        return null;
     }
     
     //Update DB data in interval or at shutdown

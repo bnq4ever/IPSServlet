@@ -73,13 +73,18 @@ public class Locator {
         double timeDiff = System.currentTimeMillis() - DeviceManager.getInstance().getDevice(MAC).lastMeasurement;
         if(DeviceManager.getInstance().getDevice(MAC).lastMeasurement == 0) {
             timeDiff = 1;
+            DeviceManager.getInstance().getDevice(MAC).lastMeasurement = System.currentTimeMillis();
+            DeviceManager.getInstance().getDevice(MAC).getFilter().updateWeights(location);
             //DeviceManager.getInstance().getDevice(MAC).getFilter().findClosestFingerprints(DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics());
         }else{
+        DeviceManager.getInstance().getDevice(MAC).lastMeasurement = System.currentTimeMillis();
         DeviceManager.getInstance().getDevice(MAC).getFilter().resetParticles(timeDiff);
+        System.out.println("particles reset");
         DeviceManager.getInstance().getDevice(MAC).getFilter().findClosestFingerprints(DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics());
+        System.out.println("closest fingerprints found");
         DeviceManager.getInstance().getDevice(MAC).getFilter().updateWeights(location);
+        System.out.println("Weights updated");
         }
-        
         DeviceManager.getInstance().updatePosition(MAC, location);
     }
     

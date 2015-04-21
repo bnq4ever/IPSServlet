@@ -25,13 +25,13 @@ class Device {
     public Device(String id) {
         this.id = id;
         this.name = "";
-        filter = new ParticleFilter(0,0);
+        //filter = new ParticleFilter(0,0);
     }
     
     public Device(String id, String name) {
         this.id = id;
         this.name = name;
-        filter = new ParticleFilter(0,0);
+        //filter = new ParticleFilter(0,0);
     }
     
     public String getName() {
@@ -62,6 +62,10 @@ class Device {
         this.y = y;
     }
     
+    public String getID() {
+        return id;
+    }
+    
     public void setDirection(double direction) {
         this.direction = direction;
     }
@@ -80,6 +84,11 @@ class Device {
     
     public void addPreviousPosition(MagneticFingerprint fingerprint) {
         previousPositions.add(fingerprint);
+    }
+    
+    
+    void startFilter() {
+        filter = new ParticleFilter(0,0);
     }
     
     public ParticleFilter getFilter() {
