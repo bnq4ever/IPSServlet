@@ -28,24 +28,22 @@ public class Locator {
     public synchronized ReferencePoint locateReferenceArea(String MAC, HashMap<String, Double> fingerprint) {
         ArrayList<ReferencePoint> relevantPoints = RadioMap.getInstance().getRelevantPoints(DeviceManager.getInstance().getDevice(MAC).getX(), DeviceManager.getInstance().getDevice(MAC).getY(),fingerprint);
         //ArrayList<ReferencePoint> relevantPoints = RadioMap.getInstance().getReferencePoints();
-        System.out.println(fingerprint.size());
-        for (String key : fingerprint.keySet()) {
-            System.out.println(key + " " + fingerprint.get(key));
-        }
+//        for (String key : fingerprint.keySet()) {
+//            System.out.println(key + " " + fingerprint.get(key));
+//        }
         double distance = Integer.MAX_VALUE;
         ReferencePoint result = null;
         for (ReferencePoint point : relevantPoints) {
             double pointDistance = getRSSEuclidean(fingerprint, point);
             //System.out.println(p.getFingerprint());
-            System.out.println("x: " + point.x + " y: " + point.y + " distance: " + pointDistance);
+//            System.out.println("x: " + point.x + " y: " + point.y + " distance: " + pointDistance);
             if ( pointDistance < distance ) {
                 distance = pointDistance;
                 result = point;
             }
         }
         
-        System.out.println("BEST POINT");
-        System.out.println("x: " + result.x + " y: " + result.y);
+        System.out.println("BEST POINT " + "x: " + result.x + " y: " + result.y);
         return result;
     }
     
@@ -74,12 +72,11 @@ public class Locator {
         if(DeviceManager.getInstance().getDevice(MAC).lastMeasurement == 0) {
             timeDiff = 1;
             //DeviceManager.getInstance().getDevice(MAC).getFilter().findClosestFingerprints(DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics());
-        }else{
-        DeviceManager.getInstance().getDevice(MAC).getFilter().resetParticles(timeDiff);
-        DeviceManager.getInstance().getDevice(MAC).getFilter().findClosestFingerprints(DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics());
-        DeviceManager.getInstance().getDevice(MAC).getFilter().updateWeights(location);
+        } else {
+            DeviceManager.getInstance().getDevice(MAC).getFilter().resetParticles(timeDiff);
+            DeviceManager.getInstance().getDevice(MAC).getFilter().findClosestFingerprints(DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics());
+            DeviceManager.getInstance().getDevice(MAC).getFilter().updateWeights(location);
         }
-        
         DeviceManager.getInstance().updatePosition(MAC, location);
     }
     

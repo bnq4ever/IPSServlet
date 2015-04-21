@@ -48,7 +48,7 @@ public class MappingServlet extends HttpServlet {
                 MAC = request.getParameter("id");
                 String dataType = request.getParameter("dataType");
                 String data = request.getParameter("data");
-                
+       
                 handleLocateDeviceRequest(out, MAC, dataType, data);
                 break;
                 

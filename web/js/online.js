@@ -122,7 +122,6 @@ $(document).ready(function() {
             data:{command: "GET_CONNECTED_DEVICES"},
             success: function(response) {
                 var tmp = {};
-                alert(response);
                 var json = $.parseJSON(response);
                 var jsonArray = json['devices'];
                 for (var key in jsonArray) {
@@ -139,7 +138,6 @@ $(document).ready(function() {
             }
         });
     }
-    
 
 //    function resize() {
 //        var width = $(window).height();

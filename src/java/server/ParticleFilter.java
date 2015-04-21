@@ -16,13 +16,14 @@ import javax.json.JsonObject;
  */
 public class ParticleFilter {
     //private ArrayList<double[]> particles = new ArrayList<double[]>();
-    private ArrayList<Particle> particles = new ArrayList<Particle>();
+    private ArrayList<Particle> particles;
     //private ArrayList<MagneticFingerprint> fingerprints; 
     /*
     Particle:   x, y, direction, speed, weight    
     */
     
     public ParticleFilter(double x, double y) {
+        particles = new ArrayList<>();
         for(int i = 0; i < 100; i++) {
             double angle = Math.random()*360;
             //particles.add(new double[]{x+Math.random()*(x-40), y+Math.random()*(y-40), angle, 10*Math.random()});
@@ -98,27 +99,5 @@ public class ParticleFilter {
         
         return Json.createObjectBuilder().add("particles", array).build();
     }
-    
-    
-    public class Particle {
-        public double x;
-        public double y;
-        public double direction;
-        public double speed;
-        public double weight;
-        public MagneticFingerprint closestFingerprint;
-        
-        private Particle(double x, double y, double direction, double speed, double weight) {
-            this.x = x;
-            this.x = y;
-            this.x = direction;
-            this.x = speed;
-            this.x = weight;
-            closestFingerprint = new MagneticFingerprint(0, 0, 0, 0, 0);
-        }
-        
-        public void setClosestFingerprint(MagneticFingerprint f) {
-            closestFingerprint = f;
-        }
-    }    
+     
 }

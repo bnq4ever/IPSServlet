@@ -6,8 +6,8 @@ $(document).ready(function() {
     //window.onload = init;
     //window.onresize = resize;
     
-    setInterval(updateParticles, 100);
-    setInterval(getParticles(MAC));
+    setInterval(updateParticles, 1000);
+    setInterval(getParticles, 1000);
 
     function updateParticles() {
         //$("#mappingArea").empty();
@@ -24,7 +24,7 @@ $(document).ready(function() {
         div.style.backgroundSize = size + "px";
         div.style.backgroundRepeat = "no-repeat";
         var divID = document.createAttribute("id");
-        divID.value = particle;
+        divID.value = "particle";
         div.setAttributeNode(divID);
 
         var divClass = document.createAttribute("class");
@@ -39,7 +39,7 @@ $(document).ready(function() {
         document.getElementById("mappingArea").appendChild(div);
     }
 
-    function getParticles(MAC) {
+    function getParticles() {
         $.ajax({
             url: "Mapper",
             type: "get", //send it through get method
@@ -55,9 +55,9 @@ $(document).ready(function() {
                     var weight = jsonArray[key].weight;
                     var direction = jsonArray[key].direction;
                     var speed = jsonArray[key].speed;
-                    alert(x + " " + y + " " + weight + " " + direction + " " + speed);
+//                    alert(x + " " + y + " " + weight + " " + direction + " " + speed);
 
-                    tmp[id] = new Particle(x, y, weight, direction, speed);
+                    tmp[key] = new Particle(x, y, weight, direction, speed);
                 }
                 particles = tmp;
             },
