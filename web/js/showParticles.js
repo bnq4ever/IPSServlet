@@ -1,16 +1,16 @@
 var particles = {};
-var MAC = "88:32:9B:B6:AB:56";
+var MAC = "40:F3:08:3B:4F:AA";
 
 $(document).ready(function() {
 
     //window.onload = init;
     //window.onresize = resize;
     
-    //setInterval(updateParticles, 500);
-    //setInterval(getParticles, 500);
+    setInterval(updateParticles, 100);
+    setInterval(getParticles, 100);
 
     function updateParticles() {
-        $("#mappingArea").empty();
+        $( "#particleArea" ).empty();
         
         for (var id in particles) {            
             generateDiv(particles[id].x, particles[id].y, particles[id].weight);
@@ -18,7 +18,7 @@ $(document).ready(function() {
     }
 
     function generateDiv(x, y, weight) {
-        var size = weight * 20;
+        var size = weight;
         var div = document.createElement("DIV");
         div.style.backgroundImage = "url('imgs/particle.png')";
         div.style.backgroundSize = size + "px";
@@ -31,12 +31,12 @@ $(document).ready(function() {
         divClass.value = "particle";
         div.setAttributeNode(divClass);
         div.style.position = "absolute";
-        div.style.left = x + "px";
-        div.style.top = y + "px";
+        div.style.left = x - size/2 + "px";
+        div.style.top = y - size/2 + "px";
         div.style.zIndex = "1";
         div.style.height = size + "px";
         div.style.width = size + "px";
-        document.getElementById("mappingArea").appendChild(div);
+        document.getElementById("particleArea").appendChild(div);
     }
 
     function getParticles() {
