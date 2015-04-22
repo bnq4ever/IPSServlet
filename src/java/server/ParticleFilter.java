@@ -24,11 +24,11 @@ public class ParticleFilter {
     
     public ParticleFilter(double x, double y) {
         particles = new ArrayList<>();
-        for(int i = 0; i < 1000; i++) {
+        for(int i = 0; i < 500; i++) {
             double angle = Math.random()*360;
             //particles.add(new double[]{x+Math.random()*(x-40), y+Math.random()*(y-40), angle, 10*Math.random()});
-            x = Math.random()*1000;
-            y = Math.random()*1000;
+            x = Math.random()*1200;
+            y = Math.random()*1200;
             particles.add(new Particle(x, y, angle, 50*Math.random(), 1)); 
         }
     }
@@ -56,11 +56,12 @@ public class ParticleFilter {
         for(int i = 0; i < nbrDeleted; i++) {
 //            if(i < prioritized.size()) {
                 double angle = Math.random()*360;
-                particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, 50*Math.random(), 1));
+                particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, 10*Math.random(), 1));
 //            }           
         }
         moveParticles(timeDiff);
-        return prioritized.get(0).closestFingerprint;
+        System.out.println(prioritized.get(indexofhighest).closestFingerprint.x);
+        return prioritized.get(indexofhighest).closestFingerprint;
     }
     
     public void moveParticles(double timeDiff) {
