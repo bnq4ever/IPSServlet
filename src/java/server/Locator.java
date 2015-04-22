@@ -63,9 +63,6 @@ public class Locator {
         return Math.sqrt(pointDistance);
     }
     
-    /*
-        Locates device using both RSS and magnetic. Requires both RSS and magnetic as parameters.
-    */
     public synchronized void updatePosition(String MAC, double[] fingerprint) {
         MagneticFingerprint location = getNearestMagnetic(MAC, fingerprint);
         MagneticFingerprint filteredlocation = location;

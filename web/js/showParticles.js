@@ -1,16 +1,16 @@
 var particles = {};
-var MAC = "88:32:9B:B6:AB:56";
+var MAC = "40:F3:08:3B:4F:AA";
 
 $(document).ready(function() {
 
     //window.onload = init;
     //window.onresize = resize;
     
-//    setInterval(updateParticles, 500);
-    setInterval(getParticles, 500);
+    setInterval(updateParticles, 100);
+    setInterval(getParticles, 100);
 
     function updateParticles() {
-        $("#particleArea").empty();
+        $( "#particleArea" ).empty();
         
         for (var id in particles) {            
             generateDiv(particles[id].x, particles[id].y, particles[id].weight);

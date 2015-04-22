@@ -29,7 +29,7 @@ public class ParticleFilter {
             //particles.add(new double[]{x+Math.random()*(x-40), y+Math.random()*(y-40), angle, 10*Math.random()});
             x = Math.random()*1200;
             y = Math.random()*1200;
-            particles.add(new Particle(x, y, angle, 50*Math.random(), 1)); 
+            particles.add(new Particle(x, y, angle, 10*Math.random(), 1)); 
         }
     }
     
@@ -43,7 +43,7 @@ public class ParticleFilter {
             if(p.weight > highestWeight) {
                 indexofhighest = particles.indexOf(p);
             }
-            if(p.weight < 0.2) {
+            if(p.weight < 0.15) {
                 removed.add(p);
                 nbrDeleted++;
             }else if(p.weight > 0.40) {
@@ -51,18 +51,19 @@ public class ParticleFilter {
             }
             p.weight = 1;
         }
+        MagneticFingerprint toReturn = particles.get(indexofhighest).closestFingerprint;
         prioritized.add(particles.get(indexofhighest));
         particles.removeAll(removed);
         for(int i = 0; i < nbrDeleted; i++) {
 //            if(i < prioritized.size()) {
                 double angle = Math.random()*360;
-                particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, 10*Math.random(), 1));
+                particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, 20*Math.random(), 1));
 //            }           
         }
         moveParticles(timeDiff);
-        System.out.println(prioritized.get(indexofhighest).closestFingerprint.x);
-        return prioritized.get(indexofhighest).closestFingerprint;
+        return toReturn;
     }
+    
     
     public void moveParticles(double timeDiff) {
         //for(double[] p : particles) {
@@ -96,7 +97,7 @@ public class ParticleFilter {
         return particles;
     }
 
-    public JsonObject toJSON() {
+    public synchronized JsonObject toJSON() {
         
         JsonArrayBuilder array = Json.createArrayBuilder();
 
@@ -114,7 +115,7 @@ public class ParticleFilter {
         public double weight;
         public MagneticFingerprint closestFingerprint;
         
-        private Particle(double x, double y, double direction, double speed, double weight) {
+        Particle(double x, double y, double direction, double speed, double weight) {
             this.x = x;
             this.y = y;
             this.direction = direction;
