@@ -1,16 +1,17 @@
 var particles = {};
-var MAC = "40:F3:08:3B:4F:AA";
+var _MAC = "40:F3:08:3B:4F:AA";
+var MAC = "88:32:9B:B6:AB:56";
 
 $(document).ready(function() {
 
     //window.onload = init;
     //window.onresize = resize;
     
-    setInterval(updateParticles, 100);
-    setInterval(getParticles, 100);
+    //setInterval(updateParticles, 100);
+    setInterval(getParticles, 10);
 
     function updateParticles() {
-        $( "#particleArea" ).empty();
+        $("#particleArea").empty();
         
         for (var id in particles) {            
             generateDiv(particles[id].x, particles[id].y, particles[id].weight);
@@ -21,7 +22,7 @@ $(document).ready(function() {
     function generateDiv(x, y, weight) {
         var size = weight;
         var div = document.createElement("DIV");
-        div.style.backgroundImage = "url('imgs/particle.png')";
+        div.style.backgroundImage = "url('imgs/particle.gif')";
         div.style.backgroundSize = size + "px";
         div.style.backgroundRepeat = "no-repeat";
         var divID = document.createAttribute("id");
@@ -59,7 +60,6 @@ $(document).ready(function() {
 //                    alert(x + " " + y + " " + weight + " " + direction + " " + speed);
 
                     tmp[key] = new Particle(x, y, weight, direction, speed);
-                    updateParticles();
                 }
                 particles = tmp;
             },
@@ -67,6 +67,7 @@ $(document).ready(function() {
               //alert("error");
             }
         });
+        updateParticles();
     }
     
     var Particle = function(x, y, weight, direction, speed) {

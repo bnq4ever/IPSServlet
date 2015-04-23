@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *
@@ -17,7 +19,9 @@ import javax.json.JsonObject;
 public class ParticleFilter {
     //private ArrayList<double[]> particles = new ArrayList<double[]>();
     private ArrayList<Particle> particles;
-    //private ArrayList<MagneticFingerprint> fingerprints; 
+    //private ArrayList<MagneticFingerprint> fingerprints;
+
+    
     /*
     Particle:   x, y, direction, speed, weight    
     */
@@ -29,9 +33,10 @@ public class ParticleFilter {
             //particles.add(new double[]{x+Math.random()*(x-40), y+Math.random()*(y-40), angle, 10*Math.random()});
             x = Math.random()*1200;
             y = Math.random()*1200;
-            particles.add(new Particle(x, y, angle, 10*Math.random(), 1)); 
+            particles.add(new Particle(x, y, angle, Math.random(), 1));
         }
     }
+    
     
     public MagneticFingerprint resetParticles(double timeDiff) {
         ArrayList<Particle> removed = new ArrayList<>();
@@ -123,5 +128,5 @@ public class ParticleFilter {
             this.weight = weight;
             closestFingerprint = new MagneticFingerprint(0, 0, 0, 0, 0);
         }
-   }
+    }
 }
