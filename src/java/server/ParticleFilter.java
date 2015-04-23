@@ -47,7 +47,6 @@ public class ParticleFilter {
         ArrayList<Particle> prioritized = new ArrayList<>();
         double highestWeight = Double.MIN_VALUE;
         int indexofhighest = 0;
-//        MagneticFingerprint toReturn = null;
         for(Particle p : particles) {
             if(p.weight > highestWeight) {
                 indexofhighest = particles.indexOf(p);
@@ -57,7 +56,7 @@ public class ParticleFilter {
             if(p.weight < 0.2) {
                 removed.add(p);
                 nbrDeleted++;
-            }else if(p.weight > 0.9) {
+            }else if(p.weight > 0.5) {
                 prioritized.add(p);
             }
             p.weight = 1;
@@ -118,9 +117,11 @@ public class ParticleFilter {
     public void updateWeights(MagneticFingerprint measurement) {
         double dist = 0;
         for(Particle p : particles) {
-           if(Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2)) > dist) {
-               dist = Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2));
-           }       
+           double euclidean = Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2));
+           if(euclidean > dist) {
+               dist = euclidean;
+           }
+            //p.weight = 100 / Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2));
         }
         for(Particle p : particles) {
             p.weight = 1 - (Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2)) / dist);
@@ -134,8 +135,8 @@ public class ParticleFilter {
     public synchronized JsonObject toJSON() {
         
         JsonArrayBuilder array = Json.createArrayBuilder();
-
-        for (Particle p : particles)
+        ArrayList<Particle> tmp = new ArrayList<>(particles);
+        for (Particle p : tmp)
             array.add(Json.createObjectBuilder().add("x", p.x).add("y", p.y).add("weight", p.weight).add("direction", p.direction).add("speed", p.speed));
                     
         return Json.createObjectBuilder().add("particles", array).build();
