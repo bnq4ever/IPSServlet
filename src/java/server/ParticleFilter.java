@@ -19,6 +19,9 @@ import javax.swing.JPanel;
 public class ParticleFilter {
     //private ArrayList<double[]> particles = new ArrayList<double[]>();
     private ArrayList<Particle> particles;
+    private static final double SCATTER = 2;
+    private static final int MAP_WIDTH = 1200;
+    private static final int MAP_HEIGHT = 1200;
     //private ArrayList<MagneticFingerprint> fingerprints;
 
     
@@ -31,9 +34,9 @@ public class ParticleFilter {
         for(int i = 0; i < 500; i++) {
             double angle = Math.random()*360;
             //particles.add(new double[]{x+Math.random()*(x-40), y+Math.random()*(y-40), angle, 10*Math.random()});
-            x = Math.random()*1200;
-            y = Math.random()*1200;
-            particles.add(new Particle(x, y, angle, 2*Math.random(), 1)); 
+            x = Math.random()*MAP_WIDTH;
+            y = Math.random()*MAP_HEIGHT;
+            particles.add(new Particle(x, y, angle, SCATTER*Math.random(), 1)); 
         }
     }
     
@@ -44,17 +47,17 @@ public class ParticleFilter {
         ArrayList<Particle> prioritized = new ArrayList<>();
         double highestWeight = Double.MIN_VALUE;
         int indexofhighest = 0;
-        MagneticFingerprint toReturn = null;
+//        MagneticFingerprint toReturn = null;
         for(Particle p : particles) {
             if(p.weight > highestWeight) {
                 indexofhighest = particles.indexOf(p);
                 //toReturn = particles.get(indexofhighest).closestFingerprint;
                 highestWeight = p.weight;
             }
-            if(p.weight < 0.5) {
+            if(p.weight < 0.2) {
                 removed.add(p);
                 nbrDeleted++;
-            }else if(p.weight > 0.8) {
+            }else if(p.weight > 0.9) {
                 prioritized.add(p);
             }
             p.weight = 1;
@@ -64,7 +67,7 @@ public class ParticleFilter {
         particles.removeAll(removed);
         for(int i = 0; i < nbrDeleted; i++) {
                 double angle = Math.random()*360;
-                particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, 2*Math.random(), 1));          
+                particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, SCATTER*Math.random(), 1));          
         }
         moveParticles(timeDiff);
         return filteredLocation(prioritized);
