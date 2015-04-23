@@ -61,7 +61,7 @@ $(document).ready(function() {
 //                    alert(x + " " + y + " " + weight + " " + direction + " " + speed);
 
                     tmp[key] = new Particle(x, y, weight, direction, speed);
-                    updateParticles();
+                    //updateParticles();
                 }
                 particles = tmp;
             },

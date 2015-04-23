@@ -41,17 +41,17 @@ public class ParticleFilter {
         ArrayList<Particle> prioritized = new ArrayList<>();
         double highestWeight = Double.MIN_VALUE;
         int indexofhighest = 0;
-        MagneticFingerprint toReturn = null;
+        //MagneticFingerprint toReturn = null;
         for(Particle p : particles) {
             if(p.weight > highestWeight) {
                 indexofhighest = particles.indexOf(p);
                 //toReturn = particles.get(indexofhighest).closestFingerprint;
                 highestWeight = p.weight;
             }
-            if(p.weight < 0.5) {
+            if(p.weight < 0.2) {
                 removed.add(p);
                 nbrDeleted++;
-            }else if(p.weight > 0.8) {
+            }else if(p.weight > 0.5) {
                 prioritized.add(p);
             }
             p.weight = 1;
@@ -112,9 +112,11 @@ public class ParticleFilter {
     public void updateWeights(MagneticFingerprint measurement) {
         double dist = 0;
         for(Particle p : particles) {
-           if(Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2)) > dist) {
-               dist = Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2));
-           }       
+           double euclidean = Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2));
+           if(euclidean > dist) {
+               dist = euclidean;
+           }
+            //p.weight = 100 / Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2));
         }
         for(Particle p : particles) {
             p.weight = 1 - (Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2)) / dist);
