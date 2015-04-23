@@ -24,12 +24,12 @@ public class ParticleFilter {
     
     public ParticleFilter(double x, double y) {
         particles = new ArrayList<>();
-        for(int i = 0; i < 1000; i++) {
+        for(int i = 0; i < 500; i++) {
             double angle = Math.random()*360;
             //particles.add(new double[]{x+Math.random()*(x-40), y+Math.random()*(y-40), angle, 10*Math.random()});
-            x = Math.random()*1000;
-            y = Math.random()*1000;
-            particles.add(new Particle(x, y, angle, 20*Math.random(), 1)); 
+            x = Math.random()*1200;
+            y = Math.random()*1200;
+            particles.add(new Particle(x, y, angle, 2*Math.random(), 1)); 
         }
     }
     
@@ -39,28 +39,49 @@ public class ParticleFilter {
         ArrayList<Particle> prioritized = new ArrayList<>();
         double highestWeight = Double.MIN_VALUE;
         int indexofhighest = 0;
+        MagneticFingerprint toReturn = null;
         for(Particle p : particles) {
             if(p.weight > highestWeight) {
                 indexofhighest = particles.indexOf(p);
+                //toReturn = particles.get(indexofhighest).closestFingerprint;
+                highestWeight = p.weight;
             }
-            if(p.weight < 0.15) {
+            if(p.weight < 0.5) {
                 removed.add(p);
                 nbrDeleted++;
-            }else if(p.weight > 0.40) {
+            }else if(p.weight > 0.8) {
                 prioritized.add(p);
             }
             p.weight = 1;
         }
-        MagneticFingerprint toReturn = particles.get(indexofhighest).closestFingerprint;
+        System.out.println("nbr of prioritized: "+prioritized.size()+" nbr of removed: "+removed.size());
         prioritized.add(particles.get(indexofhighest));
         particles.removeAll(removed);
         for(int i = 0; i < nbrDeleted; i++) {
-//            if(i < prioritized.size()) {
                 double angle = Math.random()*360;
-                particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, 20*Math.random(), 1));
-//            }           
+                particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, 2*Math.random(), 1));          
         }
         moveParticles(timeDiff);
+        return filteredLocation(prioritized);
+        //return toReturn;
+    }
+    
+    
+    public MagneticFingerprint filteredLocation(ArrayList<Particle> prios) {
+        MagneticFingerprint toReturn = null;
+        int maxNeighbours = 0;
+        for(Particle prio : prios) {
+            int counter = 0;
+            for(Particle p : particles) {
+                if(Math.sqrt(Math.pow(prio.x - p.x, 2) + Math.pow(prio.y - p.y, 2)) < 20){
+                    counter++;
+                }
+            }
+            if(counter > maxNeighbours) {
+                toReturn = prio.closestFingerprint;
+                maxNeighbours = counter;
+            }
+        }
         return toReturn;
     }
     
@@ -87,9 +108,14 @@ public class ParticleFilter {
     }
     
     public void updateWeights(MagneticFingerprint measurement) {
+        double dist = 0;
         for(Particle p : particles) {
-           p.weight = Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2));       
-           p.weight = 100/p.weight; //Normalize weights.
+           if(Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2)) > dist) {
+               dist = Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2));
+           }       
+        }
+        for(Particle p : particles) {
+            p.weight = 1 - (Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2)) / dist);
         }
     }
     
