@@ -29,7 +29,9 @@ public class ParticleFilter {
             //particles.add(new double[]{x+Math.random()*(x-40), y+Math.random()*(y-40), angle, 10*Math.random()});
             x = Math.random()*1200;
             y = Math.random()*1200;
+
             particles.add(new Particle(x, y, angle, 2*Math.random(), 1)); 
+
         }
     }
     
@@ -141,7 +143,7 @@ public class ParticleFilter {
         public double weight;
         public MagneticFingerprint closestFingerprint;
         
-        private Particle(double x, double y, double direction, double speed, double weight) {
+        Particle(double x, double y, double direction, double speed, double weight) {
             this.x = x;
             this.y = y;
             this.direction = direction;

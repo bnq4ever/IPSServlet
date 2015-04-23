@@ -15,6 +15,7 @@ $(document).ready(function() {
         for (var id in particles) {            
             generateDiv(particles[id].x, particles[id].y, particles[id].weight);
         }
+        
     }
 
     function generateDiv(x, y, weight) {
@@ -60,6 +61,7 @@ $(document).ready(function() {
 //                    alert(x + " " + y + " " + weight + " " + direction + " " + speed);
 
                     tmp[key] = new Particle(x, y, weight, direction, speed);
+                    updateParticles();
                 }
                 particles = tmp;
             },
