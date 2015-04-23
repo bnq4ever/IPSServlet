@@ -21,6 +21,8 @@ $(document).ready(function() {
 
     function generateDiv(x, y, weight) {
         var size = weight;
+        if (size > 20)
+            size = 20;
         var div = document.createElement("DIV");
         div.style.backgroundImage = "url('imgs/particle.gif')";
         div.style.backgroundSize = size + "px";
