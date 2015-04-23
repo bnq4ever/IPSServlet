@@ -30,7 +30,7 @@ public class ParticleFilter {
             x = Math.random()*1200;
             y = Math.random()*1200;
 
-            particles.add(new Particle(x, y, angle, 2*Math.random(), 1)); 
+            particles.add(new Particle(x, y, angle, Math.random(), 1)); 
 
         }
     }
@@ -49,9 +49,11 @@ public class ParticleFilter {
                 highestWeight = p.weight;
             }
             if(p.weight < 0.2) {
-                removed.add(p);
-                nbrDeleted++;
-            }else if(p.weight > 0.5) {
+                if(p.kill()) {
+                    removed.add(p);
+                    nbrDeleted++;
+                }
+            }else if(p.weight > 0.6) {
                 prioritized.add(p);
             }
             p.weight = 1;
@@ -61,7 +63,7 @@ public class ParticleFilter {
         particles.removeAll(removed);
         for(int i = 0; i < nbrDeleted; i++) {
                 double angle = Math.random()*360;
-                particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, 2*Math.random(), 1));          
+                particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, Math.random(), 1));          
         }
         moveParticles(timeDiff);
         return filteredLocation(prioritized);
@@ -144,6 +146,7 @@ public class ParticleFilter {
         public double speed;
         public double weight;
         public MagneticFingerprint closestFingerprint;
+        private int lives = 5;
         
         Particle(double x, double y, double direction, double speed, double weight) {
             this.x = x;
@@ -152,6 +155,11 @@ public class ParticleFilter {
             this.speed = speed;
             this.weight = weight;
             closestFingerprint = new MagneticFingerprint(0, 0, 0, 0, 0);
+        }
+        
+        public boolean kill() {
+            lives--;
+            return (lives <= 0);
         }
    }
 }

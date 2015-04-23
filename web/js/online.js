@@ -7,8 +7,8 @@ $(document).ready(function() {
 //    window.onresize = resize;
     
 
-    //setInterval(getConnectedDevices, 100);
-    //setInterval(updateMapDevices, 100);
+    setInterval(getConnectedDevices, 100);
+    setInterval(updateMapDevices, 100);
 
     
     $('#mappingArea').on('click', '.device', function () {
