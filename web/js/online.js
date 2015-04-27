@@ -10,7 +10,6 @@ $(document).ready(function() {
     setInterval(getConnectedDevices, 100);
     setInterval(updateMapDevices, 100);
 
-    
     $('#mappingArea').on('click', '.device', function () {
         var device = connectedDevices[this.id];
         alert(device.name + "\n" + 

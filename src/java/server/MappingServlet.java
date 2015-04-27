@@ -54,7 +54,6 @@ public class MappingServlet extends HttpServlet {
                 
             case Command.GET_PARTICLES:
                 MAC = request.getParameter("id");
-                System.out.println(MAC + " " + command);
                 getParticles(out, MAC);
                 break;
                 

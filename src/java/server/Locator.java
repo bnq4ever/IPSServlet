@@ -27,22 +27,15 @@ public class Locator {
     
     public synchronized ReferencePoint locateReferenceArea(String MAC, HashMap<String, Double> fingerprint) {
         ArrayList<ReferencePoint> relevantPoints = RadioMap.getInstance().getRelevantPoints(DeviceManager.getInstance().getDevice(MAC).getX(), DeviceManager.getInstance().getDevice(MAC).getY(),fingerprint);
-        //ArrayList<ReferencePoint> relevantPoints = RadioMap.getInstance().getReferencePoints();
-//        for (String key : fingerprint.keySet()) {
-//            System.out.println(key + " " + fingerprint.get(key));
-//        }
         double distance = Integer.MAX_VALUE;
         ReferencePoint result = null;
         for (ReferencePoint point : relevantPoints) {
             double pointDistance = getRSSEuclidean(fingerprint, point);
-            //System.out.println(p.getFingerprint());
-//            System.out.println("x: " + point.x + " y: " + point.y + " distance: " + pointDistance);
             if ( pointDistance < distance ) {
                 distance = pointDistance;
                 result = point;
             }
-        }
-        
+        }     
         System.out.println("BEST POINT " + "x: " + result.x + " y: " + result.y);
         return result;
     }
@@ -66,19 +59,7 @@ public class Locator {
     public synchronized void updatePosition(String MAC, double[] fingerprint) {
         MagneticFingerprint location = getNearestMagnetic(MAC, fingerprint);
         MagneticFingerprint filteredlocation = location;
-
-        double timeDiff = System.currentTimeMillis() - DeviceManager.getInstance().getDevice(MAC).lastMeasurement;
-        if(DeviceManager.getInstance().getDevice(MAC).lastMeasurement == 0) {
-            timeDiff = 1;
-            DeviceManager.getInstance().getDevice(MAC).lastMeasurement = System.currentTimeMillis();
-            DeviceManager.getInstance().getDevice(MAC).getFilter().updateWeights(location);
-            //DeviceManager.getInstance().getDevice(MAC).getFilter().findClosestFingerprints(DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics());
-        } else {
-            DeviceManager.getInstance().getDevice(MAC).lastMeasurement = System.currentTimeMillis();
-            filteredlocation = DeviceManager.getInstance().getDevice(MAC).getFilter().resetParticles(timeDiff);
-            DeviceManager.getInstance().getDevice(MAC).getFilter().findClosestFingerprints(DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics());
-            DeviceManager.getInstance().getDevice(MAC).getFilter().updateWeights(location);
-        }
+        filteredlocation = DeviceManager.getInstance().getDevice(MAC).getFilter().Estimate(location, DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics());
         DeviceManager.getInstance().updatePosition(MAC, filteredlocation);
     }
     
