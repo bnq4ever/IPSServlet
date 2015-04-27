@@ -41,11 +41,15 @@ public class Parser {
     
     public static HashMap parseFingerprint(String fingerprintString) {
         String[] list = fingerprintString.split(";");
+        
         HashMap<String, Double> fingerprint = new HashMap<>();
         for (String str : list) {
-            String[] key_value = str.split("/");
+            System.out.println(str);
+            String[] key_value = str.split("/");      
             fingerprint.put(key_value[0], Double.parseDouble(key_value[1]));
         }
+        System.out.println("---------------------------");
+
         return fingerprint;
     }
 }

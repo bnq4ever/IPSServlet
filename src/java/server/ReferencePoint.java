@@ -34,8 +34,10 @@ public class ReferencePoint {
         StringBuilder sb = new StringBuilder();
 
         for (String key : fingerprint.keySet()) {
-            sb.append(key).append(": ").append(fingerprint.get(key)).append(" ");
+            sb.append(key).append("/").append(fingerprint.get(key)).append(";");
         }
+        
+        sb.deleteCharAt(sb.length() - 1);
         
         return sb.toString();
     }

@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 public class ParticleFilter {
     //private ArrayList<double[]> particles = new ArrayList<double[]>();
     private ArrayList<Particle> particles;
-    private static final double SCATTER = 2;
+    private static final double SCATTER = 10;
     private static final int MAP_WIDTH = 1200;
     private static final int MAP_HEIGHT = 1200;
     //private ArrayList<MagneticFingerprint> fingerprints;
@@ -66,7 +66,7 @@ public class ParticleFilter {
         particles.removeAll(removed);
         for(int i = 0; i < nbrDeleted; i++) {
                 double angle = Math.random()*360;
-                particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, SCATTER*Math.random(), 1));          
+                particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, SCATTER*Math.random(), 0));          
         }
         moveParticles(timeDiff);
         return filteredLocation(prioritized);

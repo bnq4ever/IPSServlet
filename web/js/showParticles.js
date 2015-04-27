@@ -17,13 +17,13 @@ $(document).ready(function() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         for (var id in particles) {
-//            var weight = particles[id].weight*4;
-//            if(weight > 4) {
-//                weight = 4;
-//            }
+            var weight = particles[id].weight*4;
+            if(weight > 4) {
+                weight = 4;
+            }
             ctx.fillStyle = "#000000";
             ctx.beginPath();
-            ctx.arc(particles[id].x, particles[id].y, 1, 10, Math.PI*2, true); 
+            ctx.arc(particles[id].x, particles[id].y, weight, 100, Math.PI*2, true); 
             ctx.closePath();
             ctx.fill();
             //generateDiv(particles[id].x, particles[id].y, particles[id].weight);
