@@ -53,15 +53,15 @@ function createReferencePoint(x, y) {
     divClass.value = "point";
     div.setAttributeNode(divClass);
     div.style.backgroundImage = "url('imgs/pointArea.png')";
-    div.style.backgroundSize = "150px 150px";
+    div.style.backgroundSize = "200px 200px";
     div.style.backgroundRepeat = "no-repeat";
 
     div.style.position = "absolute";
-    div.style.top = y - 75 + "px";
-    div.style.left = x - 75 + "px";
+    div.style.top = y - 100 + "px";
+    div.style.left = x - 100 + "px";
     div.style.zIndex = "1";
-    div.style.height = "150px";
-    div.style.width = "150px";
+    div.style.height = "200px";
+    div.style.width = "200px";
     document.getElementById("map").appendChild(div);
 }
 
