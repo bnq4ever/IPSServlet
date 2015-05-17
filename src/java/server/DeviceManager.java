@@ -141,6 +141,8 @@ public final class DeviceManager {
     public synchronized void updateReferencePosition(String MAC, ReferencePoint newReferencePoint) {
         Device device = getDevice(MAC);
         device.setReferencePoint(newReferencePoint);
+        device.setX(newReferencePoint.x);
+        device.setY(newReferencePoint.y);
         //System.out.println(newReferencePoint.x + " " + newReferencePoint.y);
     }
     

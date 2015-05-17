@@ -38,7 +38,7 @@ public class RadioMap {
         ArrayList<ReferencePoint> result = new ArrayList<>();
         for (ReferencePoint point : referencePoints) {
             for (String key : deviceFingerprint.keySet()) {
-                if (!point.fingerprint.containsKey(key) || (Math.sqrt(Math.pow((point.x - x), 2) + Math.pow((point.y - y), 2)) > 300))
+                if (!point.fingerprint.containsKey(key) || (Math.sqrt(Math.pow((point.x - x), 2) + Math.pow((point.y - y), 2)) > 100))
                     break;
             }
             result.add(point);
