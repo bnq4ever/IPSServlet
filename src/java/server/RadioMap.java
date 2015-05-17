@@ -7,7 +7,6 @@ package server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  *
@@ -24,7 +23,10 @@ public class RadioMap {
     }
     
     public RadioMap() {
-        referencePoints = new ArrayList<>();
+        Database.getInstance().openConnection();
+        referencePoints = Database.getInstance().getRadioMap();
+        Database.getInstance().closeConnection();
+        System.out.println("referencePoints size: " + referencePoints.size());
     }
     
     public synchronized ArrayList<ReferencePoint> getReferencePoints() {
@@ -55,6 +57,9 @@ public class RadioMap {
         for (String key : p.fingerprint.keySet()) {
             sb.append(key).append(" ").append(p.fingerprint.get(key));
         }
+        Database.getInstance().openConnection();
+        Database.getInstance().addReferencePoint(p);
+        Database.getInstance().closeConnection();
         System.out.println(sb.toString());
     }
        
@@ -62,13 +67,16 @@ public class RadioMap {
         Adds magnetic fingerprints to map and connects them to nearby RSSReferencepoint.
     */
     public synchronized void addMagneticFingerprints(ArrayList<MagneticFingerprint> magnetics) {
+        Database.getInstance().openConnection();
         for(ReferencePoint point : referencePoints) {
             for(MagneticFingerprint magneticFingerprint : magnetics) {                                            //Ändra från 300 till 75 sen
-                if(Math.sqrt(Math.pow((point.x - magneticFingerprint.x), 2) + Math.pow((point.y - magneticFingerprint.y), 2)) < 300) {
-                        point.addMagnetic(magneticFingerprint);
+                if(Math.sqrt(Math.pow((point.x - magneticFingerprint.x), 2) + Math.pow((point.y - magneticFingerprint.y), 2)) < 1000) {
+                    point.addMagnetic(magneticFingerprint);
+                    Database.getInstance().addMagneticPoint(magneticFingerprint, point);
                 }    
             }
         }
+        Database.getInstance().closeConnection();
     }
     
     public synchronized ReferencePoint getReferencePoint(double x, double y) {
@@ -92,7 +100,6 @@ public class RadioMap {
                 toRemove.add(key);
         
         }
-        
         for (String key : toRemove)
             p.fingerprint.remove(key);
         

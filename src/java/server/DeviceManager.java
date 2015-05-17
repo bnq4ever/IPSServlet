@@ -17,7 +17,6 @@ public final class DeviceManager {
     
     private final ArrayList<Device> devices = new ArrayList<>();
     private final ArrayList<Device> connectedDevices = new ArrayList<>();
-    private final Database db = new Database();
     
     public synchronized static DeviceManager getInstance() {
         if (_instance == null) 

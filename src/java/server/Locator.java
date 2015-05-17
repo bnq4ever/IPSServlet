@@ -6,7 +6,10 @@
 package server;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  *
@@ -57,38 +60,46 @@ public class Locator {
     }
     
     public synchronized void updatePosition(String MAC, double[] fingerprint) {
-        MagneticFingerprint location = getNearestMagnetic(MAC, fingerprint);
-        MagneticFingerprint filteredlocation = location;
-        filteredlocation = DeviceManager.getInstance().getDevice(MAC).getFilter().Estimate(location, DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics());
+        MagneticFingerprint[] locations = getNearestMagnetic(MAC, fingerprint);
+        MagneticFingerprint filteredlocation = locations[0];
+        //filteredlocation = DeviceManager.getInstance().getDevice(MAC).getFilter().Estimate(locations, DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics());
         DeviceManager.getInstance().updatePosition(MAC, filteredlocation);
     }
     
     
     /*
-        Euclidean from magneticfingerprint to other magneticfingerprints. Returns nearest MagneticFingerprint
+        Euclidean from magneticfingerprint to other magneticfingerprints. Returns nearest MagneticFingerprint.
+    
+        UPDATE: Method returns the top 5 magneticfingerprints. 
     */
-    private synchronized MagneticFingerprint getNearestMagnetic(String MAC, double[] fingerprint) {
+    private synchronized MagneticFingerprint[] getNearestMagnetic(String MAC, double[] fingerprint) {
         double magnitude = fingerprint[0];
         double zaxis = fingerprint[1];
         double xyaxis = fingerprint[2];
-        //System.out.println(DeviceManager.getInstance().getDevice(MAC).getReferencePoint());
+        
+        TreeMap<Double, MagneticFingerprint> map = new TreeMap<Double, MagneticFingerprint>();
         ArrayList<MagneticFingerprint> fingerprints = DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics();
         double compare = Float.MAX_VALUE;
-        MagneticFingerprint nearest = new MagneticFingerprint(90, 1000, 0, 0, 0);
+        //ArrayList<MagneticFingerprint> sorted = new ArrayList<MagneticFingerprint>();
+        MagneticFingerprint[] topmatches = new MagneticFingerprint[5];
         double distance;
-        //for (Fingerprint fp : fingerprints) {
+        System.out.println(fingerprints.size());
         for(int i = 0; i < fingerprints.size(); i++) {
             distance = 0;
             distance += Math.pow((magnitude - fingerprints.get(i).magnitude), 2);
             distance += Math.pow((zaxis - fingerprints.get(i).zaxis), 2);
             distance += Math.pow((xyaxis - fingerprints.get(i).xyaxis), 2);
             distance = (double) Math.sqrt(distance);
-//            distance = (float) (distance*priorities.get(i));
-            if (distance < compare) {
-                nearest = fingerprints.get(i);
-                compare = distance;
-            }
+            //if (distance < compare) {
+                //sorted.add(fingerprints.get(i));
+                //compare = distance;
+            //}
+            map.put(distance, fingerprints.get(i));
         }
-        return nearest;
+        
+        for(int i = 0; i < topmatches.length; i++) {
+            topmatches[i] = map.pollLastEntry().getValue();
+        }
+        return topmatches;
     }
 }

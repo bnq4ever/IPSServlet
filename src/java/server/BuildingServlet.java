@@ -7,6 +7,9 @@ package server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,7 +42,7 @@ public class BuildingServlet extends HttpServlet {
                 double x = Double.parseDouble(request.getParameter("x"));
                 double y = Double.parseDouble(request.getParameter("y"));
                 String fingerprintData = request.getParameter("fingerprint");
-                System.out.println(x + " " + y + " " + fingerprintData);
+                //System.out.println(x + " " + y + " " + fingerprintData);
                 addReferencePoint(out, x, y, fingerprintData);
                 break;
                 
@@ -47,8 +50,27 @@ public class BuildingServlet extends HttpServlet {
                 String magneticData = request.getParameter("magnetics");
                 addMagneticFingerprints(out, magneticData);
                 break;
+                
+            case Command.GET_ALL_POINTS:
+                getAllPoints(out);
+                break;
         }
     }
+    
+    private void getAllPoints(PrintWriter out) {
+        ArrayList<ReferencePoint> referencePoints = RadioMap.getInstance().getReferencePoints();
+        JsonArrayBuilder array = Json.createArrayBuilder();
+
+        for (ReferencePoint point : referencePoints) {
+            JsonArrayBuilder magnetics = Json.createArrayBuilder();
+            for(MagneticFingerprint magnetic : point.magnetics) {
+                magnetics.add(Json.createObjectBuilder().add("x", magnetic.x).add("y", magnetic.y));
+            }
+            array.add(Json.createObjectBuilder().add("x", point.x).add("y", point.y).add("magnetics", magnetics));
+        }
+        out.println(Json.createObjectBuilder().add("referencePoints", array).build());
+    }
+    
 
     private void addReferencePoint(PrintWriter out, double x, double y, String fingerprintData) {
         RadioMap.getInstance().addReferencePoint(new ReferencePoint(x, y, Parser.parseFingerprint(fingerprintData)));
