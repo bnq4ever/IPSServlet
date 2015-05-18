@@ -71,7 +71,7 @@ public class MappingServlet extends HttpServlet {
             case "MAGNETIC_POINT":
                 
                 double[] magneticFingerprint = Parser.parseMagneticFingerprint(data);
-                 Locator.getInstance().locatePosition(MAC, magneticFingerprint);
+                 Locator.getInstance().updatePosition(MAC, magneticFingerprint);
                 break;
         }
     }    

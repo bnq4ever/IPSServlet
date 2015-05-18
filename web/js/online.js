@@ -6,6 +6,7 @@ $(document).ready(function() {
     window.onload = init;
 //    window.onresize = resize;
     
+
     setInterval(getConnectedDevices, 100);
     setInterval(updateMapDevices, 100);
 
@@ -70,9 +71,19 @@ $(document).ready(function() {
         div.style.zIndex = "1";
         div.style.height = "25px";
         div.style.width = "25px";
+        //div.style.backgroundcolor = getRandomColor();
         $(div).hide();
         document.getElementById("mappingArea").appendChild(div);
         $(div).clearQueue().fadeIn("fast");
+    }
+    
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF'.split('');
+        var color = "#";
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random()*16)];
+        }
+        return color;
     }
 
     function setMap() {

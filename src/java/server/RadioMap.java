@@ -69,12 +69,14 @@ public class RadioMap {
     public synchronized void addMagneticFingerprints(ArrayList<MagneticFingerprint> magnetics) {
         Database.getInstance().openConnection();
         for(ReferencePoint point : referencePoints) {
+            
             for(MagneticFingerprint magneticFingerprint : magnetics) {                                            //Ändra från 300 sen
                 if(Math.sqrt(Math.pow((point.x - magneticFingerprint.x), 2) + Math.pow((point.y - magneticFingerprint.y), 2)) < 3000) {
                     point.addMagnetic(magneticFingerprint);
                     Database.getInstance().addMagneticPoint(magneticFingerprint, point);
                 }    
             }
+        
         }
         Database.getInstance().closeConnection();
     }
@@ -100,7 +102,6 @@ public class RadioMap {
                 toRemove.add(key);
         
         }
-        
         for (String key : toRemove)
             p.fingerprint.remove(key);
         

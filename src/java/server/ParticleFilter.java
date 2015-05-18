@@ -18,12 +18,12 @@ public class ParticleFilter {
     //private ArrayList<double[]> particles = new ArrayList<double[]>();
     private ArrayList<Particle> particles;
     private static final double SCATTER = 2;
-    private static final double LOWER_TRESHOLD = 0.2;
-    private static final double UPPER_TRESHOLD = 0.9;
+    private static final double LOWER_TRESHOLD = 0.85;
+    private static final double UPPER_TRESHOLD = 0.95;
 
     private static final int MAP_WIDTH = 1200;
     private static final int MAP_HEIGHT = 1200;
-    private static final int NBR_OF_PARTICLES = 200;
+    private static final int NBR_OF_PARTICLES = 100;
     
     //private ArrayList<MagneticFingerprint> fingerprints;
 
@@ -42,10 +42,9 @@ public class ParticleFilter {
             particles.add(new Particle(x, y, angle, SCATTER*Math.random(), 1));
         }
     }
-    
-    public MagneticFingerprint estimate(MagneticFingerprint location, ArrayList<MagneticFingerprint> fingerprints) {
+    public MagneticFingerprint Estimate(MagneticFingerprint[] locations, ArrayList<MagneticFingerprint> fingerprints) {
         //for(MagneticFingerprint f : locations) {
-        updateWeights(location);
+        updateWeights(locations);
         findClosestFingerprints(fingerprints); 
         return resetParticles();
     }
@@ -126,19 +125,51 @@ public class ParticleFilter {
         }
     }
     
-    public void updateWeights(MagneticFingerprint measurement) {
+    public void updateWeights(MagneticFingerprint[] measurements) {
         double dist = 0;
+        MagneticFingerprint calcWeight = null;
         for(Particle p : particles) {
-           double euclidean = Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2));
-           if(euclidean > dist) {
-               dist = euclidean;
-           }
-            //p.weight = 100 / Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2));
+            //dist = Double.MAX_VALUE;
+            for(MagneticFingerprint m : measurements) {
+                double euclidean = Math.sqrt(Math.pow(p.x - m.x, 2) + Math.pow(p.y - m.y, 2));
+                if(euclidean > dist) {
+                    dist = euclidean;
+                   // calcWeight = m;
+                }
+            }
+        }
+        
+        for(Particle p : particles) {
+            double max = Double.MAX_VALUE;
+            for(MagneticFingerprint m : measurements) {
+                double euclidean = Math.sqrt(Math.pow(p.x - m.x, 2) + Math.pow(p.y - m.y, 2));
+                if(euclidean < max) {
+                    max = euclidean;
+                    calcWeight = m;
+                }
+            }
+            p.weight = 1 - (Math.sqrt(Math.pow(p.x - calcWeight.x, 2) + Math.pow(p.y - calcWeight.y, 2)) / dist);
+            System.out.println("PARTICLE WEIGHT: "+p.weight);
+        }
+        
+        /*
+        for(MagneticFingerprint m : measurements) {
+            double dist = 0;
+            for(Particle p : particles) {
+                double euclidean = Math.sqrt(Math.pow(p.x - m.x, 2) + Math.pow(p.y - m.y, 2));
+                if(euclidean > dist) {
+                    dist = euclidean;
+                }
+            }
+            for(Particle p : particles) {
+                p.weight += 1 - (Math.sqrt(Math.pow(p.x - m.x, 2) + Math.pow(p.y - m.y, 2)) / dist);
+            }
         }
         for(Particle p : particles) {
-            p.weight = 1 - (Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2)) / dist);
-            System.out.println(p.weight);
-        }
+                p.weight = p.weight / measurements.length;
+                System.out.println("PARTICLE WEIGHT: "+p.weight);
+        } 
+        */
     }
     
     public ArrayList<Particle> getParticles() {
