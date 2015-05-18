@@ -6,17 +6,21 @@
 package server;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.TreeSet;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import server.ParticleFilter.Particle;
 
 /**
  *
  * @author fredrik
  */
-public class ParticleFilter {
+public class ParticleFilterSet {
     //private ArrayList<double[]> particles = new ArrayList<double[]>();
-    private ArrayList<Particle> particles;
+    private TreeSet<Particle> particles;
     private static final double SCATTER = 2;
     private static final double LOWER_TRESHOLD = 0.2;
     private static final double UPPER_TRESHOLD = 0.9;
@@ -24,6 +28,7 @@ public class ParticleFilter {
     private static final int MAP_WIDTH = 1200;
     private static final int MAP_HEIGHT = 1200;
     private static final int NBR_OF_PARTICLES = 200;
+    private double normalizer;
     
     //private ArrayList<MagneticFingerprint> fingerprints;
 
@@ -32,8 +37,8 @@ public class ParticleFilter {
     Particle:   x, y, direction, speed, weight    
     */
     
-    public ParticleFilter(double x, double y) {
-        particles = new ArrayList<>();
+    public ParticleFilterSet(double x, double y) {
+        particles = new TreeSet<>(new WeightComparator());
         for(int i = 0; i < NBR_OF_PARTICLES; i++) {
             double angle = Math.random()*360;
             //particles.add(new double[]{x+Math.random()*(x-40), y+Math.random()*(y-40), angle, 10*Math.random()});
@@ -43,7 +48,7 @@ public class ParticleFilter {
         }
     }
     
-    public MagneticFingerprint estimate(MagneticFingerprint location, ArrayList<MagneticFingerprint> fingerprints) {
+    public MagneticFingerprint Estimate(MagneticFingerprint location, ArrayList<MagneticFingerprint> fingerprints) {
         //for(MagneticFingerprint f : locations) {
         updateWeights(location);
         findClosestFingerprints(fingerprints); 
@@ -57,24 +62,30 @@ public class ParticleFilter {
         ArrayList<Particle> prioritized = new ArrayList<>();
         double highestWeight = Double.MIN_VALUE;
         int indexofhighest = 0;
+        
+        Iterator<Particle> itr = particles.iterator();
+        
+        while (itr.hasNext()){
+            Particle p = itr.next();
+            if (p.weight / normalizer < LOWER_TRESHOLD)
+                itr.remove();
+            //Placera om istället för att ta bort och skapa ny?
+            
+            itr.next();
+        }
+    }
+        
         for(Particle p : particles) {
             if(p.weight > highestWeight) {
                 indexofhighest = particles.indexOf(p);
                 highestWeight = p.weight;
             }
-            if(p.weight < LOWER_TRESHOLD) {
-                if(p.kill()) {
-                    removed.add(p);
-                    nbrDeleted++;
-                }
             } else if (p.weight > UPPER_TRESHOLD) {
                 prioritized.add(p);
             }
             p.weight = 1;
         }
-        System.out.println("nbr of prioritized: "+prioritized.size()+" nbr of removed: "+removed.size());
         prioritized.add(particles.get(indexofhighest));
-        particles.removeAll(removed);
         for(int i = 0; i < nbrDeleted; i++) {
                 double angle = Math.random()*360;
                 particles.add(new Particle(prioritized.get(i%prioritized.size()).x, prioritized.get(i%prioritized.size()).y, angle, SCATTER*Math.random(), 0));          
@@ -114,10 +125,12 @@ public class ParticleFilter {
     }
     
     public void findClosestFingerprints(ArrayList<MagneticFingerprint> fingerprints) {
+        //Tänka om? 
+        //Anamma Stefans idé om att tolka partikelfiltret och förenkla beräkningar.
         for(Particle p : particles) {
             double shortest = Double.MAX_VALUE;
             for(MagneticFingerprint f : fingerprints) {
-                double dist = Math.sqrt(Math.pow(p.x-f.x, 2) + Math.pow(p.y-f.y, 2));
+                double dist = Math.sqrt(Math.pow(p.x - f.x, 2) + Math.pow(p.y-f.y, 2));
                 if(dist < shortest) {
                     shortest = dist;
                     p.closestFingerprint = f;
@@ -127,21 +140,13 @@ public class ParticleFilter {
     }
     
     public void updateWeights(MagneticFingerprint measurement) {
-        double dist = 0;
-        for(Particle p : particles) {
-           double euclidean = Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2));
-           if(euclidean > dist) {
-               dist = euclidean;
-           }
-            //p.weight = 100 / Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2));
-        }
-        for(Particle p : particles) {
-            p.weight = 1 - (Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2)) / dist);
-            System.out.println(p.weight);
-        }
+        for(Particle p : particles)
+            p.weight = Math.sqrt(Math.pow(p.x - measurement.x, 2) + Math.pow(p.y - measurement.y, 2));
+        
+        normalizer = particles.first().weight;
     }
     
-    public ArrayList<Particle> getParticles() {
+    public TreeSet<Particle> getParticles() {
         return particles;
     }
 
@@ -185,5 +190,18 @@ public class ParticleFilter {
             //prioritization++;
             //return (prioritization >= 3);
         //}
-   }
+    }
+    
+    public class WeightComparator implements Comparator<Particle> {
+
+        @Override
+        public int compare(Particle p1, Particle p2) {
+            if (p1.weight > p2.weight)
+                return 1;
+            if (p1.weight < p2.weight)
+                return -1;
+            return 0;
+        }
+        
+    }
 }

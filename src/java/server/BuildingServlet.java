@@ -78,7 +78,7 @@ public class BuildingServlet extends HttpServlet {
     }
     
     private void addMagneticFingerprints(PrintWriter out, String magneticData) {
-        RadioMap.getInstance().addMagneticFingerprints(Parser.parseMagnetics(magneticData));
+        RadioMap.getInstance().addMagneticFingeAddrprints(Parser.parseMagnetics(magneticData));
         out.print(Command.MAGNETIC_FINGERPRINTS_ADDED);
     }
     
