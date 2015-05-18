@@ -6,9 +6,7 @@
 package server;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -41,6 +39,13 @@ public class Locator {
         }     
         System.out.println("BEST POINT " + "x: " + result.x + " y: " + result.y);
         return result;
+        
+//        ArrayList<ReferencePoint> referenceAreas = RadioMap.getInstance().getRelevantPoints(DeviceManager.getInstance().getDevice(MAC).getX(), DeviceManager.getInstance().getDevice(MAC).getY(),fingerprint);
+//        double distance = Integer.MAX_VALUE;
+//        ReferencePoint result = null;
+//        
+//        
+//        return result;
     }
     
     private synchronized double getRSSEuclidean(HashMap<String, Double> fingerprint, ReferencePoint p) {
@@ -84,17 +89,16 @@ public class Locator {
         MagneticFingerprint[] topmatches = new MagneticFingerprint[5];
         double distance;
         System.out.println(fingerprints.size());
-        for(int i = 0; i < fingerprints.size(); i++) {
+        for(MagneticFingerprint fp : fingerprints) {
             distance = 0;
-            distance += Math.pow((magnitude - fingerprints.get(i).magnitude), 2);
-            distance += Math.pow((zaxis - fingerprints.get(i).zaxis), 2);
-            distance += Math.pow((xyaxis - fingerprints.get(i).xyaxis), 2);
+            distance += Math.pow((magnitude - fp.magnitude), 2);
+            distance += Math.pow((zaxis - fp.zaxis), 2);
+            distance += Math.pow((xyaxis - fp.xyaxis), 2);
             distance = (double) Math.sqrt(distance);
-            //if (distance < compare) {
                 //sorted.add(fingerprints.get(i));
                 //compare = distance;
             //}
-            map.put(distance, fingerprints.get(i));
+            map.put(distance, fp);
         }
         
         for(int i = 0; i < topmatches.length; i++) {

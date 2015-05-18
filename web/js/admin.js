@@ -36,8 +36,9 @@ function getAllPoints() {
 
 function showPoints() {
     $(".point").remove();
+    if (referencePoints.length === 0)
+        return;
     for (key in referencePoints) {
-        if(!referencePoints.contains())
         createReferencePoint(referencePoints[key].x, referencePoints[key].y);
     }
 
@@ -88,11 +89,4 @@ function createMagneticPoint(x, y) {
 var Point = function (x, y) {
     this.x = x;
     this.y = y;
-};
-
-Array.prototype.contains = function ( obj ) {
-   for (i in this) {
-       if (this[i] === obj) return true;
-   }
-   return false;
 };

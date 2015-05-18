@@ -33,7 +33,6 @@ public class MappingServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         String command = request.getParameter("command");
-        String MAC;
         switch (command) {
             
             case Command.GET_CONNECTED_DEVICES:
@@ -45,16 +44,15 @@ public class MappingServlet extends HttpServlet {
                 break;
                 
             case Command.LOCATE_DEVICE:
-                MAC = request.getParameter("id");
-                String dataType = request.getParameter("dataType");
-                String data = request.getParameter("data");
-       
-                handleLocateDeviceRequest(out, MAC, dataType, data);
+                handleLocateDeviceRequest(out, request.getParameter("id"), 
+                        request.getParameter("dataType"), 
+                        request.getParameter("data"));
                 break;
                 
             case Command.GET_PARTICLES:
-                MAC = request.getParameter("id");
-                getParticles(out, MAC);
+                out.println(DeviceManager.getInstance()
+                        .getDevice(request.getParameter("id"))
+                        .getFilter().toJSON());
                 break;
                 
         }
@@ -63,35 +61,20 @@ public class MappingServlet extends HttpServlet {
     private void handleLocateDeviceRequest(PrintWriter out, String MAC, String dataType, String data) {
         switch(dataType) {
             case "REFERENCE_POINT":
-                HashMap<String, Double> referenceFingerprint = Parser.parseFingerprint(data);
-                locateReferenceArea(out, MAC, referenceFingerprint);
+                HashMap<String, Double> referenceFingerprint = removeUnreliable(Parser.parseFingerprint(data));
+                ReferencePoint locatedPoint = Locator.getInstance().locateReferenceArea(MAC, referenceFingerprint);
+                DeviceManager.getInstance().updateReferencePosition(MAC, locatedPoint);
+
+                out.println(locatedPoint.x + "," + locatedPoint.y);
                 break;
+                
             case "MAGNETIC_POINT":
+                
                 double[] magneticFingerprint = Parser.parseMagneticFingerprint(data);
-                locateMagneticPoint(out, MAC, magneticFingerprint);
+                 Locator.getInstance().updatePosition(MAC, magneticFingerprint);
                 break;
         }
-    }
-    
-    /*
-        locates closest RSS reference point.
-    */
-    protected void locateReferenceArea(PrintWriter out, String MAC, HashMap<String, Double> fingerprint) {
-        
-        removeUnreliable(fingerprint);
-        ReferencePoint locatedPoint = Locator.getInstance().locateReferenceArea(MAC, fingerprint);
-        DeviceManager.getInstance().updateReferencePosition(MAC, locatedPoint);
-        
-        out.println(locatedPoint.x + "," + locatedPoint.y);
-        
-    }
-    
-
-    protected void locateMagneticPoint(PrintWriter out, String MAC, double[] fingerprint) {
-        
-        Locator.getInstance().updatePosition(MAC, fingerprint);
-        
-    }
+    }    
 
     protected void getAllDevices(PrintWriter out) {
 
@@ -156,7 +139,7 @@ public class MappingServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void removeUnreliable(HashMap<String, Double> fingerprint) {
+    private HashMap<String, Double> removeUnreliable(HashMap<String, Double> fingerprint) {
         
         ArrayList<String> toRemove = new ArrayList<>();
 
@@ -170,10 +153,7 @@ public class MappingServlet extends HttpServlet {
         for (String key : toRemove)
             fingerprint.remove(key);
         
+        return fingerprint;
     }
 
-    private void getParticles(PrintWriter out, String MAC) {
-        out.println(DeviceManager.getInstance().getDevice(MAC).getFilter().toJSON());
-    }
-    
 }

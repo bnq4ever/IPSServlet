@@ -19,8 +19,8 @@ $(document).ready(function() {
         
         for (var id in particles) {
             var weight = particles[id].weight*4;
-            if(weight > 4) {
-                weight = 4;
+            if(weight > 2) {
+                weight = 2;
             }
             ctx.fillStyle = "#000000";
             ctx.beginPath();
