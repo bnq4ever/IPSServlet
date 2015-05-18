@@ -14,14 +14,14 @@ import java.util.HashMap;
  */
 public class Parser {
     public static ArrayList parseMagnetics(String magneticString) {
-        ArrayList<MagneticFingerprint> magnetics = new ArrayList<>();
+        ArrayList<MagneticPoint> magnetics = new ArrayList<>();
         String[] split = magneticString.split(";");
         for(String s : split) {
             String[] data = s.split("/");
             //    ;x/y/magnitude/zaxis/xyaxis;
             
             System.out.println(Double.parseDouble(data[0]) + " " +  Double.parseDouble(data[1]) + " " + Double.parseDouble(data[2]) + " " + Double.parseDouble(data[3]) + " " + Double.parseDouble(data[4]));
-            magnetics.add(new MagneticFingerprint(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]), Double.parseDouble(data[4])));
+            magnetics.add(new MagneticPoint(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]), Double.parseDouble(data[4])));
         }
         return magnetics;
     }

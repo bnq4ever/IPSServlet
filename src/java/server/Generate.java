@@ -13,11 +13,11 @@ import java.util.ArrayList;
  */
 public class Generate {
     
-    public static ArrayList<MagneticFingerprint> MagneticFingerprints() {
-        ArrayList<MagneticFingerprint> list = new ArrayList<>();
+    public static ArrayList<MagneticPoint> MagneticFingerprints() {
+        ArrayList<MagneticPoint> list = new ArrayList<>();
         for( int row = 0; row < 10; row++ ) {
             for(int col = 0; col < 10; col++) {
-                list.add(new MagneticFingerprint(col*10, row*10, value(), value(), value()));
+                list.add(new MagneticPoint(col*10, row*10, value(), value(), value()));
             }
         }
         return list;

@@ -16,7 +16,7 @@ import javax.json.JsonObject;
  */
 public class ParticleFilter {
     //private ArrayList<double[]> particles = new ArrayList<double[]>();
-    private ArrayList<Particle> particles;
+    private final ArrayList<Particle> particles;
     private static final double SCATTER = 2;
     private static final double LOWER_TRESHOLD = 0.85;
     private static final double UPPER_TRESHOLD = 0.95;
@@ -42,15 +42,16 @@ public class ParticleFilter {
             particles.add(new Particle(x, y, angle, SCATTER*Math.random(), 1));
         }
     }
-    public MagneticFingerprint Estimate(MagneticFingerprint[] locations, ArrayList<MagneticFingerprint> fingerprints) {
+    
+    public MagneticPoint estimate(MagneticPoint[] locations, ArrayList<MagneticPoint> fingerprints) {
         //for(MagneticFingerprint f : locations) {
         updateWeights(locations);
-        findClosestFingerprints(fingerprints); 
+        findClosestPoints(fingerprints); 
         return resetParticles();
     }
     
     
-    public MagneticFingerprint resetParticles() {
+    public MagneticPoint resetParticles() {
         ArrayList<Particle> removed = new ArrayList<>();
         int nbrDeleted = 0; //antal particlar som tas bort. Samma som removed.size().
         ArrayList<Particle> prioritized = new ArrayList<>();
@@ -71,7 +72,7 @@ public class ParticleFilter {
             }
             p.weight = 1;
         }
-        System.out.println("nbr of prioritized: "+prioritized.size()+" nbr of removed: "+removed.size());
+        System.out.println("nbr of prioritized: " + prioritized.size() + " nbr of removed: "+removed.size());
         prioritized.add(particles.get(indexofhighest));
         particles.removeAll(removed);
         for(int i = 0; i < nbrDeleted; i++) {
@@ -84,8 +85,8 @@ public class ParticleFilter {
     }
     
     
-    public MagneticFingerprint filteredLocation(ArrayList<Particle> prios) {
-        MagneticFingerprint toReturn = null;
+    public MagneticPoint filteredLocation(ArrayList<Particle> prios) {
+        MagneticPoint toReturn = null;
         int maxNeighbours = 0;
         //for(Particle prio : prios) {
           for(Particle prio : particles) {
@@ -112,10 +113,10 @@ public class ParticleFilter {
         }  
     }
     
-    public void findClosestFingerprints(ArrayList<MagneticFingerprint> fingerprints) {
+    public void findClosestPoints(ArrayList<MagneticPoint> fingerprints) {
         for(Particle p : particles) {
             double shortest = Double.MAX_VALUE;
-            for(MagneticFingerprint f : fingerprints) {
+            for(MagneticPoint f : fingerprints) {
                 double dist = Math.sqrt(Math.pow(p.x-f.x, 2) + Math.pow(p.y-f.y, 2));
                 if(dist < shortest) {
                     shortest = dist;
@@ -125,12 +126,12 @@ public class ParticleFilter {
         }
     }
     
-    public void updateWeights(MagneticFingerprint[] measurements) {
+    public void updateWeights(MagneticPoint[] measurements) {
         double dist = 0;
-        MagneticFingerprint calcWeight = null;
+        MagneticPoint calcWeight = null;
         for(Particle p : particles) {
             //dist = Double.MAX_VALUE;
-            for(MagneticFingerprint m : measurements) {
+            for(MagneticPoint m : measurements) {
                 double euclidean = Math.sqrt(Math.pow(p.x - m.x, 2) + Math.pow(p.y - m.y, 2));
                 if(euclidean > dist) {
                     dist = euclidean;
@@ -141,7 +142,7 @@ public class ParticleFilter {
         
         for(Particle p : particles) {
             double max = Double.MAX_VALUE;
-            for(MagneticFingerprint m : measurements) {
+            for(MagneticPoint m : measurements) {
                 double euclidean = Math.sqrt(Math.pow(p.x - m.x, 2) + Math.pow(p.y - m.y, 2));
                 if(euclidean < max) {
                     max = euclidean;
@@ -192,7 +193,7 @@ public class ParticleFilter {
         public double direction;
         public double speed;
         public double weight;
-        public MagneticFingerprint closestFingerprint;
+        public MagneticPoint closestFingerprint;
         private int lives = 3;
         private int prioritity = 0;
         
@@ -202,7 +203,7 @@ public class ParticleFilter {
             this.direction = direction;
             this.speed = speed;
             this.weight = weight;
-            closestFingerprint = new MagneticFingerprint(0, 0, 0, 0, 0);
+            closestFingerprint = new MagneticPoint(0, 0, 0, 0, 0);
         }
         
         public boolean kill() {

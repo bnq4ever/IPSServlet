@@ -58,20 +58,20 @@ public class MappingServlet extends HttpServlet {
         }
     }
     
-    private void handleLocateDeviceRequest(PrintWriter out, String MAC, String dataType, String data) {
+    private void handleLocateDeviceRequest(PrintWriter out, String deviceId, String dataType, String data) {
         switch(dataType) {
-            case "REFERENCE_POINT":
-                HashMap<String, Double> referenceFingerprint = removeUnreliable(Parser.parseFingerprint(data));
-                ReferencePoint locatedPoint = Locator.getInstance().locateReferenceArea(MAC, referenceFingerprint);
-                DeviceManager.getInstance().updateReferencePosition(MAC, locatedPoint);
+            case "REFERENCE_AREA":
+                HashMap<String, Double> areaFingerprint = removeUnreliable(Parser.parseFingerprint(data));
+                ReferenceArea locatedArea = Locator.getInstance().locateReferenceArea(deviceId, areaFingerprint);
+                DeviceManager.getInstance().updateReferencePosition(deviceId, locatedArea);
 
-                out.println(locatedPoint.x + "," + locatedPoint.y);
+                out.println(locatedArea.x + "," + locatedArea.y);
                 break;
                 
             case "MAGNETIC_POINT":
                 
                 double[] magneticFingerprint = Parser.parseMagneticFingerprint(data);
-                 Locator.getInstance().updatePosition(MAC, magneticFingerprint);
+                Locator.getInstance().updatePosition(deviceId, magneticFingerprint);
                 break;
         }
     }    
@@ -139,21 +139,21 @@ public class MappingServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private HashMap<String, Double> removeUnreliable(HashMap<String, Double> fingerprint) {
+    private HashMap<String, Double> removeUnreliable(HashMap<String, Double> areaFingerprint) {
         
         ArrayList<String> toRemove = new ArrayList<>();
 
-        for (String key : fingerprint.keySet() ) {
+        for (String key : areaFingerprint.keySet() ) {
         
-            if ((double)fingerprint.get(key) < -80)
+            if ((double)areaFingerprint.get(key) < -80)
                 toRemove.add(key);
-        
+            
         }
         
         for (String key : toRemove)
-            fingerprint.remove(key);
+            areaFingerprint.remove(key);
         
-        return fingerprint;
+        return areaFingerprint;
     }
 
 }

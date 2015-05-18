@@ -14,7 +14,7 @@ import java.util.HashMap;
  */
 public class RadioMap {
     private static RadioMap _instance;
-    private final ArrayList<ReferencePoint> referencePoints;
+    private final ArrayList<ReferenceArea> referenceAreas;
     
     public synchronized static RadioMap getInstance() {
         if (_instance == null) 
@@ -24,41 +24,40 @@ public class RadioMap {
     
     public RadioMap() {
         Database.getInstance().openConnection();
-        referencePoints = Database.getInstance().getRadioMap();
+        referenceAreas = Database.getInstance().getRadioMap();
         Database.getInstance().closeConnection();
-        System.out.println("referencePoints size: " + referencePoints.size());
+        System.out.println("referencePoints size: " + referenceAreas.size());
     }
     
-    public synchronized ArrayList<ReferencePoint> getReferencePoints() {
-        ArrayList<ReferencePoint> tmp = new ArrayList<>(referencePoints);
-        return tmp;
+    public synchronized ArrayList<ReferenceArea> getReferenceAreas() {
+        return new ArrayList<>(referenceAreas);
     }
     
-    public synchronized ArrayList<ReferencePoint> getRelevantPoints(double x, double y, HashMap<String, Double> deviceFingerprint) {
-        ArrayList<ReferencePoint> result = new ArrayList<>();
-        for (ReferencePoint point : referencePoints) {
-            for (String key : deviceFingerprint.keySet()) {
-                if (!point.fingerprint.containsKey(key) || (Math.sqrt(Math.pow((point.x - x), 2) + Math.pow((point.y - y), 2)) > 100))
+    public synchronized ArrayList<ReferenceArea> getRelevantAreas(double x, double y, HashMap<String, Double> obtainedFingerprint) {
+        ArrayList<ReferenceArea> relevantAreas = new ArrayList<>();
+        for (ReferenceArea area : referenceAreas) {
+            for (String key : obtainedFingerprint.keySet()) {
+                if (!area.fingerprint.containsKey(key) || (Math.sqrt(Math.pow((area.x - x), 2) + Math.pow((area.y - y), 2)) > 100))
                     break;
             }
-            result.add(point);
+            relevantAreas.add(area);
         }
-        return result;
+        return relevantAreas;
     }
     
-    public synchronized void addReferencePoint(ReferencePoint p) {
-        removeUnreliable(p);
-        ReferencePoint point = getReferencePoint(p.x, p.y);
-        if (point != null)
-            point.fingerprint = p.fingerprint;
+    public synchronized void addReferenceArea(ReferenceArea a) {
+        removeUnreliable(a);
+        ReferenceArea area = getReferenceArea(a.x, a.y);
+        if (area != null)
+            area.fingerprint = a.fingerprint;
         else
-            referencePoints.add(p);
+            referenceAreas.add(a);
         StringBuilder sb = new StringBuilder();
-        for (String key : p.fingerprint.keySet()) {
-            sb.append(key).append(" ").append(p.fingerprint.get(key));
+        for (String key : a.fingerprint.keySet()) {
+            sb.append(key).append(" ").append(a.fingerprint.get(key));
         }
         Database.getInstance().openConnection();
-        Database.getInstance().addReferencePoint(p);
+        Database.getInstance().addReferenceArea(a);
         Database.getInstance().closeConnection();
         System.out.println(sb.toString());
     }
@@ -66,14 +65,14 @@ public class RadioMap {
     /*
         Adds magnetic fingerprints to map and connects them to nearby RSSReferencepoint.
     */
-    public synchronized void addMagneticFingerprints(ArrayList<MagneticFingerprint> magnetics) {
+    public synchronized void addMagneticPoints(ArrayList<MagneticPoint> magneticPoints) {
         Database.getInstance().openConnection();
-        for(ReferencePoint point : referencePoints) {
+        for(ReferenceArea area : referenceAreas) {
             
-            for(MagneticFingerprint magneticFingerprint : magnetics) {                                            //Ändra från 300 sen
-                if(Math.sqrt(Math.pow((point.x - magneticFingerprint.x), 2) + Math.pow((point.y - magneticFingerprint.y), 2)) < 3000) {
-                    point.addMagnetic(magneticFingerprint);
-                    Database.getInstance().addMagneticPoint(magneticFingerprint, point);
+            for(MagneticPoint magneticPoint :  magneticPoints) {                                            //Ändra från 300 sen
+                if(Math.sqrt(Math.pow((area.x - magneticPoint.x), 2) + Math.pow((area.y - magneticPoint.y), 2)) < 3000) {
+                    area.addMagneticPoint(magneticPoint);
+                    Database.getInstance().addMagneticPoint(magneticPoint, area);
                 }    
             }
         
@@ -81,29 +80,29 @@ public class RadioMap {
         Database.getInstance().closeConnection();
     }
     
-    public synchronized ReferencePoint getReferencePoint(double x, double y) {
-        for (ReferencePoint point : referencePoints) {
-            if(x == point.x && y == point.y)
-                return point;
+    public synchronized ReferenceArea getReferenceArea(double x, double y) {
+        for (ReferenceArea area : referenceAreas) {
+            if(x == area.x && y == area.y)
+                return area;
         }
         return null;
     }
     
-    public synchronized void removeReferencePoint(double x, double y) {
-        referencePoints.remove(getReferencePoint(x, y));
+    public synchronized void removeReferenceArea(double x, double y) {
+        referenceAreas.remove(getReferenceArea(x, y));
     }
 
-    private void removeUnreliable(ReferencePoint p) {
+    private void removeUnreliable(ReferenceArea area) {
         ArrayList<String> toRemove = new ArrayList<>();
 
-        for (String key : p.fingerprint.keySet() ) {
+        for (String key : area.fingerprint.keySet() ) {
         
-            if ((double)p.fingerprint.get(key) < -80)
+            if ((double)area.fingerprint.get(key) < -80)
                 toRemove.add(key);
         
         }
         for (String key : toRemove)
-            p.fingerprint.remove(key);
+            area.fingerprint.remove(key);
         
     }
     

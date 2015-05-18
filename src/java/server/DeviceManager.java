@@ -36,12 +36,12 @@ public final class DeviceManager {
         return devices.contains(getDevice(deviceId));
     }
     
-    public synchronized void addDevice(String deviceId, String name) {
+    public synchronized void addDevice(String deviceId, String deviceName) {
         //System.out.println("addDevice");
 //        db.openConnection();
 //        db.addDevice(deviceId, name);
 //        db.closeConnection();
-        Device device = new Device(deviceId, name);
+        Device device = new Device(deviceId, deviceName);
         device.startFilter();
         devices.add(device);
     }
@@ -84,7 +84,7 @@ public final class DeviceManager {
         return Command.DEVICE_DISCONNECTED;
     }
     
-    public synchronized Device getDevice(String deviceId) {
+    protected synchronized Device getDevice(String deviceId) {
         for(Device d : devices) {
             if(d.getID().equals(deviceId)) {
                 return d;
@@ -95,15 +95,15 @@ public final class DeviceManager {
     }
     
     //Update DB data in interval or at shutdown
-    public synchronized void setDeviceName(String deviceId, String name) {
+    public synchronized void setDeviceName(String deviceId, String deviceName) {
         //System.out.println("setDeviceName");
 //        db.openConnection();
 //        db.setDeviceName(deviceId, name);
 //        db.closeConnection();
-        getDevice(deviceId).setName(name);
+        getDevice(deviceId).setName(deviceName);
     }
     
-    public synchronized ArrayList<Device> getConnectedDevices() {
+    protected synchronized ArrayList<Device> getConnectedDevices() {
         return new ArrayList<>(connectedDevices);
     }
     
@@ -131,27 +131,27 @@ public final class DeviceManager {
 //    }
     
 
-    public synchronized void updatePosition(String MAC, MagneticFingerprint fingerprint) {
-        Device device = getDevice(MAC);
-        device.setX(fingerprint.x);
-        device.setY(fingerprint.y);
+    protected synchronized void setPosition(String deviceId, MagneticPoint magneticPoint) {
+        Device device = getDevice(deviceId);
+        device.setX(magneticPoint.x);
+        device.setY(magneticPoint.y);
         //device.addPreviousPosition(fingerprint);
     }
     
-    public synchronized void updateReferencePosition(String MAC, ReferencePoint newReferencePoint) {
-        Device device = getDevice(MAC);
-        device.setReferencePoint(newReferencePoint);
+    public synchronized void updateReferencePosition(String deviceId, ReferenceArea area) {
+        Device device = getDevice(deviceId);
+        device.setReferenceArea(area);
         //device.setX(newReferencePoint.x);
         //device.setY(newReferencePoint.y);
         //System.out.println(newReferencePoint.x + " " + newReferencePoint.y);
     }
     
-    public synchronized void deleteDevice(String MAC) {
-        Device d = getDevice(MAC);
-        connectedDevices.remove(d);
-        devices.remove(d);
+    public synchronized void deleteDevice(String deviceId) {
+        Device device = getDevice(deviceId);
+        connectedDevices.remove(device);
+        devices.remove(device);
 //        db.openConnection();
-//        db.deleteDevice(MAC);
+//        db.deleteDevice(deviceId);
 //        db.closeConnection();
     }
 }
