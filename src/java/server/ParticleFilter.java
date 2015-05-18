@@ -17,7 +17,7 @@ import javax.json.JsonObject;
 public class ParticleFilter {
     //private ArrayList<double[]> particles = new ArrayList<double[]>();
     private ArrayList<Particle> particles;
-    private static final double SCATTER = 2;
+    private static final double SCATTER = 1.5;
     private static final double LOWER_TRESHOLD = 0.85;
     private static final double UPPER_TRESHOLD = 0.95;
 
@@ -193,7 +193,7 @@ public class ParticleFilter {
         public double speed;
         public double weight;
         public MagneticFingerprint closestFingerprint;
-        private int lives = 3;
+        private int lives = 4;
         private int prioritity = 0;
         
         Particle(double x, double y, double direction, double speed, double weight) {
