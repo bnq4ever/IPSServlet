@@ -26,19 +26,24 @@ public class Locator {
         
     }
     
-    public synchronized ReferencePoint locateReferenceArea(String MAC, HashMap<String, Double> fingerprint) {
-        ArrayList<ReferencePoint> relevantPoints = RadioMap.getInstance().getRelevantPoints(DeviceManager.getInstance().getDevice(MAC).getX(), DeviceManager.getInstance().getDevice(MAC).getY(),fingerprint);
-        double distance = Integer.MAX_VALUE;
-        ReferencePoint result = null;
-        for (ReferencePoint point : relevantPoints) {
-            double pointDistance = getRSSEuclidean(fingerprint, point);
-            if (pointDistance < distance) {
-                distance = pointDistance;
-                result = point;
+    public synchronized ReferenceArea locateReferenceArea(String deviceId, HashMap<String, Double> areaFingerprint) {
+        ArrayList<ReferenceArea> candidates = RadioMap.getInstance().getRelevantAreas(
+                DeviceManager.getInstance().getDevice(deviceId).getX(), 
+                DeviceManager.getInstance().getDevice(deviceId).getY(),
+                areaFingerprint);
+        
+        double bestDistance = Integer.MAX_VALUE;
+        ReferenceArea bestCandidate = null;
+        
+        for (ReferenceArea candidate : candidates) {
+            double candidateDistance = getRSSEuclidean(areaFingerprint, candidate);
+            if ( candidateDistance < bestDistance ) {
+                bestDistance = candidateDistance;
+                bestCandidate = candidate;
             }
         }     
-        System.out.println("BEST POINT " + "x: " + result.x + " y: " + result.y);
-        return result;
+        System.out.println("BEST POINT " + "x: " + bestCandidate.x + " y: " + bestCandidate.y);
+        return bestCandidate;
         
 //        ArrayList<ReferencePoint> referenceAreas = RadioMap.getInstance().getRelevantPoints(DeviceManager.getInstance().getDevice(MAC).getX(), DeviceManager.getInstance().getDevice(MAC).getY(),fingerprint);
 //        double distance = Integer.MAX_VALUE;
@@ -48,12 +53,12 @@ public class Locator {
 //        return result;
     }
     
-    private synchronized double getRSSEuclidean(HashMap<String, Double> fingerprint, ReferencePoint p) {
-        double pointDistance = 0;
+    private synchronized double getRSSEuclidean(HashMap<String, Double> fingerprint, ReferenceArea candidate) {
+        double candidateDistance = 0;
         //System.out.println("euclidian");
         for ( String key : fingerprint.keySet() ) {
-            if(p.fingerprint.get(key) != null) {
-                pointDistance += Math.pow(fingerprint.get(key) - p.fingerprint.get(key), 2);
+            if(candidate.fingerprint.get(key) != null) {
+                candidateDistance += Math.pow(fingerprint.get(key) - candidate.fingerprint.get(key), 2);
             }
             /*
             else {
@@ -61,14 +66,15 @@ public class Locator {
             }
             */
         }
-        return Math.sqrt(pointDistance);
+        return Math.sqrt(candidateDistance);
     }
     
-    public synchronized void updatePosition(String MAC, double[] fingerprint) {
-        MagneticFingerprint[] locations = getNearestMagnetic(MAC, fingerprint);
-        MagneticFingerprint filteredlocation = locations[0];
-        filteredlocation = DeviceManager.getInstance().getDevice(MAC).getFilter().Estimate(locations, DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics());
-        DeviceManager.getInstance().updatePosition(MAC, filteredlocation);
+
+    public synchronized void updatePosition(String deviceId, double[] fingerprint) {
+        MagneticPoint[] bestLocations = getNearestMagnetic(deviceId, fingerprint);
+        MagneticPoint filteredlocation = bestLocations[0];
+        filteredlocation = DeviceManager.getInstance().getDevice(deviceId).getFilter().estimate(bestLocations, DeviceManager.getInstance().getDevice(deviceId).getReferenceArea().getMagneticPoints());
+        DeviceManager.getInstance().setPosition(deviceId, filteredlocation);
     }
     
     
@@ -77,31 +83,33 @@ public class Locator {
     
         UPDATE: Method returns the top 5 magneticfingerprints. 
     */
-    private synchronized MagneticFingerprint[] getNearestMagnetic(String MAC, double[] fingerprint) {
-        double magnitude = fingerprint[0];
-        double zaxis = fingerprint[1];
-        double xyaxis = fingerprint[2];
+    private synchronized MagneticPoint[] getNearestMagnetic(String deviceId, double[] magneticFingerprint) {
+        double magnitude = magneticFingerprint[0];
+        double zaxis = magneticFingerprint[1];
+        double xyaxis = magneticFingerprint[2];
         
-        TreeMap<Double, MagneticFingerprint> map = new TreeMap<Double, MagneticFingerprint>();
-        ArrayList<MagneticFingerprint> fingerprints = DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics();
+        TreeMap<Double, MagneticPoint> map = new TreeMap<>();
+        ArrayList<MagneticPoint> magneticPoints = DeviceManager.getInstance().getDevice(deviceId).getReferenceArea().getMagneticPoints();
         double compare = Float.MAX_VALUE;
         //ArrayList<MagneticFingerprint> sorted = new ArrayList<MagneticFingerprint>();
-        MagneticFingerprint[] topmatches = new MagneticFingerprint[3];
+
+        MagneticPoint[] bestCandidates = new MagneticPoint[5];
         double distance;
-        for(MagneticFingerprint fp : fingerprints) {
+        for(MagneticPoint point : magneticPoints) {
             distance = 0;
-            distance += Math.pow((magnitude - fp.magnitude), 2);
-            distance += Math.pow((zaxis - fp.zaxis), 2);
-            distance += Math.pow((xyaxis - fp.xyaxis), 2);
+            distance += Math.pow((magnitude - point.magnitude), 2);
+            distance += Math.pow((zaxis - point.zaxis), 2);
+            distance += Math.pow((xyaxis - point.xyaxis), 2);
             distance = (double) Math.sqrt(distance);
                 //sorted.add(fingerprints.get(i));
                 //compare = distance;
             //}
-            map.put(distance, fp);
+            map.put(distance, point);
         }
-        for(int i = 0; i < topmatches.length; i++) {
-            topmatches[i] = map.pollLastEntry().getValue();
+
+        for(int i = 0; i < bestCandidates.length; i++) {
+            bestCandidates[i] = map.pollLastEntry().getValue();
         }
-        return topmatches;
+        return bestCandidates;
     }
 }

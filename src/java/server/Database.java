@@ -1,9 +1,7 @@
 package server;
 
 import java.sql.*;
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,16 +22,14 @@ public class Database {
         return _instance;
     }    
 
-    
-    
-//    public void addDevice(String deviceId, String name) {
+//    public void addDevice(String deviceId, String deviceName) {
 //        String sql = "INSERT INTO USERS "
 //                + "(MAC, NAME) VALUES"
 //                + "(?, ?)";
 //        try {
 //            preparedStatement = conn.prepareStatement(sql);
 //            preparedStatement.setString(1, deviceId);
-//            preparedStatement.setString(2, name);
+//            preparedStatement.setString(2, deviceName);
 //            preparedStatement.executeUpdate();
 //        } catch (SQLException e) {
 //            System.out.println(e.getMessage());
@@ -43,17 +39,16 @@ public class Database {
 //    }
 
     //Working
-    public boolean addReferencePoint(ReferencePoint p) {
-        Set<String> keys = p.fingerprint.keySet();
-        String fingerprint = p.getFingerprint();
+    public boolean addReferenceArea(ReferenceArea area) {
+        Set<String> keys = area.fingerprint.keySet();
         String sql = "INSERT INTO REFERENCE_POINTS "
                 + "(x, y, fingerprint) VALUES"
                 + "(?, ?, ?)";
         try {
             preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setDouble(1, p.x);
-            preparedStatement.setDouble(2, p.y);
-            preparedStatement.setString(3, fingerprint);
+            preparedStatement.setDouble(1, area.x);
+            preparedStatement.setDouble(2, area.y);
+            preparedStatement.setString(3, area.getFingerprint());
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -66,19 +61,19 @@ public class Database {
     }
     
     //Working
-    public boolean addMagneticPoint(MagneticFingerprint fingerprint, ReferencePoint p) {
+    public boolean addMagneticPoint(MagneticPoint magneticPoint, ReferenceArea area) {
         String sql = "INSERT INTO MAGNETIC_POINTS "
                 + "(x, y, magnitude, zvalue, xyvalue, reference_x, reference_y) VALUES"
                 + "(?, ?, ?, ?, ?, ?, ?)";
         try {
             preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setDouble(1, fingerprint.x);
-            preparedStatement.setDouble(2, fingerprint.y);
-            preparedStatement.setDouble(3, fingerprint.magnitude);
-            preparedStatement.setDouble(4, fingerprint.zaxis);
-            preparedStatement.setDouble(5, fingerprint.xyaxis);
-            preparedStatement.setDouble(6, p.x);
-            preparedStatement.setDouble(7, p.y);
+            preparedStatement.setDouble(1, magneticPoint.x);
+            preparedStatement.setDouble(2, magneticPoint.y);
+            preparedStatement.setDouble(3, magneticPoint.magnitude);
+            preparedStatement.setDouble(4, magneticPoint.zaxis);
+            preparedStatement.setDouble(5, magneticPoint.xyaxis);
+            preparedStatement.setDouble(6, area.x);
+            preparedStatement.setDouble(7, area.y);
             
             preparedStatement.executeUpdate();
             return true;
@@ -92,17 +87,22 @@ public class Database {
     }
 
     
-    public ArrayList<ReferencePoint> getRadioMap() {
-        ArrayList<ReferencePoint> referencePoints = new ArrayList<>();
+    public ArrayList<ReferenceArea> getRadioMap() {
+        ArrayList<ReferenceArea> referenceAreas = new ArrayList<>();
         String sql = "Select * FROM REFERENCE_POINTS";
         
         try {
             preparedStatement = conn.prepareStatement(sql);
             ResultSet rs = preparedStatement.executeQuery(sql);
             while(rs.next()) {
-                ReferencePoint p = new ReferencePoint(rs.getDouble("x"), rs.getDouble("y"), Parser.parseFingerprint(rs.getString("fingerprint")));
-                p.magnetics = getMagneticPoints(rs.getDouble("x"), rs.getDouble("y"));
-                referencePoints.add(p);
+                
+                ReferenceArea area = new ReferenceArea(
+                        rs.getDouble("x"), 
+                        rs.getDouble("y"), 
+                        Parser.parseFingerprint(rs.getString("fingerprint")));
+                
+                area.magneticPoints = getMagneticPoints(rs.getDouble("x"), rs.getDouble("y"));
+                referenceAreas.add(area);
                 //System.out.println(rs.getDouble("x") + " " + rs.getDouble("y") + " " + Parser.parseFingerprint(rs.getString("fingerprint") + " " + p.magnetics.size()));
             }
         } catch (SQLException e) {
@@ -110,11 +110,11 @@ public class Database {
         } finally {
             closePreparedStatement();
         }
-        return referencePoints;
+        return referenceAreas;
     }
     
-    public ArrayList<MagneticFingerprint> getMagneticPoints(double x, double y) {
-        ArrayList<MagneticFingerprint> magnetics = new ArrayList<>();
+    public ArrayList<MagneticPoint> getMagneticPoints(double x, double y) {
+        ArrayList<MagneticPoint> magneticPoints = new ArrayList<>();
         String sql = "SELECT * FROM MAGNETIC_POINTS "
                 + "WHERE REFERENCE_X=? AND "
                 + "REFERENCE_Y=?";
@@ -125,23 +125,29 @@ public class Database {
             ResultSet rs = preparedStatement.executeQuery();
             while(rs.next()) {
                 //System.out.println(rs.getDouble("x") + " " + rs.getDouble("y") + " " + rs.getDouble("magnitude") + " " + rs.getDouble("zvalue") + " " + rs.getDouble("xyvalue"));
-                magnetics.add(new MagneticFingerprint(rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("magnitude"), rs.getDouble("zvalue"), rs.getDouble("xyvalue")));
+                magneticPoints.add(
+                        new MagneticPoint(
+                            rs.getDouble("x"), 
+                            rs.getDouble("y"), 
+                            rs.getDouble("magnitude"), 
+                            rs.getDouble("zvalue"), 
+                            rs.getDouble("xyvalue")));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
             closePreparedStatement();
         }
-        return magnetics;
+        return magneticPoints;
     }
     
-    public void setDeviceName(String deviceId, String name) {
+    public void setDeviceName(String deviceId, String deviceName) {
         String sql = "UPDATE USERS "
                 + "SET NAME=? "
                 + "WHERE MAC=?";
         try {
             preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, name);
+            preparedStatement.setString(1, deviceName);
             preparedStatement.setString(2, deviceId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -171,34 +177,37 @@ public class Database {
         return false;
     }
 
-    public String getDevice(String MAC) {
+    public String getDevice(String deviceId) {
         String sql = "SELECT NAME FROM USERS "
                 + "WHERE MAC=?";
-        String name = "";
+        String deviceName = "";
         try {
             preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, MAC);
+            preparedStatement.setString(1, deviceId);
             ResultSet rs = preparedStatement.executeQuery(sql);
             while (rs.next()) {
-                name = rs.getString("NAME");
+                deviceName = rs.getString("NAME");
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
             closePreparedStatement();
         }
-        return name;
+        return deviceName;
     }
 
     public ArrayList<Device> getAllDevices() {
-        ArrayList<Device> devices = new ArrayList<>();
+        ArrayList<Device> allDevices = new ArrayList<>();
         String sql = "SELECT MAC, NAME FROM USERS "
                 + "ORDER BY MAC";
         try {
             preparedStatement = conn.prepareStatement(sql);
             ResultSet rs = preparedStatement.executeQuery(sql);
             while (rs.next()) {
-                devices.add(new Device(rs.getString("MAC"), rs.getString("NAME")));
+                allDevices.add(
+                        new Device(
+                            rs.getString("MAC"), 
+                            rs.getString("NAME")));
             }
 
         } catch (SQLException e) {
@@ -206,15 +215,15 @@ public class Database {
         } finally {
             closePreparedStatement();
         }
-        return devices;
+        return allDevices;
     }
     
-    public void deleteDevice(String MAC) {
+    public void deleteDevice(String deviceId) {
         String sql = "DELETE USERS WHERE "
                 + "MAC = ?";
         try {
             preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, MAC);
+            preparedStatement.setString(1, deviceId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

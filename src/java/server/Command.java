@@ -21,12 +21,12 @@ public class Command {
     public static final String DEVICE_DELETED = "DEVICE_DELETED";
     public static final String DEVICE_NOT_EXISTING = "DEVICE_NOT_EXISTING";
     
-    public static final String ADD_MAGNETIC_FINGERPRINTS = "ADD_MAGNETIC_FINGERPRINTS";
-    public static final String MAGNETIC_FINGERPRINTS_ADDED = "MAGNETIC_FINGERPRINTS_ADDED";
-    public static final String MAGNETIC_FINGERPRINTS_NOT_ADDED = "MAGNETIC_FINGERPRINTS_NOT_ADDED";
-    public static final String ADD_REFERENCE_POINT = "ADD_REFERENCE_POINT";
-    public static final String REFERENCE_POINT_ADDED = "REFERENCE_POINT_ADDED";
-    public static final String REFERENCE_POINT_NOT_ADDED = "REFERENCE_POINT_NOT_ADDED";
+    public static final String ADD_MAGNETIC_POINTS = "ADD_MAGNETIC_POINTS";
+    public static final String MAGNETIC_POINTS_ADDED = "MAGNETIC_POINTS_ADDED";
+    public static final String MAGNETIC_POINTS_NOT_ADDED = "MAGNETIC_POINTS_NOT_ADDED";
+    public static final String ADD_REFERENCE_AREA = "ADD_REFERENCE_AREA";
+    public static final String REFERENCE_AREA_ADDED = "REFERENCE_AREA_ADDED";
+    public static final String REFERENCE_AREA_NOT_ADDED = "REFERENCE_AREA_NOT_ADDED";
     
     //DEVICE REQUESTS
     public static final String CONNECT_DEVICE = "CONNECT_DEVICE";

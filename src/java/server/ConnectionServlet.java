@@ -35,41 +35,40 @@ public class ConnectionServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         
         String command = request.getParameter("command");
-        String MAC = request.getParameter("id");
         System.out.println(command);
         switch(command) {
             case Command.CONNECT_DEVICE:
-                connectDevice(out, MAC);
+                connectDevice(out, request.getParameter("id"));
                 break;
             case Command.DISCONNECT_DEVICE:
-                disconnectDevice(out, MAC);
+                disconnectDevice(out, request.getParameter("id"));
                 break;
             case Command.INTRODUCING_DEVICE:
-                String name = request.getParameter("name");
-                introduction(out, MAC, name);
+                String deviceName = request.getParameter("name");
+                introduction(out, request.getParameter("id"), deviceName);
                 break;
             case Command.DELETE_DEVICE:
-                deleteDevice(out, MAC);
+                deleteDevice(out, request.getParameter("id"));
                 break;
         }
     }
     
-    private void deleteDevice(PrintWriter out, String MAC) {
-        if (DeviceManager.getInstance().exists(MAC)) {
-            DeviceManager.getInstance().deleteDevice(MAC);
+    private void deleteDevice(PrintWriter out, String deviceMAC) {
+        if (DeviceManager.getInstance().exists(deviceMAC)) {
+            DeviceManager.getInstance().deleteDevice(deviceMAC);
             out.print(Command.DEVICE_DELETED);
         } else {
             out.print(Command.DEVICE_NOT_EXISTING);
         }
     }
 
-    private void connectDevice(PrintWriter out, String MAC) {
-        if (!DeviceManager.getInstance().isIntroduced(MAC)) {
+    private void connectDevice(PrintWriter out, String deviceMAC) {
+        if (!DeviceManager.getInstance().isIntroduced(deviceMAC)) {
             out.print(Command.DEVICE_UNKNOWN);
-        } else if (DeviceManager.getInstance().isConnected(MAC)) {
+        } else if (DeviceManager.getInstance().isConnected(deviceMAC)) {
             out.print(Command.DEVICE_CONNECTED);
         } else {
-            DeviceManager.getInstance().connectDevice(MAC);
+            DeviceManager.getInstance().connectDevice(deviceMAC);
             out.print(Command.DEVICE_CONNECTED);
         }
     }
@@ -113,17 +112,17 @@ public class ConnectionServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void disconnectDevice(PrintWriter out, String MAC) {
-        if (DeviceManager.getInstance().isConnected(MAC)) {
-            DeviceManager.getInstance().disconnectDevice(MAC);
+    private void disconnectDevice(PrintWriter out, String deviceMAC) {
+        if (DeviceManager.getInstance().isConnected(deviceMAC)) {
+            DeviceManager.getInstance().disconnectDevice(deviceMAC);
             out.print(Command.DEVICE_DISCONNECTED);
         } else {
             out.print(Command.DEVICE_ALREADY_DISCONNECTED);
         }
     }
 
-    private void introduction(PrintWriter out, String MAC, String name) {
-        DeviceManager.getInstance().addDevice(MAC, name);
+    private void introduction(PrintWriter out, String deviceMAC, String deviceName) {
+        DeviceManager.getInstance().addDevice(deviceMAC, deviceName);
         out.print(Command.DEVICE_INTRODUCED);
     }
 

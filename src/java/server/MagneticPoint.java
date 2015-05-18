@@ -9,12 +9,12 @@ package server;
  *
  * @author fredrik
  */
-class MagneticFingerprint {
+class MagneticPoint {
     public double x, y;
     //private float[] orientation;
     public double magnitude, zaxis, xyaxis;
     
-    public MagneticFingerprint(double x, double y, double magnitude, double zaxis, double xyaxis) {
+    public MagneticPoint(double x, double y, double magnitude, double zaxis, double xyaxis) {
         this.x = x;
         this.y = y;
         this.magnitude = magnitude;

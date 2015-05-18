@@ -48,7 +48,7 @@ public class ParticleFilterSet {
         }
     }
     
-    public MagneticFingerprint Estimate(MagneticFingerprint location, ArrayList<MagneticFingerprint> fingerprints) {
+    public MagneticPoint Estimate(MagneticPoint location, ArrayList<MagneticPoint> fingerprints) {
         //for(MagneticFingerprint f : locations) {
         updateWeights(location);
         findClosestFingerprints(fingerprints); 
@@ -56,7 +56,7 @@ public class ParticleFilterSet {
     }
     
     
-    public MagneticFingerprint resetParticles() {
+    public MagneticPoint resetParticles() {
         ArrayList<Particle> removed = new ArrayList<>();
         int nbrDeleted = 0; //antal particlar som tas bort. Samma som removed.size().
         ArrayList<Particle> prioritized = new ArrayList<>();
@@ -166,7 +166,7 @@ public class ParticleFilterSet {
         public double direction;
         public double speed;
         public double weight;
-        public MagneticFingerprint closestFingerprint;
+        public MagneticPoint closestFingerprint;
         private int lives = 3;
         private int prioritity = 0;
         
@@ -176,7 +176,7 @@ public class ParticleFilterSet {
             this.direction = direction;
             this.speed = speed;
             this.weight = weight;
-            closestFingerprint = new MagneticFingerprint(0, 0, 0, 0, 0);
+            closestFingerprint = new MagneticPoint(0, 0, 0, 0, 0);
         }
         
         public boolean kill() {

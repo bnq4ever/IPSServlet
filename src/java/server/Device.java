@@ -5,8 +5,6 @@
  */
 package server;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author Hampus
@@ -16,9 +14,9 @@ class Device {
     private final String id;
     private double x;
     private double y;
-    private ArrayList<MagneticFingerprint> previousPositions;//HISTORICAL COORDINATES
-    private double direction;
-    private ReferencePoint referencePoint;
+    //private ArrayList<MagneticPoint> previousPoints;//HISTORICAL COORDINATES
+    //private double direction;
+    private ReferenceArea referenceArea;
     private ParticleFilter filter;
     public double lastMeasurement = 0;
     
@@ -66,25 +64,25 @@ class Device {
         return id;
     }
     
-    public void setDirection(double direction) {
-        this.direction = direction;
+//    public void setDirection(double direction) {
+//        this.direction = direction;
+//    }
+    
+//    public double getDirection() {
+//        return direction;
+//    }
+    
+    public void setReferenceArea(ReferenceArea referenceArea) {
+        this.referenceArea = referenceArea;
     }
     
-    public double getDirection() {
-        return direction;
+    public ReferenceArea getReferenceArea() {
+        return this.referenceArea;
     }
     
-    public void setReferencePoint(ReferencePoint referencePoint) {
-        this.referencePoint = referencePoint;
-    }
-    
-    public ReferencePoint getReferencePoint() {
-        return this.referencePoint;
-    }
-    
-    public void addPreviousPosition(MagneticFingerprint fingerprint) {
-        previousPositions.add(fingerprint);
-    }
+//    public void addPreviousPosition(MagneticPoint fingerprint) {
+//        previousPoints.add(fingerprint);
+//    }
     
     
     void startFilter() {
@@ -100,10 +98,11 @@ class Device {
 //    public boolean equals(Device device) {
 //        return id.equals(device.getId());
 //    }
-    @Override
-    public boolean equals(Object o) {
-        if(!(o instanceof Device)) return false;
-        Device other = (Device) o;
-        return this.id.equals(other.getId());
-    }
+    
+//    @Override
+//    public boolean equals(Object o) {
+//        if(!(o instanceof Device)) return false;
+//        Device other = (Device) o;
+//        return this.id.equals(other.getId());
+//    }
 }

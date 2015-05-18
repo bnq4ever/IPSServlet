@@ -38,17 +38,16 @@ public class BuildingServlet extends HttpServlet {
         String command = request.getParameter("command");
         System.out.println(command);
         switch(command) {
-            case Command.ADD_REFERENCE_POINT:
-                double x = Double.parseDouble(request.getParameter("x"));
-                double y = Double.parseDouble(request.getParameter("y"));
-                String fingerprintData = request.getParameter("fingerprint");
-                //System.out.println(x + " " + y + " " + fingerprintData);
-                addReferencePoint(out, x, y, fingerprintData);
+            case Command.ADD_REFERENCE_AREA:
+                handleReferenceAreaData(out, 
+                        Double.parseDouble(request.getParameter("x")), 
+                        Double.parseDouble(request.getParameter("y")),
+                        request.getParameter("fingerprint"));
                 break;
                 
-            case Command.ADD_MAGNETIC_FINGERPRINTS:
-                String magneticData = request.getParameter("magnetics");
-                addMagneticFingerprints(out, magneticData);
+            case Command.ADD_MAGNETIC_POINTS:
+                handleMagneticPointsData(out, 
+                        request.getParameter("magnetics"));
                 break;
                 
             case Command.GET_ALL_POINTS:
@@ -58,28 +57,43 @@ public class BuildingServlet extends HttpServlet {
     }
     
     private void getAllPoints(PrintWriter out) {
-        ArrayList<ReferencePoint> referencePoints = RadioMap.getInstance().getReferencePoints();
+        ArrayList<ReferenceArea> referenceAreas = RadioMap.getInstance().getReferenceAreas();
         JsonArrayBuilder array = Json.createArrayBuilder();
 
-        for (ReferencePoint point : referencePoints) {
+        for (ReferenceArea area : referenceAreas) {
+            
             JsonArrayBuilder magnetics = Json.createArrayBuilder();
-            for(MagneticFingerprint magnetic : point.magnetics) {
-                magnetics.add(Json.createObjectBuilder().add("x", magnetic.x).add("y", magnetic.y));
+            
+            for(MagneticPoint magnetic : area.magneticPoints) {
+                
+                magnetics.add(Json.createObjectBuilder()
+                        .add("x", magnetic.x)
+                        .add("y", magnetic.y));
+                
             }
-            array.add(Json.createObjectBuilder().add("x", point.x).add("y", point.y).add("magnetics", magnetics));
+            array.add(Json.createObjectBuilder()
+                    .add("x", area.x)
+                    .add("y", area.y)
+                    .add("magnetics", magnetics));
         }
-        out.println(Json.createObjectBuilder().add("referencePoints", array).build());
+        out.println(Json.createObjectBuilder()
+                .add("referencePoints", array)
+                .build());
     }
     
 
-    private void addReferencePoint(PrintWriter out, double x, double y, String fingerprintData) {
-        RadioMap.getInstance().addReferencePoint(new ReferencePoint(x, y, Parser.parseFingerprint(fingerprintData)));
-        out.print(Command.REFERENCE_POINT_ADDED);
+    private void handleReferenceAreaData(PrintWriter out, double x, double y, String areaData) {
+        RadioMap.getInstance().addReferenceArea(
+                new ReferenceArea(x, y, Parser.parseFingerprint(areaData)));
+        
+        out.print(Command.REFERENCE_AREA_ADDED);
     }
     
-    private void addMagneticFingerprints(PrintWriter out, String magneticData) {
-        RadioMap.getInstance().addMagneticFingerprints(Parser.parseMagnetics(magneticData));
-        out.print(Command.MAGNETIC_FINGERPRINTS_ADDED);
+    private void handleMagneticPointsData(PrintWriter out, String magneticPointsData) {
+        RadioMap.getInstance().addMagneticPoints(
+                Parser.parseMagnetics(magneticPointsData));
+        
+        out.print(Command.MAGNETIC_POINTS_ADDED);
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
