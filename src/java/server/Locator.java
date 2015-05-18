@@ -34,7 +34,7 @@ public class Locator {
         ReferencePoint result = null;
         for (ReferencePoint point : relevantPoints) {
             double pointDistance = getRSSEuclidean(fingerprint, point);
-            if ( pointDistance < distance ) {
+            if (pointDistance < distance) {
                 distance = pointDistance;
                 result = point;
             }
