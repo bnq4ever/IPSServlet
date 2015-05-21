@@ -72,7 +72,7 @@ public class Locator {
     public synchronized void updatePosition(String deviceId, double[] fingerprint) {
         MagneticPoint[] bestLocations = getNearestMagnetic(deviceId, fingerprint);
         MagneticPoint filteredlocation = bestLocations[0];
-        //filteredlocation = DeviceManager.getInstance().getDevice(deviceId).getFilter().Estimate(locations, DeviceManager.getInstance().getDevice(MAC).getReferencePoint().getMagnetics());
+        filteredlocation = DeviceManager.getInstance().getDevice(deviceId).getFilter().estimate(bestLocations, DeviceManager.getInstance().getDevice(deviceId).getReferenceArea().getMagneticPoints());
         DeviceManager.getInstance().setPosition(deviceId, filteredlocation);
     }
     
@@ -88,7 +88,9 @@ public class Locator {
         double xyaxis = magneticFingerprint[2];
         
         TreeMap<Double, MagneticPoint> map = new TreeMap<>();
+
         ArrayList<MagneticPoint> magneticPoints = DeviceManager.getInstance().getDevice(deviceId).getReferenceArea().getMagneticPoints();
+
         double compare = Float.MAX_VALUE;
         //ArrayList<MagneticFingerprint> sorted = new ArrayList<MagneticFingerprint>();
         MagneticPoint[] bestCandidates = new MagneticPoint[5];

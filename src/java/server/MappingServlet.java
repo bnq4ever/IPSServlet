@@ -50,8 +50,9 @@ public class MappingServlet extends HttpServlet {
                 break;
                 
             case Command.GET_PARTICLES:
+                String deviceId = request.getParameter("id");
                 out.println(DeviceManager.getInstance()
-                        .getDevice(request.getParameter("id"))
+                        .getDevice(deviceId)
                         .getFilter().toJSON());
                 break;
                 
@@ -59,6 +60,7 @@ public class MappingServlet extends HttpServlet {
     }
     
     private void handleLocateDeviceRequest(PrintWriter out, String deviceId, String dataType, String data) {
+        System.out.println();
         switch(dataType) {
             case "REFERENCE_AREA":
                 HashMap<String, Double> areaFingerprint = removeUnreliable(Parser.parseFingerprint(data));
