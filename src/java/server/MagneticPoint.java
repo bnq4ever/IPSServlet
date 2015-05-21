@@ -10,7 +10,7 @@ package server;
  * @author fredrik
  */
 class MagneticPoint {
-    public double x, y;
+    public double x, y, diff;
     //private float[] orientation;
     public double magnitude, zaxis, xyaxis;
     

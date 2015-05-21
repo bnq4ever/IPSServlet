@@ -59,7 +59,6 @@ public class RadioMap {
         Database.getInstance().openConnection();
         Database.getInstance().addReferenceArea(a);
         Database.getInstance().closeConnection();
-        System.out.println(sb.toString());
     }
        
     /*

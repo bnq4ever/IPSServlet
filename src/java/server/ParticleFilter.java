@@ -17,13 +17,14 @@ import javax.json.JsonObject;
 public class ParticleFilter {
     //private ArrayList<double[]> particles = new ArrayList<double[]>();
     private final ArrayList<Particle> particles;
-    private static final double SCATTER = 1.5;
-    private static final double LOWER_TRESHOLD = 0.85;
-    private static final double UPPER_TRESHOLD = 0.95;
+    private static final double SCATTER = 2;
+    private static final double LOWER_TRESHOLD = 0.89;
+    private static final double UPPER_TRESHOLD = 0.97;
+    private double SCATTER_DIRECTION = 0;
 
     private static final int MAP_WIDTH = 1200;
     private static final int MAP_HEIGHT = 1200;
-    private static final int NBR_OF_PARTICLES = 100;
+    private static final int NBR_OF_PARTICLES = 300;
     
     //private ArrayList<MagneticFingerprint> fingerprints;
 
@@ -43,15 +44,21 @@ public class ParticleFilter {
         }
     }
     
-    public MagneticPoint estimate(MagneticPoint[] locations, ArrayList<MagneticPoint> fingerprints) {
-        //for(MagneticFingerprint f : locations) {
-        updateWeights(locations);
-        findClosestPoints(fingerprints); 
-        return resetParticles();
+    public MagneticPoint estimate(ArrayList<MagneticPoint> locations, ArrayList<MagneticPoint> fingerprints) {
+        if(locations.isEmpty()) {
+            moveParticles();
+            return null;
+        }else{
+            updateWeights(locations);
+            findClosestPoints(fingerprints);
+            return resampleParticles();
+        }  
     }
     
-    
-    public MagneticPoint resetParticles() {
+    /*
+        Resampling particles.
+    */
+    public MagneticPoint resampleParticles() {    
         ArrayList<Particle> removed = new ArrayList<>();
         int nbrDeleted = 0; //antal particlar som tas bort. Samma som removed.size().
         ArrayList<Particle> prioritized = new ArrayList<>();
@@ -84,7 +91,9 @@ public class ParticleFilter {
         //return toReturn;
     }
     
-    
+    /*
+            returns a filtered location.
+    */
     public MagneticPoint filteredLocation(ArrayList<Particle> prios) {
         MagneticPoint toReturn = null;
         int maxNeighbours = 0;
@@ -108,6 +117,7 @@ public class ParticleFilter {
     public void moveParticles() {
         //for(double[] p : particles) {
         for(Particle p : particles) {
+            //p.direction = Math.random()*360;
             p.x += p.speed*Math.cos(Math.toRadians(p.direction));
             p.y += p.speed*Math.sin(Math.toRadians(p.direction));
         }  
@@ -126,7 +136,7 @@ public class ParticleFilter {
         }
     }
     
-    public void updateWeights(MagneticPoint[] measurements) {
+    public void updateWeights(ArrayList<MagneticPoint> measurements) {
         double dist = 0;
         MagneticPoint calcWeight = null;
         for(Particle p : particles) {
@@ -135,7 +145,7 @@ public class ParticleFilter {
                 double euclidean = Math.sqrt(Math.pow(p.x - m.x, 2) + Math.pow(p.y - m.y, 2));
                 if(euclidean > dist) {
                     dist = euclidean;
-                   // calcWeight = m;
+                    calcWeight = m;
                 }
             }
         }
@@ -149,8 +159,7 @@ public class ParticleFilter {
                     calcWeight = m;
                 }
             }
-            p.weight = 1 - (Math.sqrt(Math.pow(p.x - calcWeight.x, 2) + Math.pow(p.y - calcWeight.y, 2)) / dist);
-            System.out.println("PARTICLE WEIGHT: "+p.weight);
+                p.weight = 1 - (Math.sqrt(Math.pow(p.x - calcWeight.x, 2) + Math.pow(p.y - calcWeight.y, 2)) / dist);
         }
         
         /*

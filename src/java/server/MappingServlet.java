@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -50,9 +51,11 @@ public class MappingServlet extends HttpServlet {
                 break;
                 
             case Command.GET_PARTICLES:
-                out.println(DeviceManager.getInstance()
-                        .getDevice(request.getParameter("id"))
-                        .getFilter().toJSON());
+                if(DeviceManager.getInstance().isConnected(request.getParameter("id"))) {
+                    out.println(DeviceManager.getInstance()
+                            .getDevice(request.getParameter("id"))
+                            .getFilter().toJSON());
+                }
                 break;
                 
         }
