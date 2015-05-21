@@ -20,7 +20,7 @@ public class Parser {
             String[] data = s.split("/");
             //    ;x/y/magnitude/zaxis/xyaxis;
             
-            System.out.println(Double.parseDouble(data[0]) + " " +  Double.parseDouble(data[1]) + " " + Double.parseDouble(data[2]) + " " + Double.parseDouble(data[3]) + " " + Double.parseDouble(data[4]));
+            //System.out.println(Double.parseDouble(data[0]) + " " +  Double.parseDouble(data[1]) + " " + Double.parseDouble(data[2]) + " " + Double.parseDouble(data[3]) + " " + Double.parseDouble(data[4]));
             magnetics.add(new MagneticPoint(Double.parseDouble(data[0]), Double.parseDouble(data[1]), Double.parseDouble(data[2]), Double.parseDouble(data[3]), Double.parseDouble(data[4])));
         }
         return magnetics;
@@ -44,11 +44,11 @@ public class Parser {
         
         HashMap<String, Double> fingerprint = new HashMap<>();
         for (String str : list) {
-            System.out.println(str);
+            //System.out.println(str);
             String[] key_value = str.split("/");      
             fingerprint.put(key_value[0], Double.parseDouble(key_value[1]));
         }
-        System.out.println("---------------------------");
+        //System.out.println("---------------------------");
 
         return fingerprint;
     }

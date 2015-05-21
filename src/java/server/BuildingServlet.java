@@ -63,13 +63,13 @@ public class BuildingServlet extends HttpServlet {
         for (ReferenceArea area : referenceAreas) {
             
             JsonArrayBuilder magnetics = Json.createArrayBuilder();
-            
-            for(MagneticPoint magnetic : area.magneticPoints) {
+            if(Locator.getInstance().getBestCandidates() != null) {
+                for(MagneticPoint magnetic : Locator.getInstance().getBestCandidates()) {
                 
-                magnetics.add(Json.createObjectBuilder()
-                        .add("x", magnetic.x)
-                        .add("y", magnetic.y));
-                
+                    magnetics.add(Json.createObjectBuilder()
+                            .add("x", magnetic.x)
+                            .add("y", magnetic.y));
+                }
             }
             array.add(Json.createObjectBuilder()
                     .add("x", area.x)

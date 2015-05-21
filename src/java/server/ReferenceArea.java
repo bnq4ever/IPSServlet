@@ -27,6 +27,7 @@ public class ReferenceArea {
     }
     
     public ArrayList<MagneticPoint> getMagneticPoints() {
+        //System.out.println(magneticPoints.size());
         return magneticPoints;
     }
     

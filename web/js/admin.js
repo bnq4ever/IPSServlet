@@ -1,8 +1,8 @@
 var magneticPoints = [];
 var referencePoints = [];
 
-setInterval(getAllPoints, 1000);
-setInterval(showPoints, 1000);
+setInterval(getAllPoints, 250);
+setInterval(showPoints, 250);
 
 
 function getAllPoints() {
@@ -38,9 +38,9 @@ function showPoints() {
     $(".point").remove();
     if (referencePoints.length === 0)
         return;
-    for (key in referencePoints) {
-        createReferencePoint(referencePoints[key].x, referencePoints[key].y);
-    }
+    //for (key in referencePoints) {
+    //    createReferencePoint(referencePoints[key].x, referencePoints[key].y);
+    //}
 
     for (key in magneticPoints) {
         createMagneticPoint(magneticPoints[key].x, magneticPoints[key].y);
