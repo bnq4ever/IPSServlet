@@ -7,8 +7,8 @@ $(document).ready(function() {
 //    window.onresize = resize;
     
 
-    setInterval(getConnectedDevices, 100);
-    setInterval(updateMapDevices, 100);
+    //setInterval(getConnectedDevices, 100);
+    //setInterval(updateMapDevices, 100);
 
     $('#mappingArea').on('click', '.device', function () {
         var device = connectedDevices[this.id];
@@ -126,6 +126,22 @@ $(document).ready(function() {
 //        ctx.putImageData(imgData, 0, 0);
 //    }
 
+/* will not work
+    function pushDevices(response) {
+        var tmp = {};
+                var json = $.parseJSON(response);
+                var jsonArray = json['devices'];
+                for (var key in jsonArray) {
+                    var id = jsonArray[key].id;
+                    var name = jsonArray[key].name;
+                    var x = jsonArray[key].x;
+                    var y = jsonArray[key].y;
+                    tmp[id] = new Device(id, name, x, y);
+                }
+                connectedDevices = tmp;
+                updateMapDevices();
+    }
+*/
     function getConnectedDevices() {
         $.ajax({
             url: "Mapper",
