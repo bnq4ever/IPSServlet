@@ -8,8 +8,8 @@ $(document).ready(function() {
     //window.onload = init;
     //window.onresize = resize;
     
-    setInterval(updateParticles, 100);
-    setInterval(getParticles, 100);
+    setInterval(updateParticles, 500);
+    setInterval(getParticles, 500);
 
     function updateParticles() {
         //$("#particleArea").empty();
