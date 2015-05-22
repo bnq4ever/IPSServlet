@@ -116,8 +116,8 @@ function addPoint(x, y) {
     div.style.backgroundRepeat = "no-repeat";
 
     div.style.position = "absolute";
-    div.style.top = y -100 + "px";
-    div.style.left = x -100 + "px";
+    div.style.top = y - 100 + "px";
+    div.style.left = x - 100 + "px";
     div.style.zIndex = "1";
     div.style.height = "200px";
     div.style.width = "200px";
@@ -138,7 +138,7 @@ function addMagneticPoints(startX, startY, endX, endY, nbrOfSamples) {
         div.style.top = (startY + ((endY - startY)/nbrOfSamples) * i) - 5 + "px";
         div.style.left = (startX + ((endX - startX)/nbrOfSamples) * i) - 5 + "px";
         div.style.zIndex = "1";
-        div.style.height = "10px";
+        div.style.height = "10px"; 
         div.style.width = "10px";
         
         document.getElementById("map").appendChild(div);
