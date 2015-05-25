@@ -98,6 +98,14 @@ public class MappingServlet extends HttpServlet {
                             .getFilter().toJSON());
                 }
                 break;
+            
+            case Command.GET_CANDIDATES:
+                if(DeviceManager.getInstance().isConnected(request.getParameter("id"))) {
+                    out.println(DeviceManager.getInstance()
+                            .getDevice(request.getParameter("id"))
+                            .getFilter().toJSON());
+                }
+                break;
                 
         }
     }

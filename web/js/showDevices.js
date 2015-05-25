@@ -3,8 +3,7 @@ var Command = new Command();
 
 $(document).ready(function() {
 
-    window.onload = init;
-//    window.onresize = resize;
+    window.onresize = resize;
     
 
     //setInterval(getConnectedDevices, 100);
@@ -16,11 +15,6 @@ $(document).ready(function() {
                 "x: " + device.x + " y: " + device.y + "\n" +
                 "id: " + device.id);
     });
-
-    function init() {
-        setMap();
-        //initMatrix();
-    }
 
     function updateMapDevices() {
         removeDisconnected();
@@ -86,15 +80,15 @@ $(document).ready(function() {
         return color;
     }
 
-    function setMap() {
-        var img = document.getElementById('map');
-        img.style.zIndex = -1;
-        img.style.position = "relative";
-//        img.style.top = "200px";
-        img.style.left = "0px";
-//        img.style.margin = "auto auto";
-        img.style.width = "1200px";
-    }
+//    function setMap() {
+//        var img = document.getElementById('map');
+//        img.style.zIndex = -1;
+//        img.style.position = "relative";
+////        img.style.top = "200px";
+//        img.style.left = "0px";
+////        img.style.margin = "auto auto";
+//        img.style.width = "1200px";
+//    }
 
 //    function initMatrix() {
 //        var img = document.getElementById('map_img');
@@ -166,12 +160,7 @@ $(document).ready(function() {
         });
     }
 
-//    function resize() {
-//        var width = $(window).height();
-//        var height = $(window).width();
-//        System.out.println(width + " " + height);
-//
-//    }
+
 
     var Device = function(id, name, x, y) {
         this.id = id;
@@ -179,4 +168,5 @@ $(document).ready(function() {
         this.y = y;
         this.name = name;
     };
+    
 });

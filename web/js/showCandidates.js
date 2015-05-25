@@ -1,24 +1,17 @@
 var particles = {};
+
 var _MAC = "40:F3:08:3B:4F:AA";
 var MAC = "88:32:9B:B6:AB:56";
-
-var colors = [
-    "#0759a5",
-    "#ed7b01",
-    "#aab300",
-    "#723289"
-];
-
 
 $(document).ready(function() {
 
     //window.onload = init;
     //window.onresize = resize;
     
-    setInterval(updateParticles, 200);
-    setInterval(getParticles, 50);
+    setInterval(updateCandidates, 200);
+    setInterval(getCandidates, 50);
 
-    function updateParticles() {
+    function updateCandidates() {
         //$("#particleArea").empty();
         var canvas = $('canvas')[0];
         var ctx = canvas.getContext("2d");
@@ -39,11 +32,11 @@ $(document).ready(function() {
     }
 
 
-    function getParticles() {
+    function getCandidates() {
         $.ajax({
             url: "Mapper",
             type: "get", //send it through get method
-            data:{command: "GET_PARTICLES",
+            data:{command: "GET_CANDIDATES",
                   id: MAC},
             success: function(response) {
                 var tmp = {};

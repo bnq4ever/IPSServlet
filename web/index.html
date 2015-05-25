@@ -9,12 +9,26 @@ and open the template in the editor.
         <title>IPS</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            var offline = false;
+            var showMagneticPoints = false;
+            var showReferenceAreas = false;
+            
+            var online = true;
+            var showDevices = false;
+            var showParticles = false;
+            var showCandidates = false;
+            
+        </script>
         <script src="js/jquery-2.1.3.min.js"></script>
         <script src="js/Command.js"></script>
-        <script src="js/online.js"></script>
+        <script src="js/initElements.js"></script>
+        <script src="js/menu.js"></script>
+        
+        <script src="js/showRadioMap.js"></script>
         <script src="js/showParticles.js"></script>
+        <script src="js/showCandidates.js"></script>
 
-        <script src="js/admin.js"></script>
         <style>
             body {
                 //background-color: #f4f2ea;
@@ -30,12 +44,109 @@ and open the template in the editor.
                 -webkit-user-select: none; 
                 -o-user-select: none; 
             }
+            
+            .menu {
+                width:500px; 
+                height:20px; 
+                margin-left:auto; 
+                margin-right:auto;
+            }
+            
+            #btn-online, #btn-offline {
+                float:left; 
+                font-family:Candara; 
+                margin-top:5px;
+                cursor: pointer;
+            }
+            
+            #btn-offline {
+                margin-left:5px;
+            }
+            
+            #splitter {
+                margin-left:5px; 
+                margin-top:7px; 
+                background-color:#1a1a1a; 
+                width:1px; 
+                height:16px; 
+                float:left;
+            }
+            
+            .menu-filter-online {
+                float:left; 
+                background-color:#0b5ba6;
+                height:30px;
+                padding-left:20px;
+                padding-right:20px;
+                margin-left:10px;
+                border-radius: 0px 0px 5px 5px;
+            }
+            
+            .menu-filter-offline {
+                float:left; 
+                background-color:#0b5ba6;
+                height:30px;
+                padding-left:20px;
+                padding-right:20px;
+                margin-left:10px;
+                border-radius: 0px 0px 5px 5px;
+            }
+            
+            #filter-online-devices, #filter-offline-magneticPoints {
+                float:left;
+                margin-top:5px;
+            }
+            
+            #filter-online-particles, #filter-online-candidates, #filter-offline-referenceAreas {
+                float:left;
+                margin-top:5px;
+                margin-left:40px;
+            }
+            
+            .online-label {
+                float:right;
+                color:white;
+                font-family:Candara;
+            }
 
         </style>
     </head>
     <body>
-        <div id="map"><img src="imgs/Cybercom Office Interior Solid Offline.png" draggable="false" id="map_img" style="width:1200px;"/></div>
-        <div id="mappingArea" style="position:absolute; top:0px; left:0px; width:1200px; height:1126px; z-index:1;"></div>
-        <canvas id="particleArea" style="position:absolute; top:0px; left:0px; z-index:1;" width="1200" height="1126" ></canvas>
+        
+        <div class="menu">
+            <div class="menu-phase">
+                <div id="btn-online">ONLINE</div>
+                <div id="splitter"></div>
+                <div id="btn-offline">OFFLINE</div>
+            </div>
+            
+            <div class="menu-filter-online">
+                <div id="filter-online-devices"><input type="checkbox"/><label class="online-label">Devices</label></div>
+                <div id="filter-online-particles"><input type="checkbox"/><label class="online-label">Particles</label></div>
+                <div id="filter-online-candidates"><input type="checkbox"/><label class="online-label">Candidates</label></div>
+            </div>
+            
+            
+            <div class="menu-filter-offline">
+                <div id="filter-offline-magneticPoints"><input type="checkbox"/><label class="online-label">Magnetic Points</label></div>
+                <div id="filter-offline-referenceAreas"><input type="checkbox"/><label class="online-label">Bluetooth Beacons</label></div>
+            </div>
+            
+        </div>
+        
+        <div style="width:250px; margin-left:auto; margin-right:auto; margin-top:30px;"><img src="imgs/logo.png" style="width:250px;"/></div>
+        <div id="map" style="position:relative;">
+            
+            <!---ONLINE-->
+            <div id="mappingArea" style="position:absolute; top:0px; left:0px; z-index:1; border: solid 1px black;"></div>
+            <canvas id="particleArea" style="position:absolute; top:0px; left:0px; z-index:0; border: solid 1px blue;"></canvas>
+            
+            <!---OFFLINE-->
+            <canvas id="radiomapArea" style="position:absolute; top:0px; left:0px; z-index:1; border: solid 1px red;"></canvas>
+            
+            <!---COMMON-->
+            <img  id="map_img" src="imgs/Cybercom Office Interior Solid Offline.png" draggable="false"/>
+        </div>
+        
     </body>
 </html>
