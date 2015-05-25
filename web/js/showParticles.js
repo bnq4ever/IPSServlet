@@ -2,14 +2,21 @@ var particles = {};
 var _MAC = "40:F3:08:3B:4F:AA";
 var MAC = "88:32:9B:B6:AB:56";
 
+var colors = [
+    "#0759a5",
+    "#ed7b01",
+    "#aab300",
+    "#723289"
+];
+
 
 $(document).ready(function() {
 
     //window.onload = init;
     //window.onresize = resize;
     
-    setInterval(updateParticles, 500);
-    setInterval(getParticles, 500);
+    setInterval(updateParticles, 200);
+    setInterval(getParticles, 50);
 
     function updateParticles() {
         //$("#particleArea").empty();
@@ -22,7 +29,8 @@ $(document).ready(function() {
             if(weight > 2) {
                 weight = 2;
             }
-            ctx.fillStyle = "#000000";
+            //ctx.fillStyle = "#000000";
+            ctx.fillStyle = colors[Math.floor((Math.random() * 4))];
             ctx.beginPath();
             ctx.arc(particles[id].x, particles[id].y, weight, 100, Math.PI*2, true); 
             ctx.closePath();

@@ -2,27 +2,15 @@ package server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Timer;
-import java.util.TimerTask;
-import javax.script.Invocable;
 
 /**
  *
@@ -42,6 +30,7 @@ public class MappingServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private int count = 0;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -94,6 +83,9 @@ public class MappingServlet extends HttpServlet {
                 break;
                 
             case Command.LOCATE_DEVICE:
+                
+                System.out.println("Request: " + ++count);
+                
                 handleLocateDeviceRequest(out, request.getParameter("id"), 
                         request.getParameter("dataType"), 
                         request.getParameter("data"));
