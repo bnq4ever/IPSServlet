@@ -17,7 +17,7 @@ import javax.json.JsonObject;
 public class ParticleFilter {
     //private ArrayList<double[]> particles = new ArrayList<double[]>();
     private final ArrayList<Particle> particles;
-    private static final double SCATTER = 3;
+    private static final double SCATTER = 4;
     private static final double LOWER_TRESHOLD = 0.89;
     private static final double UPPER_TRESHOLD = 0.97;
     private double SCATTER_DIRECTION = 0;

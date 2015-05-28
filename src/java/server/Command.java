@@ -45,4 +45,5 @@ public class Command {
     public static final String GET_PARTICLES = "GET_PARTICLES";
     
     public static final String GET_ALL_POINTS = "GET_ALL_POINTS";
+    public static final String GET_BEST_CANDIDATES = "GET_BEST_CANDIDATES";
 }

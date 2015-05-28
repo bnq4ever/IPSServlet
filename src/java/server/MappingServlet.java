@@ -107,7 +107,36 @@ public class MappingServlet extends HttpServlet {
                 }
                 break;
                 
+            case Command.GET_BEST_CANDIDATES:
+                    getBestCandidates(out);
+                break;
+                
         }
+    }
+    
+    private void getBestCandidates(PrintWriter out) {
+        ArrayList<ReferenceArea> referenceAreas = RadioMap.getInstance().getReferenceAreas();
+        JsonArrayBuilder array = Json.createArrayBuilder();
+
+        for (ReferenceArea area : referenceAreas) {
+            
+            JsonArrayBuilder magnetics = Json.createArrayBuilder();
+            if(Locator.getInstance().getBestCandidates() != null) {
+                for(MagneticPoint magnetic : area.magneticPoints) {
+                
+                    magnetics.add(Json.createObjectBuilder()
+                            .add("x", magnetic.x)
+                            .add("y", magnetic.y));
+                }
+            }
+            array.add(Json.createObjectBuilder()
+                    .add("x", area.x)
+                    .add("y", area.y)
+                    .add("magnetics", magnetics));
+        }
+        out.println(Json.createObjectBuilder()
+                .add("referencePoints", array)
+                .build());
     }
     
     private void handleLocateDeviceRequest(PrintWriter out, String deviceId, String dataType, String data) {

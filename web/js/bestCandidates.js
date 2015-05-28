@@ -1,21 +1,21 @@
 var magneticPoints = [];
 var referencePoints = [];
 
-setInterval(getAllPoints, 250);
+setInterval(getBestCandidates, 250);
 setInterval(showPoints, 250);
 
 
-function getAllPoints() {
+function getBestCandidates() {
     $.ajax({
-        url: "Builder",
+        url: "Mapper",
         type: "get", //send it through get method
-        data: {command: "GET_ALL_POINTS"},
+        data: {command: "GET_BEST_CANDIDATES"},
         success: function (response) {
             var tmpRP = [];
             var tmpMP = [];
             var json = $.parseJSON(response);
             var jsonArray = json['referencePoints'];
-            //alert(response);
+            alert(response);
             for (var key in jsonArray) {
                 tmpRP.push(new Point(jsonArray[key].x, jsonArray[key].y));
                 var magnetics = jsonArray[key].magnetics;
@@ -38,9 +38,9 @@ function showPoints() {
     $(".point").remove();
     if (referencePoints.length === 0)
         return;
-    for (key in referencePoints) {
-        createReferencePoint(referencePoints[key].x, referencePoints[key].y);
-    }
+    //for (key in referencePoints) {
+    //    createReferencePoint(referencePoints[key].x, referencePoints[key].y);
+    //}
 
     for (key in magneticPoints) {
         createMagneticPoint(magneticPoints[key].x, magneticPoints[key].y);

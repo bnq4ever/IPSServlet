@@ -16,7 +16,7 @@ import java.util.TreeMap;
 public class Locator {
     private static Locator _instance;
     private ArrayList<MagneticPoint> bestCandidates;
-    private static double CANDIDATES_TRESHOLD = 2;
+    private static double CANDIDATES_TRESHOLD = 8; //magnetude only: 2    3-size vector: 8
     public static synchronized Locator getInstance() {
         if(_instance == null)
             _instance = new Locator();
@@ -97,8 +97,8 @@ public class Locator {
         for(MagneticPoint point : magneticPoints) {
             distance = 0;
             distance += Math.pow((magnitude - point.magnitude), 2);
-            //distance += Math.pow((zaxis - point.zaxis), 2);
-            //distance += Math.pow((xyaxis - point.xyaxis), 2);
+            distance += Math.pow((zaxis - point.zaxis), 2);
+            distance += Math.pow((xyaxis - point.xyaxis), 2);
             distance = (double) Math.sqrt(distance);
             map.put(distance, point);
         }

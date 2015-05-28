@@ -68,8 +68,8 @@ public class RadioMap {
         Database.getInstance().openConnection();
         for(ReferenceArea area : referenceAreas) {
             
-            for(MagneticPoint magneticPoint :  magneticPoints) {                                            //Ändra från 300 sen
-                if(Math.sqrt(Math.pow((area.x - magneticPoint.x), 2) + Math.pow((area.y - magneticPoint.y), 2)) < 3000) {
+            for(MagneticPoint magneticPoint :  magneticPoints) {                                  
+                if(Math.sqrt(Math.pow((area.x - magneticPoint.x), 2) + Math.pow((area.y - magneticPoint.y), 2)) < 320) {
                     area.addMagneticPoint(magneticPoint);
                     Database.getInstance().addMagneticPoint(magneticPoint, area);
                 }    
