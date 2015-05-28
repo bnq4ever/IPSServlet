@@ -133,16 +133,16 @@ public final class DeviceManager {
 
     protected synchronized void setPosition(String deviceId, MagneticPoint magneticPoint) {
         Device device = getDevice(deviceId);
-//        device.setX(magneticPoint.x);
-//        device.setY(magneticPoint.y);
+        device.setX(magneticPoint.x);
+        device.setY(magneticPoint.y);
 //        device.addPreviousPosition(fingerprint);
     }
     
     public synchronized void updateReferencePosition(String deviceId, ReferenceArea area) {
         Device device = getDevice(deviceId);
         device.setReferenceArea(area);
-        device.setX(area.x);
-        device.setY(area.y);
+//        device.setX(area.x);
+//        device.setY(area.y);
     }
     
     public synchronized void deleteDevice(String deviceId) {

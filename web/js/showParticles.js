@@ -39,8 +39,8 @@ $(document).ready(function() {
             if (weight > 2) {
                 weight = 2;
             }
-            ctx.fillStyle = colors[Math.floor((Math.random() * 4))];
-//            ctx.fillStyle = "#ffffff";
+//            ctx.fillStyle = colors[Math.floor((Math.random() * 4))];
+            ctx.fillStyle = "#000000";
             ctx.beginPath();
             ctx.arc(particles[id].x*ratioX, particles[id].y*ratioY, weight*ratioX, 100, Math.PI * 2, true);
             ctx.closePath();
