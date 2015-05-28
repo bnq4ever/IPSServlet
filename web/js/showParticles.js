@@ -12,34 +12,50 @@ var colors = [
 
 $(document).ready(function() {
 
-    //window.onload = init;
-    //window.onresize = resize;
-    
     setInterval(updateParticles, 200);
-    setInterval(getParticles, 50);
+    setInterval(getParticles, 100);
 
     function updateParticles() {
-        //$("#particleArea").empty();
-        var canvas = $('canvas')[0];
-        var ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var particleCanvas = document.getElementById("particleArea");
+        var ctx = particleCanvas.getContext("2d");
+        ctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+        
+        if(!showParticles)
+            return;
+        
+        var img_container = document.getElementById('map');
+
+        var ratioX = parseInt(img_container.style.width) / 685;
+        var ratioY = parseInt(img_container.style.height) / 1122;
+        
+//        var img_container = document.getElementById('map');
+//
+//        var ratioX = parseInt(img_container.style.width) / 1200;
+//        var ratioY = parseInt(img_container.style.height) / 1122;
+        
         
         for (var id in particles) {
-            var weight = particles[id].weight*4;
-            if(weight > 2) {
+            var weight = particles[id].weight * 4;
+            if (weight > 2) {
                 weight = 2;
             }
             ctx.fillStyle = colors[Math.floor((Math.random() * 4))];
+//            ctx.fillStyle = "#ffffff";
             ctx.beginPath();
-            ctx.arc(particles[id].x, particles[id].y, weight, 100, Math.PI*2, true); 
+            ctx.arc(particles[id].x*ratioX, particles[id].y*ratioY, weight*ratioX, 100, Math.PI * 2, true);
             ctx.closePath();
             ctx.fill();
         }
-        
     }
 
 
     function getParticles() {
+        
+        if(!showParticles) {
+            particles = {};
+            return;
+        }
+        
         $.ajax({
             url: "Mapper",
             type: "get", //send it through get method

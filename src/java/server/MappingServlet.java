@@ -30,7 +30,6 @@ public class MappingServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private int count = 0;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -83,9 +82,6 @@ public class MappingServlet extends HttpServlet {
                 break;
                 
             case Command.LOCATE_DEVICE:
-                
-                System.out.println("Request: " + ++count);
-                
                 handleLocateDeviceRequest(out, request.getParameter("id"), 
                         request.getParameter("dataType"), 
                         request.getParameter("data"));
@@ -101,9 +97,14 @@ public class MappingServlet extends HttpServlet {
             
             case Command.GET_CANDIDATES:
                 if(DeviceManager.getInstance().isConnected(request.getParameter("id"))) {
-                    out.println(DeviceManager.getInstance()
-                            .getDevice(request.getParameter("id"))
-                            .getFilter().toJSON());
+                    ArrayList<MagneticPoint> points = DeviceManager.getInstance().getDevice(request.getParameter("id")).bestCandidates;
+                    JsonArrayBuilder array = Json.createArrayBuilder();
+                    for (MagneticPoint point : points) {
+                        array.add(Json.createObjectBuilder().add("x", point.x).add("y", point.y));
+                    }
+
+                    out.println(Json.createObjectBuilder().add("candidates", array).build());
+                    
                 }
                 break;
                 
@@ -115,6 +116,8 @@ public class MappingServlet extends HttpServlet {
         switch(dataType) {
             case "REFERENCE_AREA":
                 HashMap<String, Double> areaFingerprint = removeUnreliable(Parser.parseFingerprint(data));
+//                System.out.println(data);
+//                HashMap<String, Double> areaFingerprint = Parser.parseFingerprint(data);
                 ReferenceArea locatedArea = Locator.getInstance().locateReferenceArea(deviceId, areaFingerprint);
                 DeviceManager.getInstance().updateReferencePosition(deviceId, locatedArea);
 
@@ -135,7 +138,7 @@ public class MappingServlet extends HttpServlet {
         JsonArrayBuilder array = Json.createArrayBuilder();
 
         for (Device device : devices) {
-            array.add(Json.createObjectBuilder().add("id", device.getId()).add("name", device.getName()).add("x", device.getX()).add("y", device.getY()));
+            array.add(Json.createObjectBuilder().add("id", device.getId()).add("name", device.getName()).add("x", device.getX()).add("y", device.getY()).add("color", device.getColor()));
         }
         out.println(Json.createObjectBuilder().add("devices", array).build());
         

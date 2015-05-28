@@ -15,19 +15,22 @@ and open the template in the editor.
             var showReferenceAreas = false;
             
             var online = true;
-            var showDevices = false;
+            var showDevices = true;
             var showParticles = false;
             var showCandidates = false;
             
         </script>
         <script src="js/jquery-2.1.3.min.js"></script>
-        <script src="js/Command.js"></script>
         <script src="js/initElements.js"></script>
         <script src="js/menu.js"></script>
         
+        <!--OFFLINE-->
         <script src="js/showRadioMap.js"></script>
+        
+        <!--ONLINE-->
         <script src="js/showParticles.js"></script>
         <script src="js/showCandidates.js"></script>
+        <script src="js/showDevices.js"></script>
 
         <style>
             body {
@@ -108,6 +111,14 @@ and open the template in the editor.
                 color:white;
                 font-family:Candara;
             }
+            #mappingArea, #particleArea, #candidateArea, #radiomapArea {
+                position:absolute;
+                top:0px;
+                left:0px;
+            }
+            #mappingArea {
+                z-index:1;
+            }
 
         </style>
     </head>
@@ -129,7 +140,7 @@ and open the template in the editor.
             
             <div class="menu-filter-offline">
                 <div id="filter-offline-magneticPoints"><input type="checkbox"/><label class="online-label">Magnetic Points</label></div>
-                <div id="filter-offline-referenceAreas"><input type="checkbox"/><label class="online-label">Bluetooth Beacons</label></div>
+                <div id="filter-offline-referenceAreas"><input type="checkbox"/><label class="online-label">Reference Areas</label></div>
             </div>
             
         </div>
@@ -138,15 +149,28 @@ and open the template in the editor.
         <div id="map" style="position:relative;">
             
             <!---ONLINE-->
-            <div id="mappingArea" style="position:absolute; top:0px; left:0px; z-index:1; border: solid 1px black;"></div>
-            <canvas id="particleArea" style="position:absolute; top:0px; left:0px; z-index:0; border: solid 1px blue;"></canvas>
+            <div id="mappingArea"></div>
+            <canvas id="particleArea"></canvas>
+            <canvas id="candidateArea"></canvas>
             
             <!---OFFLINE-->
-            <canvas id="radiomapArea" style="position:absolute; top:0px; left:0px; z-index:1; border: solid 1px red;"></canvas>
+            <canvas id="radiomapArea"></canvas>
             
             <!---COMMON-->
-            <img  id="map_img" src="imgs/Cybercom Office Interior Solid Offline.png" draggable="false"/>
+            <!--<img id="map_img" src="imgs/Cybercom Office Interior Solid Offline.png" draggable="false"/>-->
+            <!--<img id="map_img" src="imgs/mapsmaller.png" draggable="false"/>-->
+            <img id="map_img" src="imgs/mapWithRooms.png" draggable="false"/>
+            
         </div>
-        
+        <div style="height:100px; width: 100%; margin-top:50px; background-color:#f2f2f2;">
+            <div style="width:100%; height:3px;">
+                <div style="width:25%; background-color:#ed7b01; height:3px; float:left;"></div>
+                <div style="width:25%; background-color:#0759a5; height:3px; float:left;"></div>
+                <div style="width:25%; background-color:#723289; height:3px; float:left;"></div>
+                <div style="width:25%; background-color:#aab300; height:3px; float:left;"></div>
+            </div>
+            <div style="font-family:Adobe Garamond pro; color:#a6a6a6; width:15px; margin-left:auto; margin-right:auto; margin-top:50px; font-size: 12px;">by</div>
+            <div style="font-family:Adobe Garamond pro; color:#a6a6a6; width:250px; margin-left:auto; margin-right:auto; margin-top:0px;">Hampus Engström & Fredrik Helander</div>
+        </div>
     </body>
 </html>

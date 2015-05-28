@@ -7,8 +7,11 @@ $(document).ready(function() {
         var screenWidth = $(window).width();
         var screenHeight = $(window).height();
         
-        var width = screenWidth * 0.8;
-        var height = width * 0.935;
+        var width = screenWidth * 0.4;
+        var height = width * 1.638;
+
+//        var width = screenWidth * 0.8;
+//        var height = width * 0.935;
         
         var img_container = document.getElementById('map');
         img_container.style.width = width + "px";
@@ -29,6 +32,10 @@ $(document).ready(function() {
         radiomapCanvas.width = width;
         radiomapCanvas.height = height;
         
+        var candidateCanvas = document.getElementById("candidateArea");
+        candidateCanvas.width = width;
+        candidateCanvas.height = height;
+        
 
     }
     
@@ -36,9 +43,12 @@ $(document).ready(function() {
         
         var screenWidth = $(window).width();
         var screenHeight = $(document).height();
+        
+        var width = screenWidth * 0.4;
+        var height = width * 1.638;
 
-        var width = screenWidth * 0.8;
-        var height = width * 0.935;
+//        var width = screenWidth * 0.8;
+//        var height = width * 0.935;
         
         var img_container = document.getElementById('map');
         img_container.style.width =  width + "px";
@@ -55,6 +65,10 @@ $(document).ready(function() {
         var radiomapCanvas = document.getElementById("radiomapArea");
         radiomapCanvas.width  = width;
         radiomapCanvas.height = height;
+        
+        var candidateCanvas = document.getElementById("candidateArea");
+        candidateCanvas.width = width;
+        candidateCanvas.height = height;
         
     }
 });

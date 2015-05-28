@@ -24,7 +24,7 @@ public class Locator {
     }
     
     public Locator() {
-        
+        bestCandidates = new ArrayList<MagneticPoint>();
     }
     
     public ArrayList<MagneticPoint> getBestCandidates() {
@@ -42,12 +42,14 @@ public class Locator {
         
         for (ReferenceArea candidate : candidates) {
             double candidateDistance = getRSSEuclidean(areaFingerprint, candidate);
+            System.out.println("x: " + candidate.x + ", y: " + candidate.y + " distance: " + candidateDistance);
             if ( candidateDistance < bestDistance ) {
                 bestDistance = candidateDistance;
                 bestCandidate = candidate;
             }
-        }     
+        }
         System.out.println("BEST POINT " + "x: " + bestCandidate.x + " y: " + bestCandidate.y);
+        System.out.println(" ");
         return bestCandidate;
     }
     
@@ -57,12 +59,9 @@ public class Locator {
         for ( String key : fingerprint.keySet() ) {
             if(candidate.fingerprint.get(key) != null) {
                 candidateDistance += Math.pow(fingerprint.get(key) - candidate.fingerprint.get(key), 2);
+            } else {
+                candidateDistance += Math.pow(fingerprint.get(key) - (-90), 2); //unknown APs
             }
-            /*
-            else {
-                pointDistance += Math.pow(fingerprint.get(key) + 90, 2); //unknown APs
-            }
-            */
         }
         return Math.sqrt(candidateDistance);
     }
@@ -93,8 +92,8 @@ public class Locator {
         ArrayList<MagneticPoint> magneticPoints = DeviceManager.getInstance().getDevice(deviceId).getReferenceArea().getMagneticPoints();
 
         double compare = Float.MAX_VALUE;
-        //MagneticPoint[] bestCandidates = new MagneticPoint[5];
-        bestCandidates = new ArrayList<MagneticPoint>();
+//        MagneticPoint[] bestCandidates = new MagneticPoint[5];
+//        ArrayList<MagneticPoint> bestCandidates = DeviceManager.getInstance().getDevice(deviceId).bestCandidates;
         double distance;
         for(MagneticPoint point : magneticPoints) {
             distance = 0;

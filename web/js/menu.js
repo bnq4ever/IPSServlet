@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    //INITIALIZATION
     $(".menu-filter-offline").hide();
     $(".menu-filter-online").show();
 
@@ -7,14 +8,19 @@ $(document).ready(function () {
     $("#mappingArea").show();
     $("#particleArea").show();
     
+    $("#filter-online-devices :checkbox").prop('checked', true);
+        
     document.getElementById("btn-online").style.color = "lightgray";
-        
+    
+    
+    //ONLINE
     $(".menu-phase").on('click', '#btn-online', function () {
-        alert("online");
-        
         offline = false;
         online = true;
         
+        $("#filter-online-devices :checkbox").prop('checked', true);
+        showDevices = true;
+    
         document.getElementById("btn-online").style.color = "lightgray";
         document.getElementById("btn-offline").style.color = "black";
 
@@ -26,11 +32,14 @@ $(document).ready(function () {
         $("#particleArea").fadeIn();
     });
     
+    
+    //OFFLINE    
     $(".menu-phase").on('click', '#btn-offline', function () {
-        alert("offline");
-        
         online = false;
         offline = true;
+        
+        showMagneticPoints = true;
+        $("#filter-offline-magneticPoints :checkbox").prop('checked', true);
         
         document.getElementById("btn-offline").style.color = "lightgray";
         document.getElementById("btn-online").style.color = "black";
@@ -42,49 +51,29 @@ $(document).ready(function () {
         $("#particleArea").fadeOut();
         $("#radiomapArea").fadeIn();
     });
-    
-    $("#filter-offline-magneticPoints :checkbox").change(function() {
-        
-        if($(this).is(':checked'))
-            showMagneticPoints = true;
-        else
-            showMagneticPoints = false;
-        
+
+
+    //ONLINE FILTERS
+    $("#filter-online-devices :checkbox").change(function () {
+        showDevices = $(this).is(':checked');
+    });
+
+    $("#filter-online-particles :checkbox").change(function () {
+        showParticles = $(this).is(':checked');
+    });
+
+    $("#filter-online-candidates :checkbox").change(function () {
+        showCandidates = $(this).is(':checked');
     });
     
-    $("#filter-offline-referenceAreas :checkbox").change(function() {
-        
-        if($(this).is(':checked'))
-            showReferenceAreas = true;
-        else
-            showReferenceAreas = false;
-        
-    });
     
-    $("#filter-online-devices :checkbox").change(function() {
-        
-        if($(this).is(':checked'))
-            showDevices = true;
-        else
-            showDevices = false;
-        
+    //OFFLINE FILTERS
+    $("#filter-offline-magneticPoints :checkbox").change(function () {
+        showMagneticPoints = $(this).is(':checked');
     });
-    
-    $("#filter-online-particles :checkbox").change(function() {
-        
-        if($(this).is(':checked'))
-            showParticles = true;
-        else
-            showParticles = false;
-        
+
+    $("#filter-offline-referenceAreas :checkbox").change(function () {
+        showReferenceAreas = $(this).is(':checked');
     });
-    
-    $("#filter-online-candidates :checkbox").change(function() {
-        
-        if($(this).is(':checked'))
-            showCandidates = true;
-        else
-            showCandidates = false;
-        
-    });
+   
 });

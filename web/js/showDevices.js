@@ -1,13 +1,9 @@
 var connectedDevices = {};
-var Command = new Command();
 
 $(document).ready(function() {
 
-    window.onresize = resize;
-    
-
-    //setInterval(getConnectedDevices, 100);
-    //setInterval(updateMapDevices, 100);
+    setInterval(getConnectedDevices, 100);
+    setInterval(updateMapDevices, 100);
 
     $('#mappingArea').on('click', '.device', function () {
         var device = connectedDevices[this.id];
@@ -19,10 +15,23 @@ $(document).ready(function() {
     function updateMapDevices() {
         removeDisconnected();
 
+        if(!showDevices)
+            return;
+        
+        var img_container = document.getElementById('map');
+
+        var ratioX = parseInt(img_container.style.width) / 685;
+        var ratioY = parseInt(img_container.style.height) / 1122;
+        
+//        var img = document.getElementById('map_img');
+//
+//        var ratioX = parseInt(img_container.style.width) / 1200;
+//        var ratioY = parseInt(img_container.style.height) / 1122;
+        
         for (var id in connectedDevices) {            
             var div = document.getElementById(id);
             if (div === null) {
-                generateDiv(id, connectedDevices[id].name, connectedDevices[id].x, connectedDevices[id].y);
+                generateDiv(id, connectedDevices[id].name, connectedDevices[id].x*ratioX, connectedDevices[id].y*ratioY, connectedDevices[id].color);
             } else {
                 moveTo(id);
             }
@@ -40,18 +49,45 @@ $(document).ready(function() {
     }
 
     function moveTo(id) {
+        
+        var img_container = document.getElementById('map');
+
+        var ratioX = parseInt(img_container.style.width) / 685;
+        var ratioY = parseInt(img_container.style.height) / 1122;
+        
+//        var img = document.getElementById('map_img');
+//
+//        var ratioX = parseInt(img_container.style.width) / 1200;
+//        var ratioY = parseInt(img_container.style.height) / 1122;
+
+        var size = 40*ratioX;
+        
         var div = document.getElementById(id);
-        var x = connectedDevices[id].x;
-        var y = connectedDevices[id].y;
-        div.style.left = x - 10 + "px";
-        div.style.top = y - 10 + "px";
+        var x = connectedDevices[id].x*ratioX;
+        var y = connectedDevices[id].y*ratioY;
+        div.style.left = x - size/2 + "px";
+        div.style.top = y - size/2 - 2 + "px";
     }
 
-    function generateDiv(deviceID, name, x, y) {
+    function generateDiv(deviceID, name, x, y, color) {
+        
+        var img_container = document.getElementById('map');
+
+        var ratioX = parseInt(img_container.style.width) / 685;
+        var ratioY = parseInt(img_container.style.height) / 1122;
+        
+//        var img = document.getElementById('map_img');
+//
+//        var ratioX = parseInt(img_container.style.width) / 1200;
+//        var ratioY = parseInt(img_container.style.height) / 1122;
+        var size = 40*ratioX;
+        
         var div = document.createElement("DIV");
-        div.style.backgroundImage = "url('imgs/circle.png')";
-        div.style.backgroundSize = "25px 25px";
+        div.style.backgroundImage = "url('imgs/person.png')";
+        div.style.backgroundColor = color;
+        div.style.backgroundSize = size + "px " + size + 2 + "px";
         div.style.backgroundRepeat = "no-repeat";
+        div.style.borderRadius = "20px";
         var divID = document.createAttribute("id");
         divID.value = deviceID;
         div.setAttributeNode(divID);
@@ -60,24 +96,15 @@ $(document).ready(function() {
         divClass.value = "device";
         div.setAttributeNode(divClass);
         div.style.position = "absolute";
-        div.style.top = Math.floor(y) + "px";
-        div.style.left = Math.floor(x) + "px";
+        div.style.top = Math.floor(y) - size/2 - 2 + "px";
+        div.style.left = Math.floor(x) - size/2 + "px";
         div.style.zIndex = "1";
-        div.style.height = "25px";
-        div.style.width = "25px";
+        div.style.height = size + "px";
+        div.style.width = size + "px";
         //div.style.backgroundcolor = getRandomColor();
         $(div).hide();
         document.getElementById("mappingArea").appendChild(div);
         $(div).clearQueue().fadeIn("fast");
-    }
-    
-    function getRandomColor() {
-        var letters = '0123456789ABCDEF'.split('');
-        var color = "#";
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random()*16)];
-        }
-        return color;
     }
 
 //    function setMap() {
@@ -137,6 +164,10 @@ $(document).ready(function() {
     }
 */
     function getConnectedDevices() {
+        if(!showDevices || !online) {
+            connectedDevices = {};
+            return;
+        }
         $.ajax({
             url: "Mapper",
             type: "get", //send it through get method
@@ -150,7 +181,8 @@ $(document).ready(function() {
                     var name = jsonArray[key].name;
                     var x = jsonArray[key].x;
                     var y = jsonArray[key].y;
-                    tmp[id] = new Device(id, name, x, y);
+                    var color = jsonArray[key].color;
+                    tmp[id] = new Device(id, name, x, y, color);
                 }
                 connectedDevices = tmp;
             },
@@ -160,13 +192,12 @@ $(document).ready(function() {
         });
     }
 
-
-
-    var Device = function(id, name, x, y) {
+    var Device = function(id, name, x, y, color) {
         this.id = id;
         this.x = x;
         this.y = y;
         this.name = name;
+        this.color = color;
     };
     
 });
