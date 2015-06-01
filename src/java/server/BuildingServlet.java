@@ -80,15 +80,21 @@ public class BuildingServlet extends HttpServlet {
     
 
     private void handleReferenceAreaData(PrintWriter out, double x, double y, String areaData) {
-        RadioMap.getInstance().addReferenceArea(
-                new ReferenceArea(x, y, Parser.parseFingerprint(areaData)));
+        ReferenceArea area = new ReferenceArea(x, y, Parser.parseFingerprint(areaData));
+        
+        RadioMap.getInstance().addReferenceArea(area);
+        RadioMap.getInstance().addReferenceAreaDB(area);
         
         out.print(Command.REFERENCE_AREA_ADDED);
     }
     
-    private void handleMagneticPointsData(PrintWriter out, String magneticPointsData) {
-        RadioMap.getInstance().addMagneticPoints(
-                Parser.parseMagnetics(magneticPointsData));
+    private void handleMagneticPointsData(PrintWriter out, String magneticPointData) {
+        ArrayList<MagneticPoint> points = Parser.parseMagnetics(magneticPointData);
+        
+        for(MagneticPoint p : points) {
+            RadioMap.getInstance().addMagneticPoint(p);
+            RadioMap.getInstance().addMagneticPointDB(p);
+        }
         
         out.print(Command.MAGNETIC_POINTS_ADDED);
     }

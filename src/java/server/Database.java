@@ -41,7 +41,7 @@ public class Database {
     //Working
     public boolean addReferenceArea(ReferenceArea area) {
         Set<String> keys = area.fingerprint.keySet();
-        String sql = "INSERT INTO REFERENCE_POINTS "
+        String sql = "INSERT INTO REFERENCE_AREAS "
                 + "(x, y, fingerprint) VALUES"
                 + "(?, ?, ?)";
         try {
@@ -61,10 +61,10 @@ public class Database {
     }
     
     //Working
-    public boolean addMagneticPoint(MagneticPoint magneticPoint, ReferenceArea area) {
+    public boolean addMagneticPoint(MagneticPoint magneticPoint) {
         String sql = "INSERT INTO MAGNETIC_POINTS "
-                + "(x, y, magnitude, zvalue, xyvalue, reference_x, reference_y) VALUES"
-                + "(?, ?, ?, ?, ?, ?, ?)";
+                + "(x, y, magnitude, zvalue, xyvalue) VALUES"
+                + "(?, ?, ?, ?, ?)";
         try {
             preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setDouble(1, magneticPoint.x);
@@ -72,8 +72,6 @@ public class Database {
             preparedStatement.setDouble(3, magneticPoint.magnitude);
             preparedStatement.setDouble(4, magneticPoint.zaxis);
             preparedStatement.setDouble(5, magneticPoint.xyaxis);
-            preparedStatement.setDouble(6, area.x);
-            preparedStatement.setDouble(7, area.y);
             
             preparedStatement.executeUpdate();
             return true;
@@ -87,9 +85,9 @@ public class Database {
     }
 
     
-    public ArrayList<ReferenceArea> getRadioMap() {
+    public ArrayList<ReferenceArea> getReferenceAreas() {
         ArrayList<ReferenceArea> referenceAreas = new ArrayList<>();
-        String sql = "Select * FROM REFERENCE_POINTS";
+        String sql = "Select * FROM REFERENCE_AREAS";
         
         try {
             preparedStatement = conn.prepareStatement(sql);
@@ -101,7 +99,6 @@ public class Database {
                         rs.getDouble("y"), 
                         Parser.parseFingerprint(rs.getString("fingerprint")));
                 
-                area.magneticPoints = getMagneticPoints(rs.getDouble("x"), rs.getDouble("y"));
                 referenceAreas.add(area);
                 //System.out.println(rs.getDouble("x") + " " + rs.getDouble("y") + " " + Parser.parseFingerprint(rs.getString("fingerprint") + " " + p.magnetics.size()));
             }
@@ -113,15 +110,11 @@ public class Database {
         return referenceAreas;
     }
     
-    public ArrayList<MagneticPoint> getMagneticPoints(double x, double y) {
+    public ArrayList<MagneticPoint> getMagneticPoints() {
         ArrayList<MagneticPoint> magneticPoints = new ArrayList<>();
-        String sql = "SELECT * FROM MAGNETIC_POINTS "
-                + "WHERE REFERENCE_X=? AND "
-                + "REFERENCE_Y=?";
+        String sql = "SELECT * FROM MAGNETIC_POINTS";
         try {
             preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setDouble(1, x);
-            preparedStatement.setDouble(2, y);
             ResultSet rs = preparedStatement.executeQuery();
             while(rs.next()) {
                 //System.out.println(rs.getDouble("x") + " " + rs.getDouble("y") + " " + rs.getDouble("magnitude") + " " + rs.getDouble("zvalue") + " " + rs.getDouble("xyvalue"));
@@ -140,6 +133,34 @@ public class Database {
         }
         return magneticPoints;
     }
+    
+//    public ArrayList<MagneticPoint> getMagneticPoints(double x, double y) {
+//        ArrayList<MagneticPoint> magneticPoints = new ArrayList<>();
+//        String sql = "SELECT * FROM MAGNETIC_POINTS "
+//                + "WHERE REFERENCE_X=? AND "
+//                + "REFERENCE_Y=?";
+//        try {
+//            preparedStatement = conn.prepareStatement(sql);
+//            preparedStatement.setDouble(1, x);
+//            preparedStatement.setDouble(2, y);
+//            ResultSet rs = preparedStatement.executeQuery();
+//            while(rs.next()) {
+//                //System.out.println(rs.getDouble("x") + " " + rs.getDouble("y") + " " + rs.getDouble("magnitude") + " " + rs.getDouble("zvalue") + " " + rs.getDouble("xyvalue"));
+//                magneticPoints.add(
+//                        new MagneticPoint(
+//                            rs.getDouble("x"), 
+//                            rs.getDouble("y"), 
+//                            rs.getDouble("magnitude"), 
+//                            rs.getDouble("zvalue"), 
+//                            rs.getDouble("xyvalue")));
+//            }
+//        } catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        } finally {
+//            closePreparedStatement();
+//        }
+//        return magneticPoints;
+//    }
     
     public void setDeviceName(String deviceId, String deviceName) {
         String sql = "UPDATE USERS "

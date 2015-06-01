@@ -51,10 +51,9 @@ $(document).ready(function() {
     function moveTo(id) {
         
         var img_container = document.getElementById('map');
-
+        
         var ratioX = parseInt(img_container.style.width) / 685;
         var ratioY = parseInt(img_container.style.height) / 1122;
-        
 //        var img = document.getElementById('map_img');
 //
 //        var ratioX = parseInt(img_container.style.width) / 1200;
@@ -65,6 +64,7 @@ $(document).ready(function() {
         var div = document.getElementById(id);
         var x = connectedDevices[id].x*ratioX;
         var y = connectedDevices[id].y*ratioY;
+
         div.style.left = x - size/2 + "px";
         div.style.top = y - size/2 - 2 + "px";
     }

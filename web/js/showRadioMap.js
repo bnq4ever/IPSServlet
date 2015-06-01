@@ -60,7 +60,7 @@ $(document).ready(function() {
 
         if(showReferenceAreas){
             for (key in referencePoints) {
-                createReferencePoint(referencePoints[key].x*ratioX, referencePoints[key].y*ratioY, 100*ratioX);
+                createReferencePoint(referencePoints[key].x*ratioX, referencePoints[key].y*ratioY, 150*ratioX);
             }
         }
         

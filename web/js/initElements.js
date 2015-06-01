@@ -20,22 +20,23 @@ $(document).ready(function() {
         img_container.style.marginRight = "auto"; 
         img_container.style.marginTop = "20px";
         
-        var particleCanvas = document.getElementById("particleArea");
-        particleCanvas.width = width;
-        particleCanvas.height = height;
-
         var img = document.getElementById('map_img');
         img.style.width = width + "px";
         img.style.height = height + "px";
         
-        var radiomapCanvas = document.getElementById("radiomapArea");
-        radiomapCanvas.width = width;
-        radiomapCanvas.height = height;
+        if(!mobile) {
+            var particleCanvas = document.getElementById("particleArea");
+            particleCanvas.width = width;
+            particleCanvas.height = height;
         
-        var candidateCanvas = document.getElementById("candidateArea");
-        candidateCanvas.width = width;
-        candidateCanvas.height = height;
-        
+            var radiomapCanvas = document.getElementById("radiomapArea");
+            radiomapCanvas.width = width;
+            radiomapCanvas.height = height;
+
+            var candidateCanvas = document.getElementById("candidateArea");
+            candidateCanvas.width = width;
+            candidateCanvas.height = height;
+        }
 
     }
     
@@ -58,17 +59,19 @@ $(document).ready(function() {
         img.style.width = width + "px";
         img.style.height = height + "px";
         
-        var particleCanvas = document.getElementById("particleArea");
-        particleCanvas.width  = width;
-        particleCanvas.height = height;
-        
-        var radiomapCanvas = document.getElementById("radiomapArea");
-        radiomapCanvas.width  = width;
-        radiomapCanvas.height = height;
-        
-        var candidateCanvas = document.getElementById("candidateArea");
-        candidateCanvas.width = width;
-        candidateCanvas.height = height;
+        if(!mobile) {
+            var particleCanvas = document.getElementById("particleArea");
+            particleCanvas.width  = width;
+            particleCanvas.height = height;
+
+            var radiomapCanvas = document.getElementById("radiomapArea");
+            radiomapCanvas.width  = width;
+            radiomapCanvas.height = height;
+
+            var candidateCanvas = document.getElementById("candidateArea");
+            candidateCanvas.width = width;
+            candidateCanvas.height = height;
+        }
         
     }
 });
