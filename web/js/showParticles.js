@@ -12,8 +12,8 @@ var colors = [
 
 $(document).ready(function() {
 
-    setInterval(updateParticles, 50);
-    setInterval(getParticles, 50);
+    setInterval(updateParticles, 100);
+    setInterval(getParticles, 100);
 
     function updateParticles() {
         var particleCanvas = document.getElementById("particleArea");

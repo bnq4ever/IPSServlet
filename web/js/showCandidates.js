@@ -5,26 +5,25 @@ var MAC = "88:32:9B:B6:AB:56";
 
 $(document).ready(function () {
 
-    setInterval(updateCandidates, 50);
-    setInterval(getCandidates, 200);
+    setInterval(getCandidates, 100);
+    setInterval(updateCandidates, 100);
 
     function updateCandidates() {
         var candidateCanvas = document.getElementById("candidateArea");
         var ctx = candidateCanvas.getContext("2d");
         ctx.clearRect(0, 0, candidateCanvas.width, candidateCanvas.height);
-
         if(!showCandidates)
             return;
         
         var img_container = document.getElementById('map');
 
-        var ratioX = parseInt(img_container.style.width) / 1200;
+        var ratioX = parseInt(img_container.style.width) / 685;
         var ratioY = parseInt(img_container.style.height) / 1122;
         
         for (var id in candidates) {
-            ctx.fillStyle = "#000000";
+            ctx.fillStyle = "#ffffff";
             ctx.beginPath();
-            ctx.arc(candidates[id].x*ratioX, candidates[id].y*ratioY, 10*ratioX, 100, Math.PI * 2, true);
+            ctx.arc(candidates[id].x*ratioX, candidates[id].y*ratioY, 5*ratioX, 100, Math.PI * 2, true);
             ctx.closePath();
             ctx.fill();
         }
@@ -40,10 +39,9 @@ $(document).ready(function () {
         $.ajax({
             url: "Mapper",
             type: "get", //send it through get method
-            data: {command: "GET_CANDIDATES",
+            data: {command: "GET_BEST_CANDIDATES",
                 id: MAC},
             success: function (response) {
-                alert(response);
                 var tmp = {};
                 var json = $.parseJSON(response);
                 var jsonArray = json['candidates'];
@@ -53,21 +51,14 @@ $(document).ready(function () {
 
                     tmp[key] = new Candidate(x, y);
                 }
-                //candidates = tmp;
+                candidates = tmp;
             },
             error: function (xhr) {
                 //alert("error");
             }
         });
-        
-        candidates[0] = new Candidate(100, 50);
-        candidates[1] = new Candidate(100, 70);
-        candidates[2] = new Candidate(100, 90);
-        candidates[3] = new Candidate(100, 110);
-        candidates[4] = new Candidate(100, 130);
-        candidates[5] = new Candidate(100, 150);
                 
-        //updateParticles();
+        updateCandidates();
     }
 
     var Candidate = function (x, y) {

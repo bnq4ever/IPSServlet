@@ -95,9 +95,12 @@ public class MappingServlet extends HttpServlet {
                 }
                 break;
             
-            case Command.GET_CANDIDATES:
-                if(DeviceManager.getInstance().isConnected(request.getParameter("id"))) {
-                    ArrayList<MagneticPoint> points = DeviceManager.getInstance().getDevice(request.getParameter("id")).bestCandidates;
+            case Command.GET_BEST_CANDIDATES:
+                String deviceId = request.getParameter("id");
+                System.out.println("GET_BEST_CANDIDATES - step 1");
+                if(DeviceManager.getInstance().isConnected(deviceId)) {
+                    System.out.println("GET_BEST_CANDIDATES - step 2");
+                    ArrayList<MagneticPoint> points = Locator.getInstance().getBestCandidates(deviceId);
                     JsonArrayBuilder array = Json.createArrayBuilder();
                     for (MagneticPoint point : points) {
                         array.add(Json.createObjectBuilder().add("x", point.x).add("y", point.y));
@@ -107,38 +110,33 @@ public class MappingServlet extends HttpServlet {
                     
                 }
                 break;
-                
-            case Command.GET_BEST_CANDIDATES:
-                    getBestCandidates(out);
-                break;
-                
         }
     }
     
-    private void getBestCandidates(PrintWriter out) {
-        ArrayList<ReferenceArea> referenceAreas = RadioMap.getInstance().getReferenceAreas();
-        JsonArrayBuilder array = Json.createArrayBuilder();
-
-        for (ReferenceArea area : referenceAreas) {
-            
-            JsonArrayBuilder magnetics = Json.createArrayBuilder();
-            if(Locator.getInstance().getBestCandidates() != null) {
-                for(MagneticPoint magnetic : area.magneticPoints) {
-                
-                    magnetics.add(Json.createObjectBuilder()
-                            .add("x", magnetic.x)
-                            .add("y", magnetic.y));
-                }
-            }
-            array.add(Json.createObjectBuilder()
-                    .add("x", area.x)
-                    .add("y", area.y)
-                    .add("magnetics", magnetics));
-        }
-        out.println(Json.createObjectBuilder()
-                .add("referencePoints", array)
-                .build());
-    }
+//    private void getBestCandidates(PrintWriter out, String deviceId) {
+//        ArrayList<ReferenceArea> referenceAreas = RadioMap.getInstance().getReferenceAreas();
+//        JsonArrayBuilder array = Json.createArrayBuilder();
+//
+//        for (ReferenceArea area : referenceAreas) {
+//            
+//            JsonArrayBuilder magnetics = Json.createArrayBuilder();
+//            if(Locator.getInstance().getBestCandidates(deviceId) != null) {
+//                for(MagneticPoint magnetic : area.magneticPoints) {
+//                
+//                    magnetics.add(Json.createObjectBuilder()
+//                            .add("x", magnetic.x)
+//                            .add("y", magnetic.y));
+//                }
+//            }
+//            array.add(Json.createObjectBuilder()
+//                    .add("x", area.x)
+//                    .add("y", area.y)
+//                    .add("magnetics", magnetics));
+//        }
+//        out.println(Json.createObjectBuilder()
+//                .add("referencePoints", array)
+//                .build());
+//    }
     
     private void handleLocateDeviceRequest(PrintWriter out, String deviceId, String dataType, String data) {
         System.out.println();

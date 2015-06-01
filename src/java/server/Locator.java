@@ -15,8 +15,9 @@ import java.util.TreeMap;
  */
 public class Locator {
     private static Locator _instance;
-    private ArrayList<MagneticPoint> bestCandidates;
-    private static double CANDIDATES_TRESHOLD = 5; //magnetude only: 2    3-size vector: 8
+    private HashMap<String, ArrayList<MagneticPoint>> bestCandidates;
+    //private ArrayList<MagneticPoint> bestCandidates;
+    private static double CANDIDATES_TRESHOLD = 25; //magnetude only: 2    3-size vector: 8
     public static synchronized Locator getInstance() {
         if(_instance == null)
             _instance = new Locator();
@@ -24,11 +25,11 @@ public class Locator {
     }
     
     public Locator() {
-        bestCandidates = new ArrayList<MagneticPoint>();
+        bestCandidates = new HashMap<>();
     }
     
-    public ArrayList<MagneticPoint> getBestCandidates() {
-        return bestCandidates;
+    public ArrayList<MagneticPoint> getBestCandidates(String deviceId) {
+        return bestCandidates.get(deviceId);
     }
     
     public synchronized ReferenceArea locateReferenceArea(String deviceId, HashMap<String, Double> areaFingerprint) {
@@ -86,7 +87,6 @@ public class Locator {
         double magnitude = magneticFingerprint[0];
         double zaxis = magneticFingerprint[1];
         double xyaxis = magneticFingerprint[2];
-        
         TreeMap<Double, MagneticPoint> map = new TreeMap<>();
 
         ArrayList<MagneticPoint> magneticPoints = DeviceManager.getInstance().getDevice(deviceId).getReferenceArea().getMagneticPoints();
@@ -94,25 +94,28 @@ public class Locator {
         double compare = Float.MAX_VALUE;
 //        MagneticPoint[] bestCandidates = new MagneticPoint[5];
 //        ArrayList<MagneticPoint> bestCandidates = DeviceManager.getInstance().getDevice(deviceId).bestCandidates;
-        bestCandidates = new ArrayList<MagneticPoint>();
+        bestCandidates.put(deviceId, new ArrayList<MagneticPoint>());
         double distance;
         for(MagneticPoint point : magneticPoints) {
             distance = 0;
             distance += Math.pow((magnitude - point.magnitude), 2);
-//            distance += Math.pow((zaxis - point.zaxis), 2);
-//            distance += Math.pow((xyaxis - point.xyaxis), 2);
+            distance += Math.pow((zaxis - point.zaxis), 2);
+            distance += Math.pow((xyaxis - point.xyaxis), 2);
             distance = (double) Math.sqrt(distance);
             map.put(distance, point);
         }
         System.out.println("Checking first key: "+map.firstKey()+"\nLast key is: "+map.lastKey());
-        for(int i = 0; i < map.size(); i++) {
+        /*for(int i = 0; i < map.size(); i++) {
             if(map.firstKey() < CANDIDATES_TRESHOLD) {
                 bestCandidates.add(map.pollFirstEntry().getValue());
             }else{
                 break;
             }
-        }
+        }*/
+        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
+        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
+        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
         System.out.println("Number of candidates: "+bestCandidates.size());
-        return bestCandidates;
+        return bestCandidates.get(deviceId);
     }
 }
