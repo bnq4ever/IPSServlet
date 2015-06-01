@@ -10,6 +10,7 @@ public class ReferenceArea {
     
     public double x;
     public double y;
+    public double CANDIDATES_TRESHOLD;
     
     public Map<String, Double> fingerprint;
     public ArrayList<MagneticPoint> magneticPoints;

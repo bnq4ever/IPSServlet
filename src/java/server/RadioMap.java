@@ -30,6 +30,8 @@ public class RadioMap {
 
         ArrayList<MagneticPoint> tmpPoints = Database.getInstance().getMagneticPoints();
         addMagneticPoints(tmpPoints);
+        
+        computeTresholds();
 
         Database.getInstance().closeConnection();
         System.out.println("referencePoints size: " + referenceAreas.size());
@@ -123,6 +125,33 @@ public class RadioMap {
             area.fingerprint.remove(key);
         }
 
+    }
+
+    private void computeTresholds() {
+        for(ReferenceArea area : referenceAreas) {
+            ArrayList<MagneticPoint> magnetics = area.getMagneticPoints();
+            double h = 0;
+            double l = Double.MAX_VALUE;
+            double temp;
+            double mean = 0;
+                for(MagneticPoint point : magnetics) {
+                    temp = 0;
+                    temp += Math.pow((point.magnitude), 2);
+                    temp += Math.pow((point.zaxis), 2);
+                    temp += Math.pow((point.xyaxis), 2);
+                    temp = (double) Math.sqrt(temp);
+                    if(temp > h) {
+                        h = temp;
+                    }
+                    if(temp < l) {
+                        l = temp;
+                    }
+                    mean += temp;
+                    //map.put(distance, point);
+            }
+            mean /= magnetics.size();
+            area.CANDIDATES_TRESHOLD = (mean - l) / 2;
+        }
     }
 
 }
