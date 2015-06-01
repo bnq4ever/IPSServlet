@@ -246,7 +246,6 @@ public class MappingServlet extends HttpServlet {
         
             if ((double)areaFingerprint.get(key) < -80)
                 toRemove.add(key);
-            
         }
         
         for (String key : toRemove)

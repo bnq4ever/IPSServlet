@@ -105,16 +105,16 @@ public class Locator {
             map.put(distance, point);
         }
         System.out.println("Checking first key: "+map.firstKey()+"\nLast key is: "+map.lastKey());
-        /*for(int i = 0; i < map.size(); i++) {
-            if(map.firstKey() < CANDIDATES_TRESHOLD) {
-                bestCandidates.add(map.pollFirstEntry().getValue());
+        for(int i = 0; i < map.size(); i++) {
+            if(map.firstKey() < DeviceManager.getInstance().getDevice(deviceId).getReferenceArea().CANDIDATES_TRESHOLD) {
+                bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
             }else{
                 break;
             }
-        }*/
-        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
-        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
-        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
+        }
+//        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
+//        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
+//        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
         System.out.println("Number of candidates: "+bestCandidates.size());
         return bestCandidates.get(deviceId);
     }
