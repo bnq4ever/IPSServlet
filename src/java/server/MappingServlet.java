@@ -2,27 +2,15 @@ package server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Timer;
-import java.util.TimerTask;
-import javax.script.Invocable;
 
 /**
  *
@@ -106,6 +94,19 @@ public class MappingServlet extends HttpServlet {
                             .getFilter().toJSON());
                 }
                 break;
+            
+            case Command.GET_CANDIDATES:
+                if(DeviceManager.getInstance().isConnected(request.getParameter("id"))) {
+                    ArrayList<MagneticPoint> points = DeviceManager.getInstance().getDevice(request.getParameter("id")).bestCandidates;
+                    JsonArrayBuilder array = Json.createArrayBuilder();
+                    for (MagneticPoint point : points) {
+                        array.add(Json.createObjectBuilder().add("x", point.x).add("y", point.y));
+                    }
+
+                    out.println(Json.createObjectBuilder().add("candidates", array).build());
+                    
+                }
+                break;
                 
             case Command.GET_BEST_CANDIDATES:
                     getBestCandidates(out);
@@ -140,9 +141,12 @@ public class MappingServlet extends HttpServlet {
     }
     
     private void handleLocateDeviceRequest(PrintWriter out, String deviceId, String dataType, String data) {
+        System.out.println();
         switch(dataType) {
             case "REFERENCE_AREA":
                 HashMap<String, Double> areaFingerprint = removeUnreliable(Parser.parseFingerprint(data));
+//                System.out.println(data);
+//                HashMap<String, Double> areaFingerprint = Parser.parseFingerprint(data);
                 ReferenceArea locatedArea = Locator.getInstance().locateReferenceArea(deviceId, areaFingerprint);
                 DeviceManager.getInstance().updateReferencePosition(deviceId, locatedArea);
 
@@ -163,7 +167,7 @@ public class MappingServlet extends HttpServlet {
         JsonArrayBuilder array = Json.createArrayBuilder();
 
         for (Device device : devices) {
-            array.add(Json.createObjectBuilder().add("id", device.getId()).add("name", device.getName()).add("x", device.getX()).add("y", device.getY()));
+            array.add(Json.createObjectBuilder().add("id", device.getId()).add("name", device.getName()).add("x", device.getX()).add("y", device.getY()).add("color", device.getColor()));
         }
         out.println(Json.createObjectBuilder().add("devices", array).build());
         

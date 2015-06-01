@@ -13,79 +13,98 @@ import java.util.HashMap;
  * @author Hampus
  */
 public class RadioMap {
+
     private static RadioMap _instance;
     private final ArrayList<ReferenceArea> referenceAreas;
-    
+
     public synchronized static RadioMap getInstance() {
-        if (_instance == null) 
+        if (_instance == null) {
             _instance = new RadioMap();
+        }
         return _instance;
     }
-    
+
     public RadioMap() {
         Database.getInstance().openConnection();
-        referenceAreas = Database.getInstance().getRadioMap();
+        referenceAreas = Database.getInstance().getReferenceAreas();
+
+        ArrayList<MagneticPoint> tmpPoints = Database.getInstance().getMagneticPoints();
+        addMagneticPoints(tmpPoints);
+
         Database.getInstance().closeConnection();
         System.out.println("referencePoints size: " + referenceAreas.size());
     }
     
+    public synchronized void addMagneticPoints(ArrayList<MagneticPoint> tmpPoints) {
+        for(MagneticPoint p : tmpPoints) {
+            addMagneticPoint(p);
+        }
+    }
+
     public synchronized ArrayList<ReferenceArea> getReferenceAreas() {
         return new ArrayList<>(referenceAreas);
     }
-    
+
     public synchronized ArrayList<ReferenceArea> getRelevantAreas(double x, double y, HashMap<String, Double> obtainedFingerprint) {
         ArrayList<ReferenceArea> relevantAreas = new ArrayList<>();
         for (ReferenceArea area : referenceAreas) {
             for (String key : obtainedFingerprint.keySet()) {
-                if (!area.fingerprint.containsKey(key) || (Math.sqrt(Math.pow((area.x - x), 2) + Math.pow((area.y - y), 2)) > 100))
+                if (!area.fingerprint.containsKey(key) || (Math.sqrt(Math.pow((area.x - x), 2) + Math.pow((area.y - y), 2)) > 100)) {
                     break;
+                }
             }
             relevantAreas.add(area);
         }
         return relevantAreas;
     }
-    
+
     public synchronized void addReferenceArea(ReferenceArea a) {
         removeUnreliable(a);
         ReferenceArea area = getReferenceArea(a.x, a.y);
-        if (area != null)
+        if (area != null) {
             area.fingerprint = a.fingerprint;
-        else
+        } else {
             referenceAreas.add(a);
+        }
         StringBuilder sb = new StringBuilder();
         for (String key : a.fingerprint.keySet()) {
             sb.append(key).append(" ").append(a.fingerprint.get(key));
         }
+    }
+
+    public synchronized void addReferenceAreaDB(ReferenceArea a) {
+        removeUnreliable(a);
         Database.getInstance().openConnection();
         Database.getInstance().addReferenceArea(a);
         Database.getInstance().closeConnection();
     }
-       
+
     /*
-        Adds magnetic fingerprints to map and connects them to nearby RSSReferencepoint.
-    */
-    public synchronized void addMagneticPoints(ArrayList<MagneticPoint> magneticPoints) {
+     Adds magnetic fingerprints to map and connects them to nearby RSSReferencepoint.
+     */
+    public synchronized void addMagneticPointDB(MagneticPoint magneticPoint) {
         Database.getInstance().openConnection();
-        for(ReferenceArea area : referenceAreas) {
-            
-            for(MagneticPoint magneticPoint :  magneticPoints) {                                  
-                if(Math.sqrt(Math.pow((area.x - magneticPoint.x), 2) + Math.pow((area.y - magneticPoint.y), 2)) < 150) {
-                    area.addMagneticPoint(magneticPoint);
-                    Database.getInstance().addMagneticPoint(magneticPoint, area);
-                }    
-            }   
-        }
+        Database.getInstance().addMagneticPoint(magneticPoint);
         Database.getInstance().closeConnection();
     }
-    
+
+    public synchronized void addMagneticPoint(MagneticPoint magneticPoint) {
+        for (ReferenceArea area : referenceAreas) {
+            if (Math.sqrt(Math.pow((area.x - magneticPoint.x), 2) + Math.pow((area.y - magneticPoint.y), 2)) < 150) {
+                area.addMagneticPoint(magneticPoint);
+            }
+        }
+    }
+
     public synchronized ReferenceArea getReferenceArea(double x, double y) {
         for (ReferenceArea area : referenceAreas) {
-            if(x == area.x && y == area.y)
+            if (x == area.x && y == area.y) {
                 return area;
+            }
         }
         return null;
     }
-    
+
     public synchronized void removeReferenceArea(double x, double y) {
         referenceAreas.remove(getReferenceArea(x, y));
     }
@@ -93,15 +112,17 @@ public class RadioMap {
     private void removeUnreliable(ReferenceArea area) {
         ArrayList<String> toRemove = new ArrayList<>();
 
-        for (String key : area.fingerprint.keySet() ) {
-        
-            if ((double)area.fingerprint.get(key) < -80)
+        for (String key : area.fingerprint.keySet()) {
+
+            if ((double) area.fingerprint.get(key) < -80) {
                 toRemove.add(key);
-        
+            }
+
         }
-        for (String key : toRemove)
+        for (String key : toRemove) {
             area.fingerprint.remove(key);
-        
+        }
+
     }
-    
+
 }

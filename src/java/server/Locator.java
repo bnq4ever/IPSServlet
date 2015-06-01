@@ -16,7 +16,7 @@ import java.util.TreeMap;
 public class Locator {
     private static Locator _instance;
     private ArrayList<MagneticPoint> bestCandidates;
-    private static double CANDIDATES_TRESHOLD = 8; //magnetude only: 2    3-size vector: 8
+    private static double CANDIDATES_TRESHOLD = 5; //magnetude only: 2    3-size vector: 8
     public static synchronized Locator getInstance() {
         if(_instance == null)
             _instance = new Locator();
@@ -24,7 +24,7 @@ public class Locator {
     }
     
     public Locator() {
-        
+        bestCandidates = new ArrayList<MagneticPoint>();
     }
     
     public ArrayList<MagneticPoint> getBestCandidates() {
@@ -42,12 +42,14 @@ public class Locator {
         
         for (ReferenceArea candidate : candidates) {
             double candidateDistance = getRSSEuclidean(areaFingerprint, candidate);
+            System.out.println("x: " + candidate.x + ", y: " + candidate.y + " distance: " + candidateDistance);
             if ( candidateDistance < bestDistance ) {
                 bestDistance = candidateDistance;
                 bestCandidate = candidate;
             }
-        }     
+        }
         System.out.println("BEST POINT " + "x: " + bestCandidate.x + " y: " + bestCandidate.y);
+        System.out.println(" ");
         return bestCandidate;
     }
     
@@ -57,12 +59,9 @@ public class Locator {
         for ( String key : fingerprint.keySet() ) {
             if(candidate.fingerprint.get(key) != null) {
                 candidateDistance += Math.pow(fingerprint.get(key) - candidate.fingerprint.get(key), 2);
+            } else {
+                candidateDistance += Math.pow(fingerprint.get(key) - (-90), 2); //unknown APs
             }
-            /*
-            else {
-                pointDistance += Math.pow(fingerprint.get(key) + 90, 2); //unknown APs
-            }
-            */
         }
         return Math.sqrt(candidateDistance);
     }
@@ -89,16 +88,19 @@ public class Locator {
         double xyaxis = magneticFingerprint[2];
         
         TreeMap<Double, MagneticPoint> map = new TreeMap<>();
+
         ArrayList<MagneticPoint> magneticPoints = DeviceManager.getInstance().getDevice(deviceId).getReferenceArea().getMagneticPoints();
+
         double compare = Float.MAX_VALUE;
-        //MagneticPoint[] bestCandidates = new MagneticPoint[5];
+//        MagneticPoint[] bestCandidates = new MagneticPoint[5];
+//        ArrayList<MagneticPoint> bestCandidates = DeviceManager.getInstance().getDevice(deviceId).bestCandidates;
         bestCandidates = new ArrayList<MagneticPoint>();
         double distance;
         for(MagneticPoint point : magneticPoints) {
             distance = 0;
             distance += Math.pow((magnitude - point.magnitude), 2);
-            distance += Math.pow((zaxis - point.zaxis), 2);
-            distance += Math.pow((xyaxis - point.xyaxis), 2);
+//            distance += Math.pow((zaxis - point.zaxis), 2);
+//            distance += Math.pow((xyaxis - point.xyaxis), 2);
             distance = (double) Math.sqrt(distance);
             map.put(distance, point);
         }

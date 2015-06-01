@@ -1,60 +1,61 @@
 var particles = {};
-var MAC = "40:F3:08:3B:4F:AA";
-var _MAC = "88:32:9B:B6:AB:56";
+var _MAC = "40:F3:08:3B:4F:AA";
+var MAC = "88:32:9B:B6:AB:56";
+
+var colors = [
+    "#0759a5",
+    "#ed7b01",
+    "#aab300",
+    "#723289"
+];
 
 
 $(document).ready(function() {
 
-    //window.onload = init;
-    //window.onresize = resize;
-    
-    setInterval(updateParticles, 500);
-    setInterval(getParticles, 500);
+    setInterval(updateParticles, 50);
+    setInterval(getParticles, 50);
 
     function updateParticles() {
-        //$("#particleArea").empty();
-        var canvas = $('canvas')[0];
-        var ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var particleCanvas = document.getElementById("particleArea");
+        var ctx = particleCanvas.getContext("2d");
+        ctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+        
+        if(!showParticles)
+            return;
+        
+        var img_container = document.getElementById('map');
+
+        var ratioX = parseInt(img_container.style.width) / 685;
+        var ratioY = parseInt(img_container.style.height) / 1122;
+        
+//        var img_container = document.getElementById('map');
+//
+//        var ratioX = parseInt(img_container.style.width) / 1200;
+//        var ratioY = parseInt(img_container.style.height) / 1122;
+        
         
         for (var id in particles) {
-            var weight = particles[id].weight*4;
-            if(weight > 2) {
+            var weight = particles[id].weight * 4;
+            if (weight > 2) {
                 weight = 2;
             }
+//            ctx.fillStyle = colors[Math.floor((Math.random() * 4))];
             ctx.fillStyle = "#000000";
             ctx.beginPath();
-            ctx.arc(particles[id].x, particles[id].y, weight, 100, Math.PI*2, true); 
+            ctx.arc(particles[id].x*ratioX, particles[id].y*ratioY, weight*ratioX, 100, Math.PI * 2, true);
             ctx.closePath();
             ctx.fill();
-            //generateDiv(particles[id].x, particles[id].y, particles[id].weight);
         }
-        
     }
 
-//   function generateDiv(x, y, weight) {
-//        var size = 2;
-//        var div = document.createElement("DIV");
-//        div.style.backgroundImage = "url('imgs/particle.gif')";
-//        div.style.backgroundSize = size + "px";
-//        div.style.backgroundRepeat = "no-repeat";
-//        var divID = document.createAttribute("id");
-//        divID.value = "particle";
-//        div.setAttributeNode(divID);
-//
-//        var divClass = document.createAttribute("class");
-//        divClass.value = "particle";
-//        div.setAttributeNode(divClass);
-//        div.style.position = "absolute";
-//        div.style.left = x - size/2 + "px";
-//        div.style.top = y - size/2 + "px";
-//        div.style.zIndex = "1";
-//        div.style.height = size + "px";
-//        div.style.width = size + "px";
-//        document.getElementById("particleArea").appendChild(div);
-//    }
 
     function getParticles() {
+        
+        if(!showParticles) {
+            particles = {};
+            return;
+        }
+        
         $.ajax({
             url: "Mapper",
             type: "get", //send it through get method

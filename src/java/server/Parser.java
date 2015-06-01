@@ -13,6 +13,7 @@ import java.util.HashMap;
  * @author Hampus
  */
 public class Parser {
+    
     public static ArrayList parseMagnetics(String magneticString) {
         ArrayList<MagneticPoint> magnetics = new ArrayList<>();
         String[] split = magneticString.split(";");

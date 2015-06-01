@@ -43,6 +43,7 @@ public class Command {
     
     //PARTICLE FILTER
     public static final String GET_PARTICLES = "GET_PARTICLES";
+    public static final String GET_CANDIDATES = "GET_CANDIDATES";
     
     public static final String GET_ALL_POINTS = "GET_ALL_POINTS";
     public static final String GET_BEST_CANDIDATES = "GET_BEST_CANDIDATES";

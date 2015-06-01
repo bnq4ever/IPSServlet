@@ -5,6 +5,8 @@
  */
 package server;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Hampus
@@ -14,22 +16,30 @@ class Device {
     private final String id;
     private double x;
     private double y;
+    private String color;
     //private ArrayList<MagneticPoint> previousPoints;//HISTORICAL COORDINATES
     //private double direction;
     private ReferenceArea referenceArea;
     private ParticleFilter filter;
     public double lastMeasurement = 0;
+    public ArrayList<MagneticPoint> bestCandidates;
     
     public Device(String id) {
         this.id = id;
         this.name = "";
         //filter = new ParticleFilter(0,0);
+        color = Device.generateColor();
     }
     
     public Device(String id, String name) {
         this.id = id;
         this.name = name;
         //filter = new ParticleFilter(0,0);
+        color = Device.generateColor();
+    }
+    
+    public String getColor() {
+        return color;
     }
     
     public String getName() {
@@ -64,14 +74,6 @@ class Device {
         return id;
     }
     
-//    public void setDirection(double direction) {
-//        this.direction = direction;
-//    }
-    
-//    public double getDirection() {
-//        return direction;
-//    }
-    
     public void setReferenceArea(ReferenceArea referenceArea) {
         this.referenceArea = referenceArea;
     }
@@ -79,10 +81,6 @@ class Device {
     public ReferenceArea getReferenceArea() {
         return this.referenceArea;
     }
-    
-//    public void addPreviousPosition(MagneticPoint fingerprint) {
-//        previousPoints.add(fingerprint);
-//    }
     
     
     void startFilter() {
@@ -92,17 +90,14 @@ class Device {
     public ParticleFilter getFilter() {
         return filter;
     }
-   
     
-//    @Override
-//    public boolean equals(Device device) {
-//        return id.equals(device.getId());
-//    }
+    public static String generateColor() {
+        String[] letters = "0123456789ABCDEF".split("");
+        String color = "#";
+        for (int i = 0; i < 6; i++) {
+            color += letters[(int)Math.floor(Math.random()*16)];
+        }
+        return color;
+    }
     
-//    @Override
-//    public boolean equals(Object o) {
-//        if(!(o instanceof Device)) return false;
-//        Device other = (Device) o;
-//        return this.id.equals(other.getId());
-//    }
 }
