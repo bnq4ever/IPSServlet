@@ -115,7 +115,6 @@ public class Locator {
 //        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
 //        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
 //        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
-        System.out.println("Number of candidates: "+bestCandidates.size());
         return bestCandidates.get(deviceId);
     }
 }

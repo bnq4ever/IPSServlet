@@ -9,9 +9,18 @@ var colors = [
     "#723289"
 ];
 
+var ratioX;
+var ratioY;
 
 $(document).ready(function() {
-
+    if (navigator.userAgent.match(/Mobi/)) {
+        ratioX = 1;
+        ratioY = 1;
+    } else {
+        var img_container = document.getElementById('map');
+        ratioX = parseInt(img_container.style.width) / 685;
+        ratioY = parseInt(img_container.style.height) / 1122;
+    }
     setInterval(updateParticles, 100);
     setInterval(getParticles, 100);
 
@@ -22,11 +31,6 @@ $(document).ready(function() {
         
         if(!showParticles)
             return;
-        
-        var img_container = document.getElementById('map');
-
-        var ratioX = parseInt(img_container.style.width) / 685;
-        var ratioY = parseInt(img_container.style.height) / 1122;
         
 //        var img_container = document.getElementById('map');
 //

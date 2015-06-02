@@ -3,7 +3,18 @@ var candidates = {};
 var _MAC = "40:F3:08:3B:4F:AA";
 var MAC = "88:32:9B:B6:AB:56";
 
-$(document).ready(function () {
+var ratioX;
+var ratioY;
+
+$(document).ready(function() {
+    if (navigator.userAgent.match(/Mobi/)) {
+        ratioX = 1;
+        ratioY = 1;
+    } else {
+        var img_container = document.getElementById('map');
+        ratioX = parseInt(img_container.style.width) / 685;
+        ratioY = parseInt(img_container.style.height) / 1122;
+    }
 
     setInterval(getCandidates, 100);
     setInterval(updateCandidates, 100);
@@ -14,11 +25,6 @@ $(document).ready(function () {
         ctx.clearRect(0, 0, candidateCanvas.width, candidateCanvas.height);
         if(!showCandidates)
             return;
-        
-        var img_container = document.getElementById('map');
-
-        var ratioX = parseInt(img_container.style.width) / 685;
-        var ratioY = parseInt(img_container.style.height) / 1122;
         
         for (var id in candidates) {
             ctx.fillStyle = "#ffffff";

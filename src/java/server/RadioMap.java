@@ -151,6 +151,7 @@ public class RadioMap {
             }
             mean /= magnetics.size();
             area.CANDIDATES_TRESHOLD = (mean - l) / 2;
+            area.CANDIDATES_TRESHOLD = 25;
         }
     }
 
