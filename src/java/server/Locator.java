@@ -99,8 +99,8 @@ public class Locator {
         for(MagneticPoint point : magneticPoints) {
             distance = 0;
             distance += Math.pow((magnitude - point.magnitude), 2);
-            distance += Math.pow((zaxis - point.zaxis), 2);
-            distance += Math.pow((xyaxis - point.xyaxis), 2);
+            //distance += Math.pow((zaxis - point.zaxis), 2);
+            //distance += Math.pow((xyaxis - point.xyaxis), 2);
             distance = (double) Math.sqrt(distance);
             map.put(distance, point);
         }
@@ -115,7 +115,7 @@ public class Locator {
 //        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
 //        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
 //        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
-        System.out.println("Number of candidates: "+bestCandidates.size());
+        System.out.println("Number of candidates: "+bestCandidates.get(deviceId).size());
         return bestCandidates.get(deviceId);
     }
 }

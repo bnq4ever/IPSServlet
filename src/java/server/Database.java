@@ -265,8 +265,8 @@ public class Database {
         System.out.println("MySQL JDBC Driver Registered!");
 
         try {
-            //conn = (Connection) DriverManager.getConnection("jdbc:mysql://10.90.130.138:3306/db_ips", "username", "password");
-            conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/db_ips", "username", "password");
+            conn = (Connection) DriverManager.getConnection("jdbc:mysql://10.90.130.110:3306/db_ips", "username", "password");
+            //conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/db_ips", "username", "password");
 
         } catch (SQLException e) {
             System.out.println("Connection Failed! Check output console");
