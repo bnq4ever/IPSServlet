@@ -99,8 +99,8 @@ public class Locator {
         for(MagneticPoint point : magneticPoints) {
             distance = 0;
             distance += Math.pow((magnitude - point.magnitude), 2);
-            distance += Math.pow((zaxis - point.zaxis), 2);
-            distance += Math.pow((xyaxis - point.xyaxis), 2);
+            //distance += Math.pow((zaxis - point.zaxis), 2);
+            //distance += Math.pow((xyaxis - point.xyaxis), 2);
             distance = (double) Math.sqrt(distance);
             map.put(distance, point);
         }

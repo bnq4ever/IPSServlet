@@ -97,10 +97,12 @@ public class MappingServlet extends HttpServlet {
             
             case Command.GET_BEST_CANDIDATES:
                 String deviceId = request.getParameter("id");
-                System.out.println("GET_BEST_CANDIDATES - step 1");
                 if(DeviceManager.getInstance().isConnected(deviceId)) {
-                    System.out.println("GET_BEST_CANDIDATES - step 2");
                     ArrayList<MagneticPoint> points = Locator.getInstance().getBestCandidates(deviceId);
+                    if(points == null) {
+                        out.println("");
+                        return;
+                    }
                     JsonArrayBuilder array = Json.createArrayBuilder();
                     for (MagneticPoint point : points) {
                         array.add(Json.createObjectBuilder().add("x", point.x).add("y", point.y));

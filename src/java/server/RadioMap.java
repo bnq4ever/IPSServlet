@@ -137,8 +137,8 @@ public class RadioMap {
                 for(MagneticPoint point : magnetics) {
                     temp = 0;
                     temp += Math.pow((point.magnitude), 2);
-                    temp += Math.pow((point.zaxis), 2);
-                    temp += Math.pow((point.xyaxis), 2);
+                    //temp += Math.pow((point.zaxis), 2);
+                    //temp += Math.pow((point.xyaxis), 2);
                     temp = (double) Math.sqrt(temp);
                     if(temp > h) {
                         h = temp;
@@ -150,8 +150,8 @@ public class RadioMap {
                     //map.put(distance, point);
             }
             mean /= magnetics.size();
-            area.CANDIDATES_TRESHOLD = (mean - l) / 2;
-            area.CANDIDATES_TRESHOLD = 25;
+            System.out.println("hightest: "+ h +"\nlowest: "+ l +"\nmean: "+ mean +"\nTreshold: "+ 0.001 * mean * (h - l));
+            area.CANDIDATES_TRESHOLD = 0.001 * mean * (h - l);
         }
     }
 
