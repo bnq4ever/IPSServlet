@@ -10,7 +10,7 @@ $(document).ready(function () {
     
     $("#filter-online-devices :checkbox").prop('checked', true);
         
-    document.getElementById("btn-online").style.color = "lightgray";
+    document.getElementById("btn-offline").style.color = "lightgray";
     
     
     //ONLINE
@@ -21,8 +21,8 @@ $(document).ready(function () {
         $("#filter-online-devices :checkbox").prop('checked', true);
         showDevices = true;
     
-        document.getElementById("btn-online").style.color = "lightgray";
-        document.getElementById("btn-offline").style.color = "black";
+        document.getElementById("btn-online").style.color = "black";
+        document.getElementById("btn-offline").style.color = "lightgray";
 
         $(".menu-filter-offline").hide();
         $(".menu-filter-online").show();
@@ -41,8 +41,8 @@ $(document).ready(function () {
         showMagneticPoints = true;
         $("#filter-offline-magneticPoints :checkbox").prop('checked', true);
         
-        document.getElementById("btn-offline").style.color = "lightgray";
-        document.getElementById("btn-online").style.color = "black";
+        document.getElementById("btn-offline").style.color = "black";
+        document.getElementById("btn-online").style.color = "lightgray";
         
         $(".menu-filter-online").hide();
         $(".menu-filter-offline").show();

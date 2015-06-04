@@ -23,6 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "Builder", urlPatterns = {"/Builder"})
 public class BuildingServlet extends HttpServlet {
 
+    public static final String ADD_MAGNETIC_POINTS = "ADD_MAGNETIC_POINTS";
+    public static final String MAGNETIC_POINTS_ADDED = "MAGNETIC_POINTS_ADDED";
+    public static final String MAGNETIC_POINTS_NOT_ADDED = "MAGNETIC_POINTS_NOT_ADDED";
+    public static final String ADD_REFERENCE_AREA = "ADD_REFERENCE_AREA";
+    public static final String REFERENCE_AREA_ADDED = "REFERENCE_AREA_ADDED";
+    public static final String REFERENCE_AREA_NOT_ADDED = "REFERENCE_AREA_NOT_ADDED";
+    public static final String GET_ALL_POINTS = "GET_ALL_POINTS";
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -38,19 +46,19 @@ public class BuildingServlet extends HttpServlet {
         String command = request.getParameter("command");
         System.out.println(command);
         switch(command) {
-            case Command.ADD_REFERENCE_AREA:
+            case ADD_REFERENCE_AREA:
                 handleReferenceAreaData(out, 
                         Double.parseDouble(request.getParameter("x")), 
                         Double.parseDouble(request.getParameter("y")),
                         request.getParameter("fingerprint"));
                 break;
                 
-            case Command.ADD_MAGNETIC_POINTS:
+            case ADD_MAGNETIC_POINTS:
                 handleMagneticPointsData(out, 
                         request.getParameter("magnetics"));
                 break;
                 
-            case Command.GET_ALL_POINTS:
+            case GET_ALL_POINTS:
                 getAllPoints(out);
                 break;
         }
@@ -85,7 +93,7 @@ public class BuildingServlet extends HttpServlet {
         RadioMap.getInstance().addReferenceArea(area);
         RadioMap.getInstance().addReferenceAreaDB(area);
         
-        out.print(Command.REFERENCE_AREA_ADDED);
+        out.print(REFERENCE_AREA_ADDED);
     }
     
     private void handleMagneticPointsData(PrintWriter out, String magneticPointData) {
@@ -96,7 +104,7 @@ public class BuildingServlet extends HttpServlet {
             RadioMap.getInstance().addMagneticPointDB(p);
         }
         
-        out.print(Command.MAGNETIC_POINTS_ADDED);
+        out.print(MAGNETIC_POINTS_ADDED);
     }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

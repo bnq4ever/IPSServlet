@@ -3,14 +3,7 @@ var ratioX;
 var ratioY;
 
 $(document).ready(function() {
-    if (navigator.userAgent.match(/Mobi/)) {
-        ratioX = 1;
-        ratioY = 1;
-    } else {
-        var img_container = document.getElementById('map');
-        ratioX = parseInt(img_container.style.width) / 685;
-        ratioY = parseInt(img_container.style.height) / 1122;
-    }
+    
     setInterval(getConnectedDevices, 100);
     setInterval(updateMapDevices, 100);
 
@@ -48,6 +41,15 @@ $(document).ready(function() {
     }
 
     function moveTo(id) {
+        if (navigator.userAgent.match(/Mobi/)) {
+            ratioX = 1;
+            ratioY = 1;
+        } else {
+            var img_container = document.getElementById('map');
+            ratioX = parseInt(img_container.style.width) / 685;
+            ratioY = parseInt(img_container.style.height) / 1122;
+        }
+        
         var size = 40*ratioX;
         
         var div = document.getElementById(id);
@@ -56,18 +58,34 @@ $(document).ready(function() {
 
         div.style.left = x - size/2 + "px";
         div.style.top = y - size/2 - 2 + "px";
+        
+        var name = (div.firstElementChild||div.firstChild);
+        name.style.position = "relative";
+        name.style.bottom = -size + "px";
+        name.style.left = -name.offsetWidth/2 + size/2 + "px";
+        name.style.display = "inline";
+        
     }
 
     function generateDiv(deviceID, name, x, y, color) {
+        
+        if (navigator.userAgent.match(/Mobi/)) {
+            ratioX = 1;
+            ratioY = 1;
+        } else {
+            var img_container = document.getElementById('map');
+            ratioX = parseInt(img_container.style.width) / 685;
+            ratioY = parseInt(img_container.style.height) / 1122;
+        }
+        
         var size = 40*ratioX;
-        alert(size);
         
         var div = document.createElement("DIV");
         div.style.backgroundImage = "url('imgs/person.png')";
         div.style.backgroundColor = color;
         div.style.backgroundSize = size + "px " + size + "px";
         div.style.backgroundRepeat = "no-repeat";
-        div.style.borderRadius = "20px";
+        div.style.borderRadius = "40px";
         var divID = document.createAttribute("id");
         divID.value = deviceID;
         div.setAttributeNode(divID);
@@ -79,8 +97,18 @@ $(document).ready(function() {
         div.style.top = Math.floor(y) - size/2 - 2 + "px";
         div.style.left = Math.floor(x) - size/2 + "px";
         div.style.zIndex = "1";
-        div.style.height = 40 + "px";
-        div.style.width = 40 + "px";
+        div.style.height = size + "px";
+        div.style.width = size + "px";
+        
+        
+        var nameDiv = document.createElement("DIV");
+        var nameClass = document.createAttribute("class");
+        nameClass.value = "device-name";
+        nameDiv.setAttributeNode(nameClass);
+        nameDiv.innerHTML = name;
+        
+        div.appendChild(nameDiv);
+        
         //div.style.backgroundcolor = getRandomColor();
         $(div).hide();
         document.getElementById("mappingArea").appendChild(div);
@@ -113,7 +141,7 @@ $(document).ready(function() {
             type: "get", //send it through get method
             data:{command: "GET_CONNECTED_DEVICES"},
             success: function(response) {
-                //alert(response);
+//                alert(response);
                 var tmp = {};
                 var json = $.parseJSON(response);
                 var jsonArray = json['devices'];

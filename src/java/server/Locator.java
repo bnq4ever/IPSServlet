@@ -112,6 +112,7 @@ public class Locator {
                 break;
             }
         }
+        System.out.println("nbrOfCandidates: " + bestCandidates.get(deviceId).size());
 //        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
 //        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
 //        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());

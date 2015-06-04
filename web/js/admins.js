@@ -4,7 +4,7 @@ var referencePoints = [];
 setInterval(getAllPoints, 250);
 setInterval(showPoints, 250);
 
-
+//ANVÄNDS?
 function getAllPoints() {
     $.ajax({
         url: "Builder",

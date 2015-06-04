@@ -65,23 +65,23 @@ public final class DeviceManager {
     public synchronized String connectDevice(String deviceId) {
         //System.out.println("connectDevice");
         if (!exists(deviceId))
-            return Command.DEVICE_NOT_EXISTING;
+            return ConnectionServlet.DEVICE_NOT_EXISTING;
         else if (isConnected(deviceId))
-            return Command.DEVICE_ALREADY_CONNECTED;
+            return ConnectionServlet.DEVICE_ALREADY_CONNECTED;
         
         connectedDevices.add(getDevice(deviceId));
-        return Command.DEVICE_CONNECTED;
+        return ConnectionServlet.DEVICE_CONNECTED;
     }
     
     public synchronized String disconnectDevice(String deviceId) {
         //System.out.println("disconnectDevice");
         if (!exists(deviceId))
-            return Command.DEVICE_NOT_EXISTING;
+            return ConnectionServlet.DEVICE_NOT_EXISTING;
         else if (!isConnected(deviceId))
-            return Command.DEVICE_ALREADY_DISCONNECTED;
+            return ConnectionServlet.DEVICE_ALREADY_DISCONNECTED;
         
         connectedDevices.remove(getDevice(deviceId));
-        return Command.DEVICE_DISCONNECTED;
+        return ConnectionServlet.DEVICE_DISCONNECTED;
     }
     
     protected synchronized Device getDevice(String deviceId) {

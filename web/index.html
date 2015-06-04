@@ -34,14 +34,12 @@ and open the template in the editor.
         <script src="js/showDevices.js"></script>
 
         <style>
+            
             body {
-                //background-color: #f4f2ea;
-                background-color:transparent;
-                //background-image: url("imgs/bg.png");
-                background-repeat: repeat;
                 margin: 0;
                 padding: 0;
             }
+            
             img, div {
                 -moz-user-select: none; 
                 -khtml-user-select: none; 
@@ -49,69 +47,15 @@ and open the template in the editor.
                 -o-user-select: none; 
             }
             
-            .menu {
-                width:500px; 
-                height:20px; 
-                margin-left:auto; 
-                margin-right:auto;
-            }
-            
-            #btn-online, #btn-offline {
-                float:left; 
-                font-family:Candara; 
-                margin-top:5px;
-                cursor: pointer;
-            }
-            
             #btn-offline {
                 margin-left:5px;
             }
             
-            #splitter {
-                margin-left:5px; 
-                margin-top:7px; 
-                background-color:#1a1a1a; 
-                width:1px; 
-                height:16px; 
-                float:left;
-            }
-            
-            .menu-filter-online {
-                float:left; 
-                background-color:#0b5ba6;
-                height:30px;
-                padding-left:20px;
-                padding-right:20px;
-                margin-left:10px;
-                border-radius: 0px 0px 5px 5px;
-            }
-            
-            .menu-filter-offline {
-                float:left; 
-                background-color:#0b5ba6;
-                height:30px;
-                padding-left:20px;
-                padding-right:20px;
-                margin-left:10px;
-                border-radius: 0px 0px 5px 5px;
-            }
-            
-            #filter-online-devices, #filter-offline-magneticPoints {
-                float:left;
-                margin-top:5px;
-            }
-            
-            #filter-online-particles, #filter-online-candidates, #filter-offline-referenceAreas {
-                float:left;
-                margin-top:5px;
-                margin-left:40px;
-            }
-            
             .online-label {
-                float:right;
                 color:white;
                 font-family:Candara;
             }
+            
             #mappingArea, #particleArea, #candidateArea, #radiomapArea {
                 position:absolute;
                 top:0px;
@@ -120,31 +64,504 @@ and open the template in the editor.
             #mappingArea {
                 z-index:1;
             }
+            
+            .device-name {
+                color:white;
+                font-size:13px;
+                width:auto;
+                display: inline-block;
+                background-color: rgba(0, 0, 0, 0.7);
+                padding-left:2px;
+                padding-right:2px;
+                font-family:century gothic;
+            }
+            
+            @media screen and (max-width:480px) and (orientation : portrait){
+                .menu {
+                    width:100%;
+                    height:30px; 
+                    margin-left:auto; 
+                    margin-right:auto;
+                }
 
+                #btn-online, #btn-offline {
+                    float:left; 
+                    font-family:Candara; 
+                    margin-top:5px;
+                    cursor: pointer;
+                }
+
+                #splitter {
+                    margin-left:5px; 
+                    margin-top:7px; 
+                    background-color:#1a1a1a; 
+                    width:1px; 
+                    height:16px; 
+                    float:left;
+                }
+                
+                .menu-filter {
+                    background-color:#0b5ba6;
+                    width:100%;
+                    height:30px;
+                }
+
+                .menu-phase {
+                    width:135px;
+                    height:30px;
+                    margin-right:auto;
+                    margin-left:auto;
+                }
+                
+                .menu-filter-online {
+                    height:100%;
+                    width:350px;
+                    margin-left:auto;
+                    margin-right:auto;
+                }
+
+                .menu-filter-offline {
+                    height:100%;
+                    width:320px;
+                    margin-left:auto;
+                    margin-right:auto;
+                }
+
+                #filter-online-devices, #filter-offline-magneticPoints {
+                    float:left;
+                    margin-top:5px;
+                }
+
+                #filter-online-particles, #filter-online-candidates, #filter-offline-referenceAreas {
+                    float:left;
+                    margin-top:5px;
+                    margin-left:40px;
+                }
+                
+                .footer {
+                    height:100px;
+                    width: 100%;
+                    position:relative;
+                    bottom:0px;
+                    left:0px;
+                    margin-top:90px;
+                    background-color:#f2f2f2;
+                }
+                
+                .footer-names {
+                    font-family:Adobe Garamond pro;
+                    color:#a6a6a6;
+                    width:273px;
+                    margin-left:auto;
+                    margin-right:auto;
+                    margin-top:0px;
+                }
+                
+            }
+            @media screen and (max-width:480px) and (orientation : landscape){
+                .menu {
+                    width:100%;
+                    height:60px; 
+                    margin-left:auto; 
+                    margin-right:auto;
+                }
+
+                #btn-online, #btn-offline {
+                    float:left; 
+                    font-family:Candara; 
+                    margin-top:5px;
+                    cursor: pointer;
+                }
+
+                #splitter {
+                    margin-left:5px; 
+                    margin-top:7px; 
+                    background-color:#1a1a1a; 
+                    width:1px; 
+                    height:16px; 
+                    float:left;
+                }
+                
+                .menu-filter {
+                    background-color:#0b5ba6;
+                    width:100%;
+                    height:30px;
+                }
+
+                .menu-phase {
+                    width:135px;
+                    height:30px;
+                    margin-right:auto;
+                    margin-left:auto;
+                }
+                
+                .menu-filter-online {
+                    height:100%;
+                    width:350px;
+                    margin-left:auto;
+                    margin-right:auto;
+                }
+
+                .menu-filter-offline {
+                    height:100%;
+                    width:320px;
+                    margin-left:auto;
+                    margin-right:auto;
+                }
+
+                #filter-online-devices, #filter-offline-magneticPoints {
+                    float:left;
+                    margin-top:5px;
+                }
+
+                #filter-online-particles, #filter-online-candidates, #filter-offline-referenceAreas {
+                    float:left;
+                    margin-top:5px;
+                    margin-left:40px;
+                }
+                
+                .footer {
+                    height:100px;
+                    width: 100%;
+                    position:relative;
+                    bottom:0px;
+                    left:0px;
+                    margin-top:90px;
+                    background-color:#f2f2f2;
+                }
+                
+                .footer-names {
+                    font-family:Adobe Garamond pro;
+                    color:#a6a6a6;
+                    width:273px;
+                    margin-left:auto;
+                    margin-right:auto;
+                    margin-top:0px;
+                }
+                
+            }
+            @media screen and (min-width: 481px) and (orientation : portrait){
+                
+                .menu {
+                    width:525px;
+                    height:60px; 
+                    margin-left:auto; 
+                    margin-right:auto;
+                }
+
+                .menu-phase {
+                    margin-left: 10px;
+                }
+
+                #btn-online, #btn-offline {
+                    float:left; 
+                    font-family:Candara; 
+                    margin-top:5px;
+                    cursor: pointer;
+                }
+
+                #btn-offline {
+                    margin-left:5px;
+                }
+
+                #splitter {
+                    margin-left:5px; 
+                    margin-top:7px; 
+                    background-color:#1a1a1a; 
+                    width:1px; 
+                    height:16px; 
+                    float:left;
+                }
+                
+                .menu-filter {
+                    width:464px;
+                    background-color:#0b5ba6;
+                    border-radius: 0px 0px 5px 5px;
+                    margin-left:auto;
+                    margin-right:auto;
+                    height:30px;
+                }
+
+                .menu-filter-online {
+                    height:30px;
+                    margin-left:auto;
+                    margin-right:auto;
+                    width:325px;
+                }
+
+                .menu-filter-offline {
+                    height:30px;
+                    margin-left:auto;
+                    margin-right:auto;
+                    width:305px;
+                }
+
+                #filter-online-devices, #filter-offline-magneticPoints {
+                    float:left;
+                    margin-top:5px;
+                }
+
+                #filter-online-particles, #filter-online-candidates, #filter-offline-referenceAreas {
+                    float:left;
+                    margin-top:5px;
+                    margin-left:40px;
+                }
+                .menu {
+                    width:100%;
+                    height:60px;
+                }
+
+                .menu-phase {
+                    width:125px;
+                    height:30px;
+                    margin-right:auto;
+                    margin-left:auto;
+                }
+                
+                .footer {
+                    height:100px;
+                    width: 100%;
+                    position:relative;
+                    bottom:0px;
+                    left:0px;
+                    margin-top:50px;
+                    background-color:#f2f2f2;
+                }
+                
+                .footer-names {
+                    font-family:Adobe Garamond pro;
+                    color:#a6a6a6;
+                    width:300px;
+                    margin-left:auto;
+                    margin-right:auto;
+                    margin-top:0px;
+                }
+                
+            }
+            
+            @media screen and (min-width: 481px) and (orientation : landscape){
+                .menu {
+                    width:525px;
+                    height:30px; 
+                    margin-left:auto; 
+                    margin-right:auto;
+                }
+
+                .menu-phase {
+                    margin-left: 10px;
+                }
+
+                #btn-online, #btn-offline {
+                    float:left; 
+                    font-family:Candara; 
+                    margin-top:5px;
+                    cursor: pointer;
+                }
+
+                #btn-offline {
+                    margin-left:5px;
+                }
+
+                #splitter {
+                    margin-left:5px; 
+                    margin-top:7px; 
+                    background-color:#1a1a1a; 
+                    width:1px; 
+                    height:16px; 
+                    float:left;
+                }
+                
+                .menu-filter {
+                    width:464px;
+                    background-color:#0b5ba6;
+                    border-radius: 0px 0px 5px 5px;
+                    margin-left:auto;
+                    margin-right:auto;
+                    height:30px;
+                }
+
+                .menu-filter-online {
+                    height:30px;
+                    margin-left:auto;
+                    margin-right:auto;
+                    width:345px;
+                }
+
+                .menu-filter-offline {
+                    height:30px;
+                    margin-left:auto;
+                    margin-right:auto;
+                    width:320px;
+                }
+
+                #filter-online-devices, #filter-offline-magneticPoints {
+                    float:left;
+                    margin-top:5px;
+                }
+
+                #filter-online-particles, #filter-online-candidates, #filter-offline-referenceAreas {
+                    float:left;
+                    margin-top:5px;
+                    margin-left:40px;
+                }
+                .menu {
+                    width:100%;
+                    height:60px;
+                }
+
+                .menu-phase {
+                    width:135px;
+                    height:30px;
+                    margin-right:auto;
+                    margin-left:auto;
+                }
+                
+                .footer {
+                    height:100px;
+                    width: 100%;
+                    position:relative;
+                    bottom:0px;
+                    left:0px;
+                    margin-top:50px;
+                    background-color:#f2f2f2;
+                }
+                
+                .footer-names {
+                    font-family:Adobe Garamond pro;
+                    color:#a6a6a6;
+                    width:300px;
+                    margin-left:auto;
+                    margin-right:auto;
+                    margin-top:0px;
+                }
+                
+            }
+            
+            @media screen and (min-width: 641px) {
+            
+                .menu {
+                    width:525px;
+                    height:30px; 
+                    margin-left:auto; 
+                    margin-right:auto;
+                }
+
+                .menu-phase {
+                    margin-left: 10px;
+                }
+
+                #btn-online, #btn-offline {
+                    float:left; 
+                    font-family:Candara; 
+                    margin-top:5px;
+                    cursor: pointer;
+                }
+
+                #btn-offline {
+                    margin-left:5px;
+                }
+
+                #splitter {
+                    margin-left:5px; 
+                    margin-top:7px; 
+                    background-color:#1a1a1a; 
+                    width:1px; 
+                    height:16px; 
+                    float:left;
+                }
+                
+                .menu-filter {
+                    width:464px;
+                    background-color:#0b5ba6;
+                    border-radius: 0px 0px 5px 5px;
+                    margin-left:auto;
+                    margin-right:auto;
+                    height:30px;
+                }
+
+                .menu-filter-online {
+                    height:30px;
+                    margin-left:auto;
+                    margin-right:auto;
+                    width:325px;
+                }
+
+                .menu-filter-offline {
+                    height:30px;
+                    margin-left:auto;
+                    margin-right:auto;
+                    width:305px;
+                }
+
+                #filter-online-devices, #filter-offline-magneticPoints {
+                    float:left;
+                    margin-top:5px;
+                }
+
+                #filter-online-particles, #filter-online-candidates, #filter-offline-referenceAreas {
+                    float:left;
+                    margin-top:5px;
+                    margin-left:40px;
+                }
+                .menu {
+                    width:100%;
+                    height:60px;
+                }
+
+                .menu-phase {
+                    width:125px;
+                    height:30px;
+                    margin-right:auto;
+                    margin-left:auto;
+                }
+                
+                .footer {
+                    height:100px;
+                    width: 100%;
+                    position:relative;
+                    bottom:0px;
+                    left:0px;
+                    margin-top:50px;
+                    background-color:#f2f2f2;
+                }
+                
+                .footer-names {
+                    font-family:Adobe Garamond pro;
+                    color:#a6a6a6;
+                    width:250px;
+                    margin-left:auto;
+                    margin-right:auto;
+                    margin-top:0px;
+                }
+                
+            }
         </style>
     </head>
     <body>
         
         <div class="menu">
-            <div class="menu-phase">
-                <div id="btn-online">ONLINE</div>
-                <div id="splitter"></div>
-                <div id="btn-offline">OFFLINE</div>
-            </div>
-            
-            <div class="menu-filter-online">
-                <div id="filter-online-devices"><input type="checkbox"/><label class="online-label">Devices</label></div>
-                <div id="filter-online-particles"><input type="checkbox"/><label class="online-label">Particles</label></div>
-                <div id="filter-online-candidates"><input type="checkbox"/><label class="online-label">Candidates</label></div>
-            </div>
-            
-            
-            <div class="menu-filter-offline">
-                <div id="filter-offline-magneticPoints"><input type="checkbox"/><label class="online-label">Magnetic Points</label></div>
-                <div id="filter-offline-referenceAreas"><input type="checkbox"/><label class="online-label">Reference Areas</label></div>
-            </div>
+
+            <div class="menu-filter">
+                
+                <div class="menu-filter-online">
+                    <div id="filter-online-devices"><input type="checkbox"/><label class="online-label">Devices</label></div>
+                    <div id="filter-online-particles"><input type="checkbox"/><label class="online-label">Particles</label></div>
+                    <div id="filter-online-candidates"><input type="checkbox"/><label class="online-label">Candidates</label></div>
+                </div>
+                
+                <div class="menu-filter-offline">
+                    <div id="filter-offline-magneticPoints"><input type="checkbox"/><label class="online-label">Magnetic Points</label></div>
+                    <div id="filter-offline-referenceAreas"><input type="checkbox"/><label class="online-label">Reference Areas</label></div>
+                </div>
             
         </div>
+            
+                <div class="menu-phase">
+                    <div id="btn-online">ONLINE</div>
+                    <div id="splitter"></div>
+                    <div id="btn-offline">OFFLINE</div>
+                </div>
+            </div>
         
         <div style="width:250px; margin-left:auto; margin-right:auto; margin-top:30px;"><img src="imgs/logo.png" style="width:250px;"/></div>
         <div id="map" style="position:relative;">
@@ -163,7 +580,7 @@ and open the template in the editor.
             <img id="map_img" src="imgs/mapWithRooms.png" draggable="false"/>
             
         </div>
-        <div style="height:100px; width: 100%; margin-top:50px; background-color:#f2f2f2;">
+        <div class="footer">
             <div style="width:100%; height:3px;">
                 <div style="width:25%; background-color:#ed7b01; height:3px; float:left;"></div>
                 <div style="width:25%; background-color:#0759a5; height:3px; float:left;"></div>
@@ -171,7 +588,7 @@ and open the template in the editor.
                 <div style="width:25%; background-color:#aab300; height:3px; float:left;"></div>
             </div>
             <div style="font-family:Adobe Garamond pro; color:#a6a6a6; width:15px; margin-left:auto; margin-right:auto; margin-top:30px; font-size: 12px;">by</div>
-            <div style="font-family:Adobe Garamond pro; color:#a6a6a6; width:250px; margin-left:auto; margin-right:auto; margin-top:0px;">Hampus Engström & Fredrik Helander</div>
+            <div class="footer-names">Hampus Engström & Fredrik Helander</div>
         </div>
     </body>
 </html>

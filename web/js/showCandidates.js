@@ -1,25 +1,25 @@
 var candidates = {};
 
-var MAC = "40:F3:08:3B:4F:AA";
-var _MAC = "88:32:9B:B6:AB:56";
+var _MAC = "40:F3:08:3B:4F:AA";
+var MAC = "88:32:9B:B6:AB:56";
 
 var ratioX;
 var ratioY;
 
 $(document).ready(function() {
-    if (navigator.userAgent.match(/Mobi/)) {
-        ratioX = 1;
-        ratioY = 1;
-    } else {
-        var img_container = document.getElementById('map');
-        ratioX = parseInt(img_container.style.width) / 685;
-        ratioY = parseInt(img_container.style.height) / 1122;
-    }
 
     setInterval(getCandidates, 100);
     setInterval(updateCandidates, 100);
 
     function updateCandidates() {
+        if (navigator.userAgent.match(/Mobi/)) {
+            ratioX = 1;
+            ratioY = 1;
+        } else {
+            var img_container = document.getElementById('map');
+            ratioX = parseInt(img_container.style.width) / 685;
+            ratioY = parseInt(img_container.style.height) / 1122;
+        }
         var candidateCanvas = document.getElementById("candidateArea");
         var ctx = candidateCanvas.getContext("2d");
         ctx.clearRect(0, 0, candidateCanvas.width, candidateCanvas.height);

@@ -1,6 +1,6 @@
 var particles = {};
-var MAC = "40:F3:08:3B:4F:AA";
-var _MAC = "88:32:9B:B6:AB:56";
+var _MAC = "40:F3:08:3B:4F:AA";
+var MAC = "88:32:9B:B6:AB:56";
 
 var colors = [
     "#0759a5",
@@ -13,14 +13,6 @@ var ratioX;
 var ratioY;
 
 $(document).ready(function() {
-    if (navigator.userAgent.match(/Mobi/)) {
-        ratioX = 1;
-        ratioY = 1;
-    } else {
-        var img_container = document.getElementById('map');
-        ratioX = parseInt(img_container.style.width) / 685;
-        ratioY = parseInt(img_container.style.height) / 1122;
-    }
     setInterval(updateParticles, 100);
     setInterval(getParticles, 100);
 
@@ -31,6 +23,15 @@ $(document).ready(function() {
         
         if(!showParticles)
             return;
+        
+        if (navigator.userAgent.match(/Mobi/)) {
+            ratioX = 1;
+            ratioY = 1;
+        } else {
+            var img_container = document.getElementById('map');
+            ratioX = parseInt(img_container.style.width) / 685;
+            ratioY = parseInt(img_container.style.height) / 1122;
+        }
         
 //        var img_container = document.getElementById('map');
 //

@@ -18,6 +18,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "Mapper", urlPatterns = {"/Mapper"})
 public class MappingServlet extends HttpServlet {
+    
+    public static final String LOCATE_DEVICE = "LOCATE_DEVICE";
+    public static final String DEVICE_LOCATED = "DEVICE_LOCATED";
+    
+    public static final String GET_CONNECTED_DEVICES = "GET_CONNECTED_DEVICES";
+    public static final String GET_POSITIONS = "GET_POSITIONS";
+    public static final String GET_PARTICLES = "GET_PARTICLES";
+    public static final String GET_BEST_CANDIDATES = "GET_BEST_CANDIDATES";
+    
     //private PrintWriter out;
     //private ScriptEngineManager manager = new ScriptEngineManager();
     //private ScriptEngine engine = manager.getEngineByName("JavaScript");
@@ -32,6 +41,7 @@ public class MappingServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         //Timer timer = new Timer();
@@ -73,21 +83,21 @@ public class MappingServlet extends HttpServlet {
         String command = request.getParameter("command");
         switch (command) {
             
-            case Command.GET_CONNECTED_DEVICES:
+            case GET_CONNECTED_DEVICES:
                 getAllDevices(out);
                 break;
                 
-            case Command.GET_POSITIONS:
+            case GET_POSITIONS:
                 getAllPositions(out);
                 break;
                 
-            case Command.LOCATE_DEVICE:
+            case LOCATE_DEVICE:
                 handleLocateDeviceRequest(out, request.getParameter("id"), 
                         request.getParameter("dataType"), 
                         request.getParameter("data"));
                 break;
                 
-            case Command.GET_PARTICLES:
+            case GET_PARTICLES:
                 if(DeviceManager.getInstance().isConnected(request.getParameter("id"))) {
                     out.println(DeviceManager.getInstance()
                             .getDevice(request.getParameter("id"))
@@ -95,7 +105,7 @@ public class MappingServlet extends HttpServlet {
                 }
                 break;
             
-            case Command.GET_BEST_CANDIDATES:
+            case GET_BEST_CANDIDATES:
                 String deviceId = request.getParameter("id");
                 if(DeviceManager.getInstance().isConnected(deviceId)) {
                     ArrayList<MagneticPoint> points = Locator.getInstance().getBestCandidates(deviceId);

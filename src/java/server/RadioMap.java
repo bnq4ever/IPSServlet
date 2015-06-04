@@ -154,5 +154,4 @@ public class RadioMap {
             area.CANDIDATES_TRESHOLD = 0.001 * mean * (h - l);
         }
     }
-
 }

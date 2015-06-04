@@ -19,6 +19,21 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "Connector", urlPatterns = {"/Connector"})
 public class ConnectionServlet extends HttpServlet {
+    
+    public static final String CONNECT_DEVICE = "CONNECT_DEVICE";
+    public static final String DISCONNECT_DEVICE = "DISCONNECT_DEVICE";
+    public static final String INTRODUCING_DEVICE = "INTRODUCING_DEVICE";
+    public static final String DELETE_DEVICE = "DELETE_DEVICE";
+    
+    public static final String DEVICE_UNKNOWN = "DEVICE_UNKNOWN";
+    public static final String DEVICE_CONNECTED = "DEVICE_CONNECTED";
+    public static final String DEVICE_ALREADY_CONNECTED = "DEVICE_ALLREADY_CONNECTED";
+    public static final String DEVICE_DISCONNECTED = "DEVICE_DISCONNECTED";
+    public static final String DEVICE_ALREADY_DISCONNECTED = "DEVICE_ALLREADY_DISCONNECTED";
+    public static final String DEVICE_INTRODUCED = "DEVICE_INTRODUCED";
+    public static final String DEVICE_ALREADY_INTRODUCED = "DEVICE_ALLREADY_INTRODUCED";
+    public static final String DEVICE_DELETED = "DEVICE_DELETED";
+    public static final String DEVICE_NOT_EXISTING = "DEVICE_NOT_EXISTING";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -37,17 +52,17 @@ public class ConnectionServlet extends HttpServlet {
         String command = request.getParameter("command");
         System.out.println(command);
         switch(command) {
-            case Command.CONNECT_DEVICE:
+            case CONNECT_DEVICE:
                 connectDevice(out, request.getParameter("id"));
                 break;
-            case Command.DISCONNECT_DEVICE:
+            case DISCONNECT_DEVICE:
                 disconnectDevice(out, request.getParameter("id"));
                 break;
-            case Command.INTRODUCING_DEVICE:
+            case INTRODUCING_DEVICE:
                 String deviceName = request.getParameter("name");
                 introduction(out, request.getParameter("id"), deviceName);
                 break;
-            case Command.DELETE_DEVICE:
+            case DELETE_DEVICE:
                 deleteDevice(out, request.getParameter("id"));
                 break;
         }
@@ -56,20 +71,20 @@ public class ConnectionServlet extends HttpServlet {
     private void deleteDevice(PrintWriter out, String deviceMAC) {
         if (DeviceManager.getInstance().exists(deviceMAC)) {
             DeviceManager.getInstance().deleteDevice(deviceMAC);
-            out.print(Command.DEVICE_DELETED);
+            out.print(DEVICE_DELETED);
         } else {
-            out.print(Command.DEVICE_NOT_EXISTING);
+            out.print(DEVICE_NOT_EXISTING);
         }
     }
 
     private void connectDevice(PrintWriter out, String deviceMAC) {
         if (!DeviceManager.getInstance().isIntroduced(deviceMAC)) {
-            out.print(Command.DEVICE_UNKNOWN);
+            out.print(DEVICE_UNKNOWN);
         } else if (DeviceManager.getInstance().isConnected(deviceMAC)) {
-            out.print(Command.DEVICE_CONNECTED);
+            out.print(DEVICE_CONNECTED);
         } else {
             DeviceManager.getInstance().connectDevice(deviceMAC);
-            out.print(Command.DEVICE_CONNECTED);
+            out.print(DEVICE_CONNECTED);
         }
     }
 
@@ -115,15 +130,15 @@ public class ConnectionServlet extends HttpServlet {
     private void disconnectDevice(PrintWriter out, String deviceMAC) {
         if (DeviceManager.getInstance().isConnected(deviceMAC)) {
             DeviceManager.getInstance().disconnectDevice(deviceMAC);
-            out.print(Command.DEVICE_DISCONNECTED);
+            out.print(DEVICE_DISCONNECTED);
         } else {
-            out.print(Command.DEVICE_ALREADY_DISCONNECTED);
+            out.print(DEVICE_ALREADY_DISCONNECTED);
         }
     }
 
     private void introduction(PrintWriter out, String deviceMAC, String deviceName) {
         DeviceManager.getInstance().addDevice(deviceMAC, deviceName);
-        out.print(Command.DEVICE_INTRODUCED);
+        out.print(DEVICE_INTRODUCED);
     }
 
 }
