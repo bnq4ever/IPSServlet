@@ -16,12 +16,19 @@ public class ReferenceArea {
     public String BTSSID;
     public ArrayList<MagneticPoint> magneticPoints;
 
+    //public ReferenceArea(double x, double y, Map fingerprint){
     public ReferenceArea(double x, double y, Map fingerprint){
         this.x = x;
         this.y = y;
         this.fingerprint = fingerprint;
         magneticPoints = new ArrayList<>();
-        //magnetics = Generate.MagneticFingerprints();
+    }
+    
+    public ReferenceArea(double x, double y, String BTSSID) {
+        this.x = x;
+        this.y = y;
+        this.BTSSID = BTSSID;
+        magneticPoints = new ArrayList<>();
     }
     
     public void addMagneticPoint(MagneticPoint magneticPoint) {

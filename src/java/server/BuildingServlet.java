@@ -88,9 +88,9 @@ public class BuildingServlet extends HttpServlet {
     
 
     private void handleReferenceAreaData(PrintWriter out, double x, double y, String areaData) {
-        ReferenceArea area = new ReferenceArea(x, y, Parser.parseFingerprint(areaData));
-        
-        RadioMap.getInstance().addReferenceArea(area);
+        //ReferenceArea area = new ReferenceArea(x, y, Parser.parseFingerprint(areaData));
+        ReferenceArea area = new ReferenceArea(x, y, Parser.parseBT(areaData));    
+        RadioMap.getInstance().addReferenceAreaBT(area);
         RadioMap.getInstance().addReferenceAreaDB(area);
         
         out.print(REFERENCE_AREA_ADDED);
