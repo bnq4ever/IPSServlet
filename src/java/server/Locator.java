@@ -54,6 +54,16 @@ public class Locator {
         return bestCandidate;
     }
     
+    public synchronized ReferenceArea locateReferenceAreaBT(String deviceId, String BTSSID) {
+        ReferenceArea currentArea = null;
+        for(ReferenceArea ra : RadioMap.getInstance().getReferenceAreas()) {
+            if(ra.BTSSID.equals(BTSSID)) {
+                currentArea = ra;
+            }
+        }
+        return currentArea;
+    } 
+    
     private synchronized double getRSSEuclidean(HashMap<String, Double> fingerprint, ReferenceArea candidate) {
         double candidateDistance = 0;
         //System.out.println("euclidian");
