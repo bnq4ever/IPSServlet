@@ -154,10 +154,9 @@ public class MappingServlet extends HttpServlet {
         System.out.println();
         switch(dataType) {
             case "REFERENCE_AREA":
-                HashMap<String, Double> areaFingerprint = removeUnreliable(Parser.parseFingerprint(data));
-//                System.out.println(data);
-//                HashMap<String, Double> areaFingerprint = Parser.parseFingerprint(data);
-                ReferenceArea locatedArea = Locator.getInstance().locateReferenceArea(deviceId, areaFingerprint);
+                //HashMap<String, Double> areaFingerprint = removeUnreliable(Parser.parseFingerprint(data));
+                //ReferenceArea locatedArea = Locator.getInstance().locateReferenceArea(deviceId, areaFingerprint);
+                ReferenceArea locatedArea = Locator.getInstance().locateReferenceAreaBT(deviceId, Parser.parseBT(data));
                 DeviceManager.getInstance().updateReferencePosition(deviceId, locatedArea);
 
                 out.println(locatedArea.x + "," + locatedArea.y);

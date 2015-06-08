@@ -53,4 +53,9 @@ public class Parser {
 
         return fingerprint;
     }
+    
+    public static String parseBT(String BT) {
+        String[] list = BT.split(";");
+        return list[0];
+    }
 }

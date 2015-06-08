@@ -13,6 +13,7 @@ public class ReferenceArea {
     public double CANDIDATES_TRESHOLD;
     
     public Map<String, Double> fingerprint;
+    public String BTSSID;
     public ArrayList<MagneticPoint> magneticPoints;
 
     public ReferenceArea(double x, double y, Map fingerprint){
@@ -42,5 +43,9 @@ public class ReferenceArea {
         sb.deleteCharAt(sb.length() - 1);
         
         return sb.toString();
+    }
+    
+    public String getBTSSID() {
+        return BTSSID;
     }
 }
