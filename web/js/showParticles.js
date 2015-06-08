@@ -1,6 +1,6 @@
 var particles = {};
-var MAC = "40:F3:08:3B:4F:AA";
-var _MAC = "88:32:9B:B6:AB:56";
+var _MAC = "40:F3:08:3B:4F:AA";
+var MAC = "88:32:9B:B6:AB:56";
 
 var colors = [
     "#0759a5",

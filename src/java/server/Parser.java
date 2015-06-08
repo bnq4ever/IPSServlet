@@ -56,6 +56,7 @@ public class Parser {
     
     public static String parseBT(String BT) {
         String[] list = BT.split(";");
+        list = BT.split("/");
         return list[0];
     }
 }

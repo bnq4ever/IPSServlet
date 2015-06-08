@@ -61,6 +61,27 @@ public class Database {
         return false;
     }
     
+        //Working
+    public boolean addReferenceAreaBT(ReferenceArea area) {
+        String sql = "INSERT INTO REFERENCE_AREAS "
+                + "(x, y, fingerprint) VALUES"
+                + "(?, ?, ?)";
+        try {
+            preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setDouble(1, area.x);
+            preparedStatement.setDouble(2, area.y);
+            preparedStatement.setString(3, area.BTSSID);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            //return false;
+            System.out.println(e.getMessage());
+        } finally {
+            closePreparedStatement();
+        }
+        return false;
+    }
+    
     public HashSet<String> getAccessPoints() {
         HashSet<String> accessPoints = new HashSet<>();
         
@@ -136,6 +157,31 @@ public class Database {
                         rs.getDouble("x"), 
                         rs.getDouble("y"), 
                         Parser.parseFingerprint(rs.getString("fingerprint")));
+                
+                referenceAreas.add(area);
+                //System.out.println(rs.getDouble("x") + " " + rs.getDouble("y") + " " + Parser.parseFingerprint(rs.getString("fingerprint") + " " + p.magnetics.size()));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            closePreparedStatement();
+        }
+        return referenceAreas;
+    }
+    
+    public ArrayList<ReferenceArea> getReferenceAreasBT() {
+        ArrayList<ReferenceArea> referenceAreas = new ArrayList<>();
+        String sql = "Select * FROM REFERENCE_AREAS";
+        
+        try {
+            preparedStatement = conn.prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery(sql);
+            while(rs.next()) {
+                
+                ReferenceArea area = new ReferenceArea(
+                        rs.getDouble("x"), 
+                        rs.getDouble("y"),
+                        rs.getString("fingerprint"));
                 
                 referenceAreas.add(area);
                 //System.out.println(rs.getDouble("x") + " " + rs.getDouble("y") + " " + Parser.parseFingerprint(rs.getString("fingerprint") + " " + p.magnetics.size()));

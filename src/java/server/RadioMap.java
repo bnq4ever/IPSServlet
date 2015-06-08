@@ -29,15 +29,15 @@ public class RadioMap {
 
     public RadioMap() {
         Database.getInstance().openConnection();
-        referenceAreas = Database.getInstance().getReferenceAreas();
+        referenceAreas = Database.getInstance().getReferenceAreasBT();
         accessPoints = new HashSet<>();
         
-        for(ReferenceArea area : referenceAreas) {
-            removeUnreliable(area);
-            for(String BSSID : area.fingerprint.keySet()) {
-                accessPoints.add(BSSID);
-            }
-        }
+//        for(ReferenceArea area : referenceAreas) {
+//            //removeUnreliable(area);
+//            for(String BSSID : area.fingerprint.keySet()) {
+//                accessPoints.add(BSSID);
+//            }
+//        }
         
         ArrayList<MagneticPoint> tmpPoints = Database.getInstance().getMagneticPoints();
         addMagneticPoints(tmpPoints);
@@ -76,7 +76,7 @@ public class RadioMap {
     }
 
     public synchronized void addReferenceArea(ReferenceArea a) {
-        removeUnreliable(a);
+//        removeUnreliable(a);
         ReferenceArea area = getReferenceArea(a.x, a.y);
         if (area != null) {
             area.fingerprint = a.fingerprint;
@@ -95,12 +95,12 @@ public class RadioMap {
     
     public synchronized void addReferenceAreaDBBT(ReferenceArea a) {
         Database.getInstance().openConnection();
-        Database.getInstance().addReferenceArea(a);
+        Database.getInstance().addReferenceAreaBT(a);
         Database.getInstance().closeConnection();
     }
 
     public synchronized void addReferenceAreaDB(ReferenceArea a) {
-        removeUnreliable(a);
+//        removeUnreliable(a);
         Database.getInstance().openConnection();
         Database.getInstance().addReferenceArea(a);
         
