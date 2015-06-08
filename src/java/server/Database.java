@@ -2,6 +2,7 @@ package server;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,6 +59,43 @@ public class Database {
             closePreparedStatement();
         }
         return false;
+    }
+    
+    public HashSet<String> getAccessPoints() {
+        HashSet<String> accessPoints = new HashSet<>();
+        
+        String sql = "Select BSSID FROM ACCESS_POINTS";
+        
+        try {
+            preparedStatement = conn.prepareStatement(sql);
+            ResultSet rs = preparedStatement.executeQuery(sql);
+            while(rs.next()) {
+                accessPoints.add(rs.getString("BSSID"));                
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            closePreparedStatement();
+        }
+        
+        return accessPoints;
+    }
+    
+    public void addAccessPoint(String BSSID) {
+        String sql = "INSERT INTO ACCESS_POINTS "
+                + "(BSSID) VALUES"
+                + "(?)";
+        try {
+            preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, BSSID);
+            
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            //return false;
+            System.out.println(e.getMessage());
+        } finally {
+            closePreparedStatement();
+        }
     }
     
     //Working

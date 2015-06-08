@@ -56,13 +56,17 @@ public class Locator {
     
     private synchronized double getRSSEuclidean(HashMap<String, Double> fingerprint, ReferenceArea candidate) {
         double candidateDistance = 0;
-        //System.out.println("euclidian");
-        for ( String key : fingerprint.keySet() ) {
-            if(candidate.fingerprint.get(key) != null) {
-                candidateDistance += Math.pow(fingerprint.get(key) - candidate.fingerprint.get(key), 2);
-            } else {
-                candidateDistance += Math.pow(fingerprint.get(key) - (-90), 2); //unknown APs
-            }
+        for (String ap : RadioMap.getInstance().getAccessPoints()) {
+            double candidateValue = -90.;
+            double fingerprintValue = -90.;
+            
+            if(fingerprint.containsKey(ap)) 
+                fingerprintValue = fingerprint.get(ap);
+            
+            if (candidate.fingerprint.containsKey(ap)) 
+                candidateValue = candidate.fingerprint.get(ap);
+            
+            candidateDistance += Math.pow(fingerprintValue - candidateValue, 2);
         }
         return Math.sqrt(candidateDistance);
     }
@@ -88,7 +92,6 @@ public class Locator {
         double zaxis = magneticFingerprint[1];
         double xyaxis = magneticFingerprint[2];
         TreeMap<Double, MagneticPoint> map = new TreeMap<>();
-
         ArrayList<MagneticPoint> magneticPoints = DeviceManager.getInstance().getDevice(deviceId).getReferenceArea().getMagneticPoints();
 
         double compare = Float.MAX_VALUE;
@@ -112,7 +115,7 @@ public class Locator {
                 break;
             }
         }
-        System.out.println("nbrOfCandidates: " + bestCandidates.get(deviceId).size());
+        System.out.println("nbr of candidates: " + bestCandidates.get(deviceId).size() + " " + DeviceManager.getInstance().getDevice(deviceId).getReferenceArea().CANDIDATES_TRESHOLD);
 //        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
 //        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());
 //        bestCandidates.get(deviceId).add(map.pollFirstEntry().getValue());

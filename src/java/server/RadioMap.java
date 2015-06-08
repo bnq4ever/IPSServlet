@@ -7,6 +7,8 @@ package server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 /**
  *
@@ -16,6 +18,7 @@ public class RadioMap {
 
     private static RadioMap _instance;
     private final ArrayList<ReferenceArea> referenceAreas;
+    private HashSet<String> accessPoints;
 
     public synchronized static RadioMap getInstance() {
         if (_instance == null) {
@@ -27,7 +30,15 @@ public class RadioMap {
     public RadioMap() {
         Database.getInstance().openConnection();
         referenceAreas = Database.getInstance().getReferenceAreas();
-
+        accessPoints = new HashSet<>();
+        
+        for(ReferenceArea area : referenceAreas) {
+            removeUnreliable(area);
+            for(String BSSID : area.fingerprint.keySet()) {
+                accessPoints.add(BSSID);
+            }
+        }
+        
         ArrayList<MagneticPoint> tmpPoints = Database.getInstance().getMagneticPoints();
         addMagneticPoints(tmpPoints);
         
@@ -41,6 +52,10 @@ public class RadioMap {
         for(MagneticPoint p : tmpPoints) {
             addMagneticPoint(p);
         }
+    }
+    
+    public synchronized ArrayList<String> getAccessPoints() {
+        return new ArrayList<String>(accessPoints);
     }
 
     public synchronized ArrayList<ReferenceArea> getReferenceAreas() {
@@ -78,6 +93,12 @@ public class RadioMap {
         removeUnreliable(a);
         Database.getInstance().openConnection();
         Database.getInstance().addReferenceArea(a);
+        
+        //ADD ACCESSPOINTS
+        for (Map.Entry entry : a.fingerprint.entrySet()) {
+            if(!accessPoints.contains(entry.getKey()))
+                Database.getInstance().addAccessPoint((String)entry.getKey());
+        }
         Database.getInstance().closeConnection();
     }
 
@@ -116,7 +137,7 @@ public class RadioMap {
 
         for (String key : area.fingerprint.keySet()) {
 
-            if ((double) area.fingerprint.get(key) < -80) {
+            if ((double) area.fingerprint.get(key) < -90) {
                 toRemove.add(key);
             }
 
@@ -136,10 +157,11 @@ public class RadioMap {
             double mean = 0;
                 for(MagneticPoint point : magnetics) {
                     temp = 0;
-                    temp += Math.pow((point.magnitude), 2);
+//                    temp += Math.pow((point.magnitude), 2);
                     //temp += Math.pow((point.zaxis), 2);
                     //temp += Math.pow((point.xyaxis), 2);
-                    temp = (double) Math.sqrt(temp);
+//                    temp = Math.sqrt(temp);
+                    temp = point.magnitude;
                     if(temp > h) {
                         h = temp;
                     }
@@ -150,6 +172,7 @@ public class RadioMap {
                     //map.put(distance, point);
             }
             mean /= magnetics.size();
+            mean = magnetics.get(Math.round(magnetics.size()/2)).magnitude;
             System.out.println("hightest: "+ h +"\nlowest: "+ l +"\nmean: "+ mean +"\nTreshold: "+ 0.001 * mean * (h - l));
             area.CANDIDATES_TRESHOLD = 0.001 * mean * (h - l);
         }
