@@ -88,6 +88,16 @@ public class RadioMap {
             sb.append(key).append(" ").append(a.fingerprint.get(key));
         }
     }
+    
+    public synchronized void addReferenceAreaBT(ReferenceArea a) {
+            referenceAreas.add(a);
+    }
+    
+    public synchronized void addReferenceAreaDBBT(ReferenceArea a) {
+        Database.getInstance().openConnection();
+        Database.getInstance().addReferenceArea(a);
+        Database.getInstance().closeConnection();
+    }
 
     public synchronized void addReferenceAreaDB(ReferenceArea a) {
         removeUnreliable(a);
