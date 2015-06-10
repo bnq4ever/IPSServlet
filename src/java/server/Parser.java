@@ -54,9 +54,13 @@ public class Parser {
         return fingerprint;
     }
     
-    public static String parseBT(String BT) {
+    public static ArrayList<Data> parseBT(String BT) {
+        ArrayList<Data> data = new ArrayList<>();
         String[] list = BT.split(";");
-        list = BT.split("/");
-        return list[0];
+        for(String s : list) {
+            String[] key_value = s.split("/");
+            data.add(new Data(key_value[0], Double.parseDouble(key_value[1])));
+        }
+        return data;
     }
 }

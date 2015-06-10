@@ -32,7 +32,7 @@ $(document).ready(function() {
                     magneticPoints = tmpMP;
                 },
                 error: function (xhr) {
-                    alert("error");
+//                    alert("error");
                 }
             });
         }
@@ -60,7 +60,7 @@ $(document).ready(function() {
 
         if(showReferenceAreas){
             for (key in referencePoints) {
-                createReferencePoint(referencePoints[key].x*ratioX, referencePoints[key].y*ratioY, 150*ratioX);
+                createReferencePoint(referencePoints[key].x*ratioX, referencePoints[key].y*ratioY, 187*ratioX);
             }
         }
         

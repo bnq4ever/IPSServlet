@@ -24,7 +24,7 @@ public class ParticleFilter {
 
     private static final int MAP_WIDTH = 1200;
     private static final int MAP_HEIGHT = 1200;
-    private static final int NBR_OF_PARTICLES = 200;
+    private static final int NBR_OF_PARTICLES = 250;
     
     //private ArrayList<MagneticFingerprint> fingerprints;
 

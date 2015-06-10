@@ -156,7 +156,7 @@ $(document).ready(function() {
                 connectedDevices = tmp;
             },
             error: function(xhr) {
-              alert("error");
+              //alert("error");
             }
         });
     }

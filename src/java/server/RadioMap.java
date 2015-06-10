@@ -123,7 +123,7 @@ public class RadioMap {
 
     public synchronized void addMagneticPoint(MagneticPoint magneticPoint) {
         for (ReferenceArea area : referenceAreas) {
-            if (Math.sqrt(Math.pow((area.x - magneticPoint.x), 2) + Math.pow((area.y - magneticPoint.y), 2)) < 150) {
+            if (Math.sqrt(Math.pow((area.x - magneticPoint.x), 2) + Math.pow((area.y - magneticPoint.y), 2)) < 187) {
                 area.addMagneticPoint(magneticPoint);
             }
         }
@@ -161,30 +161,34 @@ public class RadioMap {
     private void computeTresholds() {
         for(ReferenceArea area : referenceAreas) {
             ArrayList<MagneticPoint> magnetics = area.getMagneticPoints();
-            double h = 0;
-            double l = Double.MAX_VALUE;
-            double temp;
-            double mean = 0;
-                for(MagneticPoint point : magnetics) {
-                    temp = 0;
-//                    temp += Math.pow((point.magnitude), 2);
-                    //temp += Math.pow((point.zaxis), 2);
-                    //temp += Math.pow((point.xyaxis), 2);
-//                    temp = Math.sqrt(temp);
-                    temp = point.magnitude;
-                    if(temp > h) {
-                        h = temp;
-                    }
-                    if(temp < l) {
-                        l = temp;
-                    }
-                    mean += temp;
-                    //map.put(distance, point);
+            if(!area.magneticPoints.isEmpty()){
+                double h = 0;
+                double l = Double.MAX_VALUE;
+                double temp;
+                double mean = 0;
+                    for(MagneticPoint point : magnetics) {
+                        temp = 0;
+    //                    temp += Math.pow((point.magnitude), 2);
+                        //temp += Math.pow((point.zaxis), 2);
+                        //temp += Math.pow((point.xyaxis), 2);
+    //                    temp = Math.sqrt(temp);
+                        temp = point.magnitude;
+                        if(temp > h) {
+                            h = temp;
+                        }
+                        if(temp < l) {
+                            l = temp;
+                        }
+                        mean += temp;
+                        //map.put(distance, point);
+                }
+                mean /= magnetics.size();
+                mean = magnetics.get(Math.round(magnetics.size()/2)).magnitude;
+                System.out.println("hightest: "+ h +"\nlowest: "+ l +"\nmean: "+ mean +"\nTreshold: "+ 0.001 * mean * (h - l));
+                area.CANDIDATES_TRESHOLD = 0.01/magnetics.size() * mean * (h - l);
+            } else {
+                area.CANDIDATES_TRESHOLD = 0;
             }
-            mean /= magnetics.size();
-            mean = magnetics.get(Math.round(magnetics.size()/2)).magnitude;
-            System.out.println("hightest: "+ h +"\nlowest: "+ l +"\nmean: "+ mean +"\nTreshold: "+ 0.001 * mean * (h - l));
-            area.CANDIDATES_TRESHOLD = 0.001 * mean * (h - l);
         }
     }
 }

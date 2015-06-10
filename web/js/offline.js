@@ -112,15 +112,15 @@ function addPoint(x, y) {
     divID.value = "point";
     div.setAttributeNode(divID);
     div.style.backgroundImage = "url('imgs/pointArea.png')";
-    div.style.backgroundSize = "300px 300px";
+    div.style.backgroundSize = "374px 374px";
     div.style.backgroundRepeat = "no-repeat";
 
     div.style.position = "absolute";
-    div.style.top = y - 150 + "px";
-    div.style.left = x - 150 + "px";
+    div.style.top = y - 187 + "px";
+    div.style.left = x - 187 + "px";
     div.style.zIndex = "1";
-    div.style.height = "300px";
-    div.style.width = "300px";
+    div.style.height = "374px";
+    div.style.width = "374px";
     document.getElementById("map").appendChild(div);
 }
 
