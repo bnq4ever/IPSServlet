@@ -4,8 +4,8 @@ var ratioY;
 
 $(document).ready(function() {
     
-    setInterval(getConnectedDevices, 100);
-    setInterval(updateMapDevices, 100);
+    setInterval(getConnectedDevices, 200);
+    setInterval(updateMapDevices, 200);
 
     $('#mappingArea').on('click', '.device', function () {
         var device = connectedDevices[this.id];

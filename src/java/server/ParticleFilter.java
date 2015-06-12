@@ -17,14 +17,14 @@ import javax.json.JsonObject;
 public class ParticleFilter {
     //private ArrayList<double[]> particles = new ArrayList<double[]>();
     private final ArrayList<Particle> particles;
-    private static final double SCATTER = 5;
-    private static final double LOWER_TRESHOLD = 0.89;
-    private static final double UPPER_TRESHOLD = 0.97;
+    private static final double SCATTER = 5;//5
+    private static final double LOWER_TRESHOLD = 0.89; //0.89
+    private static final double UPPER_TRESHOLD = 0.97; //0.97
     private double SCATTER_DIRECTION = 0;
 
     private static final int MAP_WIDTH = 1200;
     private static final int MAP_HEIGHT = 1200;
-    private static final int NBR_OF_PARTICLES = 250;
+    private static final int NBR_OF_PARTICLES = 500;
     
     //private ArrayList<MagneticFingerprint> fingerprints;
 
